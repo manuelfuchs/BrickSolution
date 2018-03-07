@@ -1,10 +1,5 @@
-﻿using System;
+﻿using MonoBrickFirmware.Movement;
 using System.Threading;
-using MonoBrickFirmware.Display;
-using MonoBrickFirmware.Sensors;
-using MonoBrickFirmware.Movement;
-using MonoBrickFirmware.Sound;
-using MonoBrickFirmware.UserInput;
 
 namespace MonoBrickTest
 {
@@ -12,12 +7,29 @@ namespace MonoBrickTest
     {
         public static void Main(string[] args)
         {
-            IRChannel[] channels = {IRChannel.One, IRChannel.Two, IRChannel.Three, IRChannel.Four};
+            Robot robot = Robot.GetInstance();
 
+            robot.Drive(50, robot.IRBreakCondition, robot.GenerateParameter(50));
+
+            //var brickExecutor = new BrickExecuter();
+            //
+            //brickExecutor
+            //    .Do(() => largeMotorLeft.SetSpeed(50))
+            //    .Until(
+            //        (executor) =>
+            //        {
+            //            Thread.Sleep(10000);
+            //            return true;
+            //        })
+            //    .Afterwards(() => largeMotorLeft.Off());
+
+            /*
             Speaker speaker = new Speaker(50);
 
             speaker.Beep(500);
+            */
             /*
+            IRChannel[] channels = {IRChannel.One, IRChannel.Two, IRChannel.Three, IRChannel.Four};
             int channelIdx = 0;
             ManualResetEvent terminateProgram = new ManualResetEvent(false);
             var sensor = new EV3IRSensor(SensorPort.In1);
