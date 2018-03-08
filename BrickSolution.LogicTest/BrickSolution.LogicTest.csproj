@@ -43,11 +43,5 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RobotTests.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Logic\BrickSolution.Logic.csproj">
-      <Project>{22097255-6f97-41e7-8c5d-2cc0a963acab}</Project>
-      <Name>BrickSolution.Logic</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

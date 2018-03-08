@@ -19,6 +19,8 @@ namespace MonoBrickTest
             this.RightWheel = new Motor(Constants.rightLargeMotorPort);
 
             this.IRSensor = new EV3IRSensor(Constants.iRSensorPort);
+
+            this.ColorSensor = new NXTColorSensor(Constants.colorSensorPort, ColorMode.Color);
         }
 
         #endregion
@@ -56,6 +58,7 @@ namespace MonoBrickTest
         #region Sensors
 
         private EV3IRSensor IRSensor { get; set; }
+        private NXTColorSensor ColorSensor{ get; set; }
 
         #endregion
 
@@ -160,6 +163,17 @@ namespace MonoBrickTest
             //{
             //    return whenSmaller == false ? true : false;
             //}
+        }
+
+        public bool ColorBreakCondition(object[] parameter)
+        {
+            String color = this.ColorSensor.ReadAsString();
+            Color
+
+            
+
+           
+            return true;
         }
 
         #endregion
