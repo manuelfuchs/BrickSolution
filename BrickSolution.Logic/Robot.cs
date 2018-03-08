@@ -67,6 +67,8 @@ namespace MonoBrickTest
 
         #endregion
 
+        #region Methods
+
         #region Public Logic
 
         public void Drive(sbyte speed, Func<object[], bool> breakCondition = null, object[] parameter = null)
@@ -120,10 +122,6 @@ namespace MonoBrickTest
         }
 
         #endregion
-
-        #region Logic-Conditions
-        //TEST: TO REMOVE LATER
-        private int counter = 0;
 
         /// <summary>
         /// 
