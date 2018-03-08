@@ -4,11 +4,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MonoBrickTest
 {
-    public class Robot
+    public class Robot : IRobot
     {
         #region Constructor
 
@@ -26,13 +27,19 @@ namespace MonoBrickTest
 
         private static Robot instance = null;
 
+        /// <summary>
+        /// For testing purposes -> see BrickSolution.LogicTest project
+        /// </summary>
+        public static Robot testInstance = null;
+
         public static Robot GetInstance()
         {
-            if (Robot.instance == null)
+            if (Robot.instance == null && Robot.testInstance == null)
             {
                 instance = new Robot();
             }
-            return instance;
+
+            return Robot.testInstance == null ? instance : testInstance;
         }
 
         #endregion
@@ -89,7 +96,8 @@ namespace MonoBrickTest
 
         public void HaltWheels()
         {
-            this.SetWheelSpeed(0, 0);
+            this.LeftWheel.Brake();
+            this.RightWheel.Brake();
         }
 
         #endregion
@@ -119,7 +127,9 @@ namespace MonoBrickTest
         #endregion
 
         #region Logic-Conditions
-
+        //TEST: TO REMOVE LATER
+        private int counter = 0;
+        
         /// <summary>
         /// 
         /// </summary>
@@ -131,40 +141,25 @@ namespace MonoBrickTest
         public bool IRBreakCondition(object[] parameter)
         {
             int breakDistance = (int)parameter[0];
-            bool whenSmaller = (bool)parameter[1];
-            bool whenEqual = (bool)parameter[2];
+            bool whenSmaller = parameter.Length >= 2 ? (bool)parameter[1] : false;
 
+            //test: remove later!!
             int iRDistance = this.IRSensor.ReadDistance();
 
-            if (iRDistance < breakDistance)
-            {
-                return whenSmaller == true ? true : false;
-            }
-            else if (iRDistance == breakDistance && whenEqual == true)
-            {
-                return true;
-            }
-            else
-            {
-                return whenSmaller == false ? true : false;
-            }
-        }
-        public bool OLDIRBreakCondition(int distance, bool whenSmaller = true, bool whenEqual = false)
-        {
-            int iRDistance = this.IRSensor.ReadDistance();
+            MonoBrickFirmware.Display.LcdConsole.WriteLine("Distance: {0}", iRDistance);
 
-            if (iRDistance < distance)
-            {
-                return whenSmaller == true ? true : false;
-            }
-            else if (iRDistance == distance && whenEqual == true)
-            {
-                return true;
-            }
-            else
-            {
-                return whenSmaller == false ? true : false;
-            }
+            counter++;
+            return counter >= 3000 ? true : false;
+            //int iRDistance = this.IRSensor.ReadDistance();
+
+            //if (iRDistance < breakDistance)
+            //{
+            //    return whenSmaller == true ? true : false;
+            //}
+            //else
+            //{
+            //    return whenSmaller == false ? true : false;
+            //}
         }
 
         #endregion
