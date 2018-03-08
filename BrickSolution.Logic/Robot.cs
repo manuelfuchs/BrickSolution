@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MonoBrickTest
 {
-    public class Robot : IRobot
+    public class Robot
     {
         #region Constructor
 
@@ -19,8 +19,6 @@ namespace MonoBrickTest
             this.RightWheel = new Motor(Constants.rightLargeMotorPort);
 
             this.IRSensor = new EV3IRSensor(Constants.iRSensorPort);
-
-            this.ColorSensor = new NXTColorSensor(Constants.colorSensorPort, ColorMode.Color);
         }
 
         #endregion
@@ -29,19 +27,14 @@ namespace MonoBrickTest
 
         private static Robot instance = null;
 
-        /// <summary>
-        /// For testing purposes -> see BrickSolution.LogicTest project
-        /// </summary>
-        public static Robot testInstance = null;
-
         public static Robot GetInstance()
         {
-            if (Robot.instance == null && Robot.testInstance == null)
+            if (Robot.instance == null)
             {
                 instance = new Robot();
             }
 
-            return Robot.testInstance == null ? instance : testInstance;
+            return Robot.instance;
         }
 
         #endregion
@@ -58,7 +51,6 @@ namespace MonoBrickTest
         #region Sensors
 
         private EV3IRSensor IRSensor { get; set; }
-        private NXTColorSensor ColorSensor{ get; set; }
 
         #endregion
 
@@ -132,7 +124,7 @@ namespace MonoBrickTest
         #region Logic-Conditions
         //TEST: TO REMOVE LATER
         private int counter = 0;
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -146,37 +138,18 @@ namespace MonoBrickTest
             int breakDistance = (int)parameter[0];
             bool whenSmaller = parameter.Length >= 2 ? (bool)parameter[1] : false;
 
-            //test: remove later!!
             int iRDistance = this.IRSensor.ReadDistance();
 
-            MonoBrickFirmware.Display.LcdConsole.WriteLine("Distance: {0}", iRDistance);
+            MonoBrickFirmware.Display.LcdConsole.WriteLine("{0} {1} {2}", iRDistance, breakDistance, whenSmaller);
 
-            counter++;
-            return counter >= 3000 ? true : false;
-            //int iRDistance = this.IRSensor.ReadDistance();
-
-            //if (iRDistance < breakDistance)
-            //{
-            //    return whenSmaller == true ? true : false;
-            //}
-            //else
-            //{
-            //    return whenSmaller == false ? true : false;
-            //}
-        }
-
-        public bool ColorBreakCondition(object[] parameter)
-        {
-            Color color = this.ColorSensor.ReadColor();
-
-            if (Color.Red == color)
+            if (iRDistance < breakDistance)
             {
-                
+                return whenSmaller == false ? true : false;
             }
-            
-
-           
-            return true;
+            else
+            {
+                return whenSmaller == true ? true : false;
+            }
         }
 
         #endregion
