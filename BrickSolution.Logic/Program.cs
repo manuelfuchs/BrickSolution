@@ -1,4 +1,6 @@
-﻿using MonoBrickFirmware.Movement;
+﻿using MonoBrickFirmware.Display;
+using MonoBrickFirmware.Movement;
+using System;
 using System.Threading;
 
 namespace MonoBrickTest
@@ -15,9 +17,11 @@ namespace MonoBrickTest
 
                 robot.Drive(50, robot.IRBreakCondition, robot.GenerateParameter(50));
             }
-            catch
+            catch (Exception e)
             {
                 robot.HaltWheels();
+                LcdConsole.WriteLine("{0}", e.Message);
+                Thread.Sleep(10000);
             }
 
             //var brickExecutor = new BrickExecuter();
