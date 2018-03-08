@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace MonoBrickTest
 {
-    public class Robot
+    public class Robot : IRobot
     {
         #region Constructor
 
@@ -29,14 +29,19 @@ namespace MonoBrickTest
 
         private static Robot instance = null;
 
+        /// <summary>
+        /// For testing purposes -> see BrickSolution.LogicTest project
+        /// </summary>
+        public static Robot testInstance = null;
+
         public static Robot GetInstance()
         {
-            if (Robot.instance == null)
+            if (Robot.instance == null && Robot.testInstance == null)
             {
                 instance = new Robot();
             }
 
-            return Robot.instance;
+            return Robot.testInstance == null ? instance : testInstance;
         }
 
         #endregion
@@ -141,25 +146,33 @@ namespace MonoBrickTest
             int breakDistance = (int)parameter[0];
             bool whenSmaller = parameter.Length >= 2 ? (bool)parameter[1] : false;
 
+            //test: remove later!!
             int iRDistance = this.IRSensor.ReadDistance();
 
-            MonoBrickFirmware.Display.LcdConsole.WriteLine("{0} {1} {2}", iRDistance, breakDistance, whenSmaller);
+            MonoBrickFirmware.Display.LcdConsole.WriteLine("Distance: {0}", iRDistance);
 
-            if (iRDistance < breakDistance)
-            {
-                return whenSmaller == false ? true : false;
-            }
-            else
-            {
-                return whenSmaller == true ? true : false;
-            }
+            counter++;
+            return counter >= 3000 ? true : false;
+            //int iRDistance = this.IRSensor.ReadDistance();
+
+            //if (iRDistance < breakDistance)
+            //{
+            //    return whenSmaller == true ? true : false;
+            //}
+            //else
+            //{
+            //    return whenSmaller == false ? true : false;
+            //}
         }
 
         public bool ColorBreakCondition(object[] parameter)
         {
-            String color = this.ColorSensor.ReadAsString();
-            Color
+            Color color = this.ColorSensor.ReadColor();
 
+            if (Color.Red == color)
+            {
+                
+            }
             
 
            

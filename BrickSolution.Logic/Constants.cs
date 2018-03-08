@@ -14,5 +14,7 @@ namespace MonoBrickTest
         public static MotorPort rightLargeMotorPort = MotorPort.OutD;
 
         public static SensorPort iRSensorPort = SensorPort.In1;
+
+        public static SensorPort colorSensorPort = SensorPort.In2;
     }
 }
