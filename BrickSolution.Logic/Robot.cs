@@ -1,11 +1,6 @@
 ﻿using MonoBrickFirmware.Movement;
 using MonoBrickFirmware.Sensors;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace BrickSolution.Logic
 {
@@ -196,17 +191,21 @@ namespace BrickSolution.Logic
         /// place (is mostly used for triggering a.e. a motor stop)
         /// </summary>
         /// <param name="parameter">
-        /// parameter[0]=distance
-        /// parameter[1]=whenSmallerBoolean(optional)</param>
-        /// <returns></returns>
+        /// parameter[0]=distance(int)
+        /// parameter[1]=whenSmallerBoolean(boolean,optional)</param>
+        /// <returns>
+        /// true: a certain action should be stopped
+        /// false: the action should continue
+        /// </returns>
         public bool IRBreakCondition(object[] parameter)
         {
-            int breakDistance = (int)parameter[0];
-            bool whenSmaller = parameter.Length >= 2 ? (bool)parameter[1] : false;
+            int breakDistance = Convert.ToInt32(parameter[0]);
+            bool whenSmaller = parameter.Length >= 2 ? Convert.ToBoolean(parameter[1]) : false;
 
             int iRDistance = this.IRSensor.ReadDistance();
             
-            MonoBrickFirmware.Display.LcdConsole.WriteLine("{0} {1} {2}", iRDistance, breakDistance, whenSmaller);
+            MonoBrickFirmware.Display.LcdConsole
+                .WriteLine("{0} {1} {2}", iRDistance, breakDistance, whenSmaller);
 
             if (iRDistance < breakDistance)
             {
@@ -216,6 +215,25 @@ namespace BrickSolution.Logic
             {
                 return whenSmaller == true ? true : false;
             }
+        }
+
+        /// <summary>
+        /// this method returns an boolean indicating if a certain action
+        /// should be stopped
+        /// </summary>
+        /// <param name="parameter">
+        /// parameter[0]=milliseconds(int)
+        /// parameter[1]=startTime(DateTime)</param>
+        /// <returns>
+        /// true: a certain action should be stopped
+        /// false: the action should continue
+        /// </returns>
+        public bool TimerBreakCondition(object[] parameter)
+        {
+            int milliseconds = Convert.ToInt32(parameter[0]);
+            DateTime startTime = (DateTime)parameter[1];
+
+            return (DateTime.Now - startTime).TotalMilliseconds >= milliseconds;
         }
 
         #endregion
