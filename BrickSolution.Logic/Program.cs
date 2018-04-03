@@ -1,5 +1,4 @@
 ﻿using MonoBrickFirmware.Display;
-using MonoBrickFirmware.Movement;
 using System;
 using System.Threading;
 
@@ -19,7 +18,11 @@ namespace MonoBrickTest
             }
             catch (Exception e)
             {
-                robot.HaltWheels();
+                if (robot != null)
+                {
+                    robot.HaltWheels();
+                }
+
                 LcdConsole.WriteLine("{0}", e.Message);
                 Thread.Sleep(10000);
             }
