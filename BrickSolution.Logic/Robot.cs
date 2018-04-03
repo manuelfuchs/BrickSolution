@@ -86,11 +86,6 @@ namespace BrickSolution.Logic
             this.Rotate(speed, speed, breakCondition);
         }
 
-        public void RotateCounterClockWise(sbyte speed, Func<object[], bool> breakCondition)
-        {
-            this.Rotate(speed, speed, breakCondition);
-        }
-
         public void HaltWheels()
         {
             this.LeftWheel.Brake();
