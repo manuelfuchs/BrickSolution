@@ -24,7 +24,7 @@ namespace BrickSolution.Logic
                 }
 
                 LcdConsole.WriteLine("{0}", e.Message);
-                Thread.Sleep(10000);
+                Thread.Sleep(15000);
             }
 
             //var brickExecutor = new BrickExecuter();

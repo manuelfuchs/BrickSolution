@@ -233,7 +233,9 @@ namespace BrickSolution.Logic
             int milliseconds = Convert.ToInt32(parameter[0]);
             DateTime startTime = (DateTime)parameter[1];
 
-            return (DateTime.Now - startTime).TotalMilliseconds >= milliseconds;
+            TimeSpan difference = DateTime.Now - startTime;
+
+            return difference.TotalMilliseconds >= milliseconds;
         }
 
         #endregion
