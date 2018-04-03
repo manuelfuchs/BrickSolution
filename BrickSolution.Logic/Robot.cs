@@ -71,7 +71,7 @@ namespace BrickSolution.Logic
 
         #region Public Logic
 
-        public void Drive(sbyte speed, Func<object[], bool> breakCondition = null, object[] parameter = null)
+        public void Drive(sbyte speed, Func<object[], bool> breakCondition, object[] parameter)
         {
             this.SetWheelSpeed(speed, speed);
 
