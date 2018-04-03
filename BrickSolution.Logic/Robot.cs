@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MonoBrickTest
+namespace BrickSolution.Logic
 {
     public class Robot
     {
