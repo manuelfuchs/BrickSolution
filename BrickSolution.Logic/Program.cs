@@ -14,7 +14,12 @@ namespace BrickSolution.Logic
             {
                 robot = Robot.GetInstance();
 
-                robot.Drive(50, robot.IRBreakCondition, robot.GenerateParameter(30));
+                for (int cunt = 0; cunt < 1000; cunt++)
+                {
+                    LcdConsole.WriteLine("{0}", robot.GetColorName());
+                }
+
+                //robot.Drive(50, robot.IRBreakCondition, robot.GenerateParameter(30));
             }
             catch (Exception e)
             {
