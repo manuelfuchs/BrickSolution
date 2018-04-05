@@ -22,6 +22,7 @@ namespace BrickSolution.Logic
             this.RightWheel = new Motor(Constants.rightLargeMotorPort);
 
             this.IRSensor = new EV3IRSensor(Constants.iRSensorPort);
+            this.ColorSensor = new EV3ColorSensor(Constants.colorSensorPort);
         }
 
         #endregion
@@ -54,6 +55,8 @@ namespace BrickSolution.Logic
 
         #region Properties
 
+        #endregion
+
         #region Motors
 
         /// <summary>
@@ -77,7 +80,7 @@ namespace BrickSolution.Logic
         /// </summary>
         private EV3IRSensor IRSensor { get; set; }
 
-        #endregion
+        private EV3ColorSensor ColorSensor { get; set; }
 
         #endregion
 
@@ -104,6 +107,25 @@ namespace BrickSolution.Logic
         #endregion
 
         #region Methods
+
+        #region Sensor Facades
+
+        public int GetColorId()
+        {
+            return this.ColorSensor.Read();
+        }
+
+        public string GetColorName()
+        {
+            return this.ColorSensor.ReadAsString();
+        }
+
+        public int GetIRDistance()
+        {
+            return this.IRSensor.ReadDistance();
+        }
+
+        #endregion
 
         #region Public Logic
 
@@ -202,7 +224,7 @@ namespace BrickSolution.Logic
             int breakDistance = Convert.ToInt32(parameter[0]);
             bool whenSmaller = parameter.Length >= 2 ? Convert.ToBoolean(parameter[1]) : false;
 
-            int iRDistance = this.IRSensor.ReadDistance();
+            int iRDistance = this.GetIRDistance();
             
             MonoBrickFirmware.Display.LcdConsole
                 .WriteLine("{0} {1} {2}", iRDistance, breakDistance, whenSmaller);
@@ -236,6 +258,19 @@ namespace BrickSolution.Logic
             TimeSpan difference = DateTime.Now - startTime;
 
             return difference.TotalMilliseconds >= milliseconds;
+        }
+
+        public bool ColorBreakConditions(object[] parameter)
+        {
+            int colorBreak = Convert.ToInt32(parameter[0]);
+            int colorSensor = this.GetColorId();
+
+            bool colorDif = colorBreak == colorSensor ? true : false;
+
+            MonoBrickFirmware.Display.LcdConsole
+                .WriteLine("{0} {1} {2}", colorBreak, colorSensor, colorDif);
+
+            return colorDif;
         }
 
         #endregion
