@@ -207,7 +207,7 @@ namespace BrickSolution.Logic
             MonoBrickFirmware.Display.LcdConsole
                 .WriteLine("{0} {1} {2}", iRDistance, breakDistance, whenSmaller);
 
-            if (iRDistance < breakDistance)
+            if (iRDistance > breakDistance)
             {
                 return whenSmaller == false ? true : false;
             }
