@@ -14,7 +14,7 @@ namespace BrickSolution.Logic
             {
                 robot = Robot.GetInstance();
 
-                robot.Drive(50, robot.IRBreakCondition, robot.GenerateParameter(50));
+                robot.Drive(50, robot.IRBreakCondition, robot.GenerateParameter(30));
             }
             catch (Exception e)
             {
