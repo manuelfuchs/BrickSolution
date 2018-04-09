@@ -13,11 +13,13 @@ namespace BrickSolution.Logic
             try
             {
                 robot = Robot.GetInstance();
-
+                
+                //start debug code
                 for (int cunt = 0; cunt < 1000; cunt++)
                 {
                     LcdConsole.WriteLine("{0}", robot.GetColorName());
                 }
+                //end debug code
 
                 //robot.Drive(50, robot.IRBreakCondition, robot.GenerateParameter(Constants.tableEndDistance));
             }
