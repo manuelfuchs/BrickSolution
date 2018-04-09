@@ -22,7 +22,8 @@ namespace BrickSolution.Logic
             this.RightWheel = new Motor(Constants.rightLargeMotorPort);
 
             this.IRSensor = new EV3IRSensor(Constants.iRSensorPort);
-            this.ColorSensor = new EV3ColorSensor(Constants.colorSensorPort);
+            this.EV3ColorSensor = new EV3ColorSensor(Constants.colorSensorPort);
+            this.NXTColorSensor = new NXTColorSensor(Constants.nxtColorSensorPort);
         }
 
         #endregion
@@ -80,11 +81,16 @@ namespace BrickSolution.Logic
         /// </summary>
         private EV3IRSensor IRSensor { get; set; }
 
-        /// <summary>
-        /// holds the <see cref="EV3ColorSensor"/> instance
-        /// for the EV3ColorSensor
+        /// holds the <see cref="EV3ColorSensor"/> instance for
+        /// the EV3ColorSensor
         /// </summary>
-        private EV3ColorSensor ColorSensor { get; set; }
+        private EV3ColorSensor EV3ColorSensor { get; set; }
+
+        /// <summary>
+        /// holds the <see cref="NXTColorSensor"/> instance for
+        /// the IRSensor
+        /// </summary>
+        private NXTColorSensor NXTColorSensor { get; set; }
 
         #endregion
 
@@ -120,9 +126,9 @@ namespace BrickSolution.Logic
         /// <returns>
         /// int: the current colorId seen by the EV3ColorSensor
         /// </returns>
-        public int GetColorId()
+        public int GetEV3ColorId()
         {
-            return this.ColorSensor.Read();
+            return this.EV3ColorSensor.Read();
         }
 
         /// <summary>
@@ -131,9 +137,9 @@ namespace BrickSolution.Logic
         /// <returns>
         /// string: the current color name seen by the EV3ColorSensor
         /// </returns>
-        public string GetColorName()
+        public string GetEV3ColorName()
         {
-            return this.ColorSensor.ReadAsString();
+            return this.EV3ColorSensor.ReadAsString();
         }
 
         /// <summary>
@@ -293,7 +299,7 @@ namespace BrickSolution.Logic
         public bool ColorBreakConditions(object[] parameter)
         {
             int colorBreak = Convert.ToInt32(parameter[0]);
-            int colorSensor = this.GetColorId();
+            int colorSensor = this.GetEV3ColorId();
 
             bool colorDif = colorBreak == colorSensor ? true : false;
 

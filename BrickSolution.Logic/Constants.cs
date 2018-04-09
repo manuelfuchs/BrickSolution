@@ -18,6 +18,7 @@ namespace BrickSolution.Logic
         #region Sensors
         public static SensorPort iRSensorPort = SensorPort.In1;
         public static SensorPort colorSensorPort = SensorPort.In2;
+        public static SensorPort nxtColorSensorPort = SensorPort.In3;
         #endregion
 
         #region
