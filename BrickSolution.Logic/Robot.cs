@@ -76,10 +76,14 @@ namespace BrickSolution.Logic
 
         /// <summary>
         /// holds the <see cref="EV3IRSensor"/> instance for
-        /// the IRSensor
+        /// the EV3IRSensor
         /// </summary>
         private EV3IRSensor IRSensor { get; set; }
 
+        /// <summary>
+        /// holds the <see cref="EV3ColorSensor"/> instance
+        /// for the EV3ColorSensor
+        /// </summary>
         private EV3ColorSensor ColorSensor { get; set; }
 
         #endregion
@@ -110,16 +114,35 @@ namespace BrickSolution.Logic
 
         #region Sensor Facades
 
+        /// <summary>
+        /// returns the current colorId of the EV3ColorSensor
+        /// </summary>
+        /// <returns>
+        /// int: the current colorId seen by the EV3ColorSensor
+        /// </returns>
         public int GetColorId()
         {
             return this.ColorSensor.Read();
         }
 
+        /// <summary>
+        /// returns the current color name of the EV3ColorSensor
+        /// </summary>
+        /// <returns>
+        /// string: the current color name seen by the EV3ColorSensor
+        /// </returns>
         public string GetColorName()
         {
             return this.ColorSensor.ReadAsString();
         }
 
+        /// <summary>
+        /// returns the current distance between the IRSensor and
+        /// the object in front of it
+        /// </summary>
+        /// <returns>
+        /// int: the distance between an object and the IRSensor (max: 100)
+        /// </returns>
         public int GetIRDistance()
         {
             return this.IRSensor.ReadDistance();
@@ -260,6 +283,13 @@ namespace BrickSolution.Logic
             return difference.TotalMilliseconds >= milliseconds;
         }
 
+        /// <summary>
+        /// this method returns an boolean indicating if a certain action
+        /// should be stopped
+        /// </summary>
+        /// <param name="parameter">
+        /// parameters[0]=colorBreak(int)</param>
+        /// <returns></returns>
         public bool ColorBreakConditions(object[] parameter)
         {
             int colorBreak = Convert.ToInt32(parameter[0]);
