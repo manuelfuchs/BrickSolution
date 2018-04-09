@@ -19,7 +19,7 @@ namespace BrickSolution.Logic
                     LcdConsole.WriteLine("{0}", robot.GetColorName());
                 }
 
-                //robot.Drive(50, robot.IRBreakCondition, robot.GenerateParameter(30));
+                //robot.Drive(50, robot.IRBreakCondition, robot.GenerateParameter(Constants.tableEndDistance));
             }
             catch (Exception e)
             {

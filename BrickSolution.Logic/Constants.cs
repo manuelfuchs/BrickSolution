@@ -19,5 +19,9 @@ namespace BrickSolution.Logic
         public static SensorPort iRSensorPort = SensorPort.In1;
         public static SensorPort colorSensorPort = SensorPort.In2;
         #endregion
+
+        #region
+        public static int tableEndDistance = 30;
+        #endregion
     }
 }
