@@ -13,8 +13,15 @@ namespace BrickSolution.Logic
             try
             {
                 robot = Robot.GetInstance();
+                
+                //start debug code
+                for (int cunt = 0; cunt < 1000; cunt++)
+                {
+                    LcdConsole.WriteLine("{0}", robot.GetColorName());
+                }
+                //end debug code
 
-                robot.Drive(50, robot.IRBreakCondition, robot.GenerateParameter(50));
+                //robot.Drive(50, robot.IRBreakCondition, robot.GenerateParameter(Constants.tableEndDistance));
             }
             catch (Exception e)
             {
@@ -24,7 +31,7 @@ namespace BrickSolution.Logic
                 }
 
                 LcdConsole.WriteLine("{0}", e.Message);
-                Thread.Sleep(10000);
+                Thread.Sleep(15000);
             }
 
             //var brickExecutor = new BrickExecuter();
