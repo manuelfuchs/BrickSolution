@@ -116,8 +116,6 @@ namespace BrickSolution.Logic
 
         #endregion
 
-        #region Methods
-
         #region Sensor Facades
 
         /// <summary>
@@ -237,76 +235,56 @@ namespace BrickSolution.Logic
 
         #endregion
 
-        /// <summary>
-        /// this method returns a boolean indicating if a certain event has taken
-        /// place (is mostly used for triggering a.e. a motor stop)
-        /// </summary>
-        /// <param name="parameter">
-        /// parameter[0]=distance(int)
-        /// parameter[1]=whenSmallerBoolean(boolean,optional)</param>
-        /// <returns>
-        /// true: a certain action should be stopped
-        /// false: the action should continue
-        /// </returns>
-        public static bool IRBreakCondition(object[] parameter)
-        {
-            int breakDistance = Convert.ToInt32(parameter[0]);
-            bool whenSmaller = parameter.Length >= 2 ? Convert.ToBoolean(parameter[1]) : false;
-
-            int iRDistance = GetIRDistance();
-            
-            MonoBrickFirmware.Display.LcdConsole
-                .WriteLine("{0} {1} {2}", iRDistance, breakDistance, whenSmaller);
-
-            if (iRDistance > breakDistance)
-            {
-                return whenSmaller == false ? true : false;
-            }
-            else
-            {
-                return whenSmaller == true ? true : false;
-            }
-        }
+        #region Break-Conditions
 
         /// <summary>
-        /// this method returns an boolean indicating if a certain action
-        /// should be stopped
+        /// 
         /// </summary>
-        /// <param name="parameter">
-        /// parameter[0]=milliseconds(int)
-        /// parameter[1]=startTime(DateTime)</param>
-        /// <returns>
-        /// true: a certain action should be stopped
-        /// false: the action should continue
-        /// </returns>
-        public static bool TimerBreakCondition(object[] parameter)
-        {
-            int milliseconds = Convert.ToInt32(parameter[0]);
-            DateTime startTime = (DateTime)parameter[1];
-
-            TimeSpan difference = DateTime.Now - startTime;
-
-            return difference.TotalMilliseconds >= milliseconds;
-        }
-
-        /// <summary>
-        /// this method returns an boolean indicating if a certain action
-        /// should be stopped
-        /// </summary>
-        /// <param name="parameter">
-        /// parameters[0]=colorBreak(int)</param>
+        /// <param name="parameter"></param>
         /// <returns></returns>
-        public static bool ColorBreakConditions(object[] parameter)
+        public static bool AbyssDetected(object[] parameter)
         {
-            int colorBreak = Convert.ToInt32(parameter[0]);
-            int colorSensor = GetColorId();
+            throw new NotImplementedException(nameof(AbyssDetected));
+        }
 
-            bool colorDif = colorBreak == colorSensor ? true : false;
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="parameter"></param>
+        /// <returns></returns>
+        public static bool ObstacleDetected(object[] parameter)
+        {
+            throw new NotImplementedException(nameof(ObstacleDetected));
+        }
 
-            MonoBrickFirmware.Display.LcdConsole
-                .WriteLine("{0} {1} {2}", colorBreak, colorSensor, colorDif);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="parameter"></param>
+        /// <returns></returns>
+        public static bool FoodplaceDetected(object[] parameter)
+        {
+            throw new NotImplementedException(nameof(FoodplaceDetected));
+        }
 
-            return colorDif;
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="parameter"></param>
+        /// <returns></returns>
+        public static bool SingleFoodDetected(object[] parameter)
+        {
+            throw new NotImplementedException(nameof(SingleFoodDetected));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="parameter"></param>
+        /// <returns></returns>
+        public static bool EnclosureDetected(object[] parameter)
+        {
+            throw new NotImplementedException(nameof(EnclosureDetected));
         }
 
         #endregion

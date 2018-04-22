@@ -1,10 +1,5 @@
 ﻿using MonoBrickFirmware.Movement;
 using MonoBrickFirmware.Sensors;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BrickSolution.Logic
 {
@@ -18,10 +13,6 @@ namespace BrickSolution.Logic
         #region Sensors
         public static SensorPort iRSensorPort = SensorPort.In1;
         public static SensorPort colorSensorPort = SensorPort.In2;
-        #endregion
-
-        #region
-        public static int tableEndDistance = 30;
         #endregion
 
         #region Error Messages
