@@ -1,4 +1,5 @@
-﻿using MonoBrickFirmware.Movement;
+﻿using MonoBrickFirmware.Display;
+using MonoBrickFirmware.Movement;
 using MonoBrickFirmware.Sensors;
 using System;
 
@@ -10,50 +11,53 @@ namespace BrickSolution.Logic
     /// </summary>
     public class Robot
     {
-        #region Constructor
-
         /// <summary>
         /// privat constructor thats used in the implemented
         /// singleton pattern
         /// </summary>
-        private Robot()
+        public static void InitRobot()
         {
-            this.LeftWheel = new Motor(Constants.leftLargeMotorPort);
-            this.RightWheel = new Motor(Constants.rightLargeMotorPort);
+            LeftTrack = new Motor(Constants.leftTrackPort);
+            RightTrack = new Motor(Constants.rightTrackPort);
+            
+            ColorSensor = new EV3ColorSensor(Constants.colorSensorPort);
 
-            this.IRSensor = new EV3IRSensor(Constants.iRSensorPort);
-            this.ColorSensor = new EV3ColorSensor(Constants.colorSensorPort);
+            GrapplerState = Enumerations.GrapplerState.Open;
+            GrapplerPosition = Enumerations.GrapplerPosition.Down;
+            FoodState = Enumerations.FoodState.Searching;
+
+            IsInitialized = true;
         }
-
-        #endregion
-
-        #region Singleton Pattern
-
-        /// <summary>
-        /// field that holds the one and only instance (or null before first call)
-        /// to the <see cref="Robot"/> class
-        /// </summary>
-        private static Robot instance = null;
-
-        /// <summary>
-        /// returns the instance of the Robot class (singleton implementation)
-        /// </summary>
-        /// <returns>
-        /// an instance of <see cref="Robot"/>
-        /// </returns>
-        public static Robot GetInstance()
-        {
-            if (Robot.instance == null)
-            {
-                instance = new Robot();
-            }
-
-            return Robot.instance;
-        }
-
-        #endregion
 
         #region Properties
+
+        #region States
+
+        /// <summary>
+        /// Is used to indicate if the robot was initialized
+        /// correctly
+        /// </summary>
+        public static bool IsInitialized { get; set; }
+
+        /// <summary>
+        /// describes the position of the grappler
+        /// </summary>
+        public static Enumerations.GrapplerPosition GrapplerPosition { get; private set; }
+
+        /// <summary>
+        /// describes the state of the grappler
+        /// </summary>
+        public static Enumerations.GrapplerState GrapplerState { get; private set; }
+
+        /// <summary>
+        /// describes if the robot is carrying food or searching currently
+        /// </summary>
+        public static Enumerations.FoodState FoodState { get; private set; }
+
+        /// <summary>
+        /// describes why the robot stopped
+        /// </summary>
+        public static Enumerations.StopReason LastStopReason { get; private set; }
 
         #endregion
 
@@ -61,30 +65,26 @@ namespace BrickSolution.Logic
 
         /// <summary>
         /// holds the <see cref="Motor"/> instance to a large
-        /// EV3 motor that is responsible for the left wheel
+        /// EV3 motor that is responsible for the left track
         /// </summary>
-        private Motor LeftWheel { get; set; }
+        private static Motor LeftTrack { get; set; }
         /// <summary>
         /// holds the <see cref="Motor"/> instance to a large
-        /// EV3 motor that is responsible for the right wheel
+        /// EV3 motor that is responsible for the right track
         /// </summary>
-        private Motor RightWheel { get; set; }
+        private static Motor RightTrack { get; set; }
 
         #endregion
 
         #region Sensors
 
         /// <summary>
-        /// holds the <see cref="EV3IRSensor"/> instance for
-        /// the EV3IRSensor
-        /// </summary>
-        private EV3IRSensor IRSensor { get; set; }
-
-        /// <summary>
         /// holds the <see cref="EV3ColorSensor"/> instance
         /// for the EV3ColorSensor
         /// </summary>
-        private EV3ColorSensor ColorSensor { get; set; }
+        private static EV3ColorSensor ColorSensor { get; set; }
+
+        #endregion
 
         #endregion
 
@@ -93,24 +93,16 @@ namespace BrickSolution.Logic
         #region Public Helper
 
         /// <summary>
-        /// this method is used to smothly generate a object array.
-        /// is later used in the action taking methods of the robot
-        /// instance.
+        /// prints a specific output string to the LCD-console of
+        /// the Lego EV3 brick
         /// </summary>
-        /// <param name="parameter">
-        /// the parameters later needed in the break conditions
-        /// </param>
-        /// <returns>
-        /// object[]: a object array that consists of all passed parameters
-        /// </returns>
-        public object[] GenerateParameter(params object[] parameter)
+        /// <param name="output">the output message to the console</param>
+        public static void Print(string output)
         {
-            return parameter;
+            LcdConsole.WriteLine("{0}", output);
         }
 
         #endregion
-
-        #region Methods
 
         #region Sensor Facades
 
@@ -120,9 +112,9 @@ namespace BrickSolution.Logic
         /// <returns>
         /// int: the current colorId seen by the EV3ColorSensor
         /// </returns>
-        public int GetColorId()
+        public static int GetColorId()
         {
-            return this.ColorSensor.Read();
+            return ColorSensor.Read();
         }
 
         /// <summary>
@@ -131,21 +123,9 @@ namespace BrickSolution.Logic
         /// <returns>
         /// string: the current color name seen by the EV3ColorSensor
         /// </returns>
-        public string GetColorName()
+        public static string GetColorName()
         {
-            return this.ColorSensor.ReadAsString();
-        }
-
-        /// <summary>
-        /// returns the current distance between the IRSensor and
-        /// the object in front of it
-        /// </summary>
-        /// <returns>
-        /// int: the distance between an object and the IRSensor (max: 100)
-        /// </returns>
-        public int GetIRDistance()
-        {
-            return this.IRSensor.ReadDistance();
+            return ColorSensor.ReadAsString();
         }
 
         #endregion
@@ -159,13 +139,13 @@ namespace BrickSolution.Logic
         /// <param name="speed">the speed with that the robot drives</param>
         /// <param name="breakCondition">when the robot should stop driving</param>
         /// <param name="parameter">the parameters for the break condition</param>
-        public void Drive(sbyte speed, Func<object[], bool> breakCondition, object[] parameter)
+        public static void Drive(sbyte speed, Func<bool> breakCondition, object[] parameter)
         {
-            this.SetWheelSpeed(speed, speed);
+            SetTracksSpeed(speed, speed);
 
             if (breakCondition != null && parameter != null)
             {
-                this.HaltWheelsWhen(breakCondition, parameter);
+                HaltTracksWhen(breakCondition);
             }
         }
 
@@ -174,21 +154,20 @@ namespace BrickSolution.Logic
         /// </summary>
         /// <param name="speed">the speed of <see cref="Motor"/>s</param>
         /// <param name="breakCondition">the condition when the rotation should stop</param>
-        public void RotateClockWise(sbyte speed, Func<object[], bool> breakCondition)
+        public static void RotateClockWise(sbyte speed, Func<bool> breakCondition)
         {
-            //TODO
             throw new NotImplementedException(nameof(RotateClockWise));
             //this.Rotate(speed, speed, breakCondition);
         }
 
         /// <summary>
         /// this method halts the two large motors that are responsible
-        /// for rotating the two main wheels that transport the robot
+        /// for rotating the two main Track that transport the robot
         /// </summary>
-        public void HaltWheels()
+        public static void HaltTracks()
         {
-            this.LeftWheel.Brake();
-            this.RightWheel.Brake();
+            LeftTrack.Brake();
+            RightTrack.Brake();
         }
 
         #endregion
@@ -196,111 +175,124 @@ namespace BrickSolution.Logic
         #region Private Logic
 
         /// <summary>
-        /// this method is responsible for halting the wheels when a certain
+        /// this method is responsible for halting the Track when a certain
         /// break condition is met
         /// </summary>
         /// <param name="breakCondition">the condition that indicates when
-        /// the wheels should halt</param>
+        /// the Track should halt</param>
         /// <param name="parameter">the parameters for the breakCondition</param>
-        private void HaltWheelsWhen(Func<object[], bool> breakCondition, object[] parameter)
+        private static void HaltTracksWhen(Func<bool> breakCondition)
         {
-            while (!breakCondition(parameter))
+            while (!breakCondition())
             {
             }
 
-            this.HaltWheels();
+            HaltTracks();
         }
 
-        private void Rotate(sbyte leftWheelSpeed, sbyte rightWheelSpeed, Func<object[], bool> breakCondition)
+        /// <summary>
+        /// rotat
+        /// </summary>
+        /// <param name="leftTrackpeed"></param>
+        /// <param name="rightTrackpeed"></param>
+        /// <param name="breakCondition"></param>
+        private static void Rotate(sbyte leftTrackpeed, sbyte rightTrackpeed, Func<bool> breakCondition)
         {
-            //TODO
             throw new NotImplementedException(nameof(Rotate));
         }
 
         /// <summary>
-        /// this methods sets the wheel speed on the two large motors that
-        /// are responsible for rotating the robots wheels
+        /// this methods sets the track speed on the two large motors that
+        /// are responsible for rotating the robots track
         /// </summary>
-        /// <param name="leftWheelSpeed">the speed for the left wheel</param>
-        /// <param name="rightWheelSpeed">the speed for the right wheel</param>
-        private void SetWheelSpeed(sbyte leftWheelSpeed, sbyte rightWheelSpeed)
+        /// <param name="leftTrackSpeed">the speed for the left Track</param>
+        /// <param name="rightTrackSpeed">the speed for the right Track</param>
+        private static void SetTracksSpeed(sbyte leftTrackSpeed, sbyte rightTrackSpeed)
         {
-            this.LeftWheel.SetSpeed(leftWheelSpeed);
-            this.RightWheel.SetSpeed(rightWheelSpeed);
+            LeftTrack.SetSpeed(leftTrackSpeed);
+            RightTrack.SetSpeed(rightTrackSpeed);
         }
 
         #endregion
 
+        #region Break-Conditions
+
         /// <summary>
-        /// this method returns a boolean indicating if a certain event has taken
-        /// place (is mostly used for triggering a.e. a motor stop)
+        /// returns a boolean indicating if a abyss is detected in
+        /// front of the robot
         /// </summary>
-        /// <param name="parameter">
-        /// parameter[0]=distance(int)
-        /// parameter[1]=whenSmallerBoolean(boolean,optional)</param>
         /// <returns>
-        /// true: a certain action should be stopped
-        /// false: the action should continue
+        /// true:  abyss was detected
+        /// false: no abyss found
         /// </returns>
-        public bool IRBreakCondition(object[] parameter)
+        public static bool AbyssDetected()
         {
-            int breakDistance = Convert.ToInt32(parameter[0]);
-            bool whenSmaller = parameter.Length >= 2 ? Convert.ToBoolean(parameter[1]) : false;
+            throw new NotImplementedException(nameof(AbyssDetected));
+        }
 
-            int iRDistance = this.GetIRDistance();
-            
-            MonoBrickFirmware.Display.LcdConsole
-                .WriteLine("{0} {1} {2}", iRDistance, breakDistance, whenSmaller);
+        /// <summary>
+        /// returns a boolean indicating if a obstacle is detected
+        /// in front of the robot
+        /// </summary>
+        /// <returns>
+        /// true:  a obstacle is in front of the robot
+        /// false: no obstacle found
+        /// </returns>
+        public static bool ObstacleDetected()
+        {
+            throw new NotImplementedException(nameof(ObstacleDetected));
+        }
 
-            if (iRDistance > breakDistance)
-            {
-                return whenSmaller == false ? true : false;
-            }
-            else
-            {
-                return whenSmaller == true ? true : false;
-            }
+        /// <summary>
+        /// returns a boolean indicating if a foodplace was found
+        /// in front of the robot
+        /// </summary>
+        /// <returns>
+        /// true:  a food place was found
+        /// false: no food place found
+        /// </returns>
+        public static bool FoodplaceDetected()
+        {
+            throw new NotImplementedException(nameof(FoodplaceDetected));
+        }
+
+        /// <summary>
+        /// returns a boolean indicating if a single bood brick
+        /// is in front of the robot
+        /// </summary>
+        /// <returns>
+        /// true:  a food brick was found in front of the robot
+        /// false: no food brick in front of the robot
+        /// </returns>
+        public static bool SingleFoodDetected()
+        {
+            throw new NotImplementedException(nameof(SingleFoodDetected));
+        }
+
+        /// <summary>
+        /// returns a boolean indicating if there's a enclosure in front
+        /// of the robot
+        /// </summary>
+        /// <returns>
+        /// true:  there's a enclosure in front of the robot
+        /// false: no enclosure in front of the robot
+        /// </returns>
+        public static bool EnclosureDetected()
+        {
+            throw new NotImplementedException(nameof(EnclosureDetected));
         }
 
         /// <summary>
         /// this method returns an boolean indicating if a certain action
         /// should be stopped
         /// </summary>
-        /// <param name="parameter">
-        /// parameter[0]=milliseconds(int)
-        /// parameter[1]=startTime(DateTime)</param>
         /// <returns>
         /// true: a certain action should be stopped
         /// false: the action should continue
         /// </returns>
-        public bool TimerBreakCondition(object[] parameter)
+        public bool TimerBreakCondition()
         {
-            int milliseconds = Convert.ToInt32(parameter[0]);
-            DateTime startTime = (DateTime)parameter[1];
-
-            TimeSpan difference = DateTime.Now - startTime;
-
-            return difference.TotalMilliseconds >= milliseconds;
-        }
-
-        /// <summary>
-        /// this method returns an boolean indicating if a certain action
-        /// should be stopped
-        /// </summary>
-        /// <param name="parameter">
-        /// parameters[0]=colorBreak(int)</param>
-        /// <returns></returns>
-        public bool ColorBreakConditions(object[] parameter)
-        {
-            int colorBreak = Convert.ToInt32(parameter[0]);
-            int colorSensor = this.GetColorId();
-
-            bool colorDif = colorBreak == colorSensor ? true : false;
-
-            MonoBrickFirmware.Display.LcdConsole
-                .WriteLine("{0} {1} {2}", colorBreak, colorSensor, colorDif);
-
-            return colorDif;
+            throw new NotImplementedException(nameof(TimerBreakCondition));
         }
 
         #endregion
