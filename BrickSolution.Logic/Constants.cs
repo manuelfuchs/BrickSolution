@@ -6,12 +6,11 @@ namespace BrickSolution.Logic
     internal static class Constants
     {
         #region Motors
-        public static MotorPort leftLargeMotorPort = MotorPort.OutA;
-        public static MotorPort rightLargeMotorPort = MotorPort.OutD;
+        public static MotorPort leftTrackPort = MotorPort.OutA;
+        public static MotorPort rightTrackPort = MotorPort.OutD;
         #endregion
 
         #region Sensors
-        public static SensorPort iRSensorPort = SensorPort.In1;
         public static SensorPort colorSensorPort = SensorPort.In2;
         #endregion
 

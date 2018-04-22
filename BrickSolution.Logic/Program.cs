@@ -11,14 +11,14 @@ namespace BrickSolution.Logic
             try
             {
                 Robot.InitRobot();
-                
-                
+
+                throw new NotImplementedException("robot logic");
             }
             catch (Exception e)
             {
                 if (Robot.IsInitialized)
                 {
-                    Robot.HaltWheels();
+                    Robot.HaltTracks();
                 }
                 else
                 {
