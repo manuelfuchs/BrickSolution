@@ -15,6 +15,10 @@ namespace BrickSolution.Logic
         public static SensorPort colorSensorPort = SensorPort.In2;
         #endregion
 
+        #region
+        public static int LcdErrorDuration = 15000;
+        #endregion
+
         #region Error Messages
         public static string INITIALIZE_ERROR = "SOMETHING WENT WRONG WHILE INITLIZING";
         #endregion

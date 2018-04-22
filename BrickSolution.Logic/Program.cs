@@ -34,6 +34,7 @@ namespace BrickSolution.Logic
 
                 LcdConsole.WriteLine("{0}", e.Message);
                 Thread.Sleep(15000);
+                Thread.Sleep(Constants.LcdErrorDuration);
             }
         }
     }
