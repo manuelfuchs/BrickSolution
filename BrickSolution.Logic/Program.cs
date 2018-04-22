@@ -8,16 +8,14 @@ namespace BrickSolution.Logic
     {
         public static void Main(string[] args)
         {
-            Robot robot = null;
-
             try
             {
-                robot = Robot.GetInstance();
+                Robot.InitRobot();
                 
                 //start debug code
                 for (int cunt = 0; cunt < 1000; cunt++)
                 {
-                    LcdConsole.WriteLine("{0}", robot.GetColorName());
+                    LcdConsole.WriteLine("{0}", Robot.GetColorName());
                 }
                 //end debug code
 
@@ -25,9 +23,13 @@ namespace BrickSolution.Logic
             }
             catch (Exception e)
             {
-                if (robot != null)
+                if (Robot.IsInitialized)
                 {
-                    robot.HaltWheels();
+                    Robot.HaltWheels();
+                }
+                else
+                {
+                    LcdConsole.WriteLine("{0}", Constants.INITIALIZE_ERROR);
                 }
 
                 LcdConsole.WriteLine("{0}", e.Message);

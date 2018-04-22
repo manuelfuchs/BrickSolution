@@ -23,5 +23,9 @@ namespace BrickSolution.Logic
         #region
         public static int tableEndDistance = 30;
         #endregion
+
+        #region Error Messages
+        public static string INITIALIZE_ERROR = "SOMETHING WENT WRONG WHILE INITLIZING";
+        #endregion
     }
 }
