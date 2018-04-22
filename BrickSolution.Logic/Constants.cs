@@ -1,27 +1,25 @@
 ﻿using MonoBrickFirmware.Movement;
 using MonoBrickFirmware.Sensors;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BrickSolution.Logic
 {
     internal static class Constants
     {
         #region Motors
-        public static MotorPort leftLargeMotorPort = MotorPort.OutA;
-        public static MotorPort rightLargeMotorPort = MotorPort.OutD;
+        public static MotorPort leftTrackPort = MotorPort.OutA;
+        public static MotorPort rightTrackPort = MotorPort.OutD;
         #endregion
 
         #region Sensors
-        public static SensorPort iRSensorPort = SensorPort.In1;
         public static SensorPort colorSensorPort = SensorPort.In2;
         #endregion
 
         #region
-        public static int tableEndDistance = 30;
+        public static int LcdErrorDuration = 15000;
+        #endregion
+
+        #region Error Messages
+        public static string INITIALIZE_ERROR_MSG = "SOMETHING WENT WRONG WHILE INITLIZING";
         #endregion
     }
 }
