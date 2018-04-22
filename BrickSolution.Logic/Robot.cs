@@ -22,16 +22,44 @@ namespace BrickSolution.Logic
             IRSensor = new EV3IRSensor(Constants.iRSensorPort);
             ColorSensor = new EV3ColorSensor(Constants.colorSensorPort);
 
+            GrapplerState = Enumerations.GrapplerState.Open;
+            GrapplerPosition = Enumerations.GrapplerPosition.Down;
+            FoodState = Enumerations.FoodState.Searching;
+
             IsInitialized = true;
         }
 
         #region Properties
-        
+
+        #region States
+
         /// <summary>
         /// Is used to indicate if the robot was initialized
         /// correctly
         /// </summary>
         public static bool IsInitialized { get; set; }
+
+        /// <summary>
+        /// describes the position of the grappler
+        /// </summary>
+        public static Enumerations.GrapplerPosition GrapplerPosition { get; private set; }
+
+        /// <summary>
+        /// describes the state of the grappler
+        /// </summary>
+        public static Enumerations.GrapplerState GrapplerState { get; private set; }
+
+        /// <summary>
+        /// describes if the robot is carrying food or searching currently
+        /// </summary>
+        public static Enumerations.FoodState FoodState { get; private set; }
+
+        /// <summary>
+        /// describes why the robot stopped
+        /// </summary>
+        public static Enumerations.StopReason LastStopReason { get; private set; }
+
+        #endregion
 
         #region Motors
 
