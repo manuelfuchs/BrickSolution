@@ -20,7 +20,7 @@ namespace BrickSolution.Logic
         #endregion
 
         #region Error Messages
-        public static string INITIALIZE_ERROR = "SOMETHING WENT WRONG WHILE INITLIZING";
+        public static string INITIALIZE_ERROR_MSG = "SOMETHING WENT WRONG WHILE INITLIZING";
         #endregion
     }
 }

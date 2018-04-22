@@ -12,14 +12,7 @@ namespace BrickSolution.Logic
             {
                 Robot.InitRobot();
                 
-                //start debug code
-                for (int cunt = 0; cunt < 1000; cunt++)
-                {
-                    LcdConsole.WriteLine("{0}", Robot.GetColorName());
-                }
-                //end debug code
-
-                //robot.Drive(50, robot.IRBreakCondition, robot.GenerateParameter(Constants.tableEndDistance));
+                
             }
             catch (Exception e)
             {
@@ -29,11 +22,10 @@ namespace BrickSolution.Logic
                 }
                 else
                 {
-                    LcdConsole.WriteLine("{0}", Constants.INITIALIZE_ERROR);
+                    Robot.Print(Constants.INITIALIZE_ERROR_MSG);
                 }
 
-                LcdConsole.WriteLine("{0}", e.Message);
-                Thread.Sleep(15000);
+                Robot.Print(e.Message);
                 Thread.Sleep(Constants.LcdErrorDuration);
             }
         }

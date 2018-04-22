@@ -99,6 +99,16 @@ namespace BrickSolution.Logic
         #region Public Helper
 
         /// <summary>
+        /// prints a specific output string to the LCD-console of
+        /// the Lego EV3 brick
+        /// </summary>
+        /// <param name="output">the output message to the console</param>
+        public static void Print(string output)
+        {
+            LcdConsole.WriteLine("{0}", output);
+        }
+
+        /// <summary>
         /// this method is used to smothly generate a object array.
         /// is later used in the action taking methods of the robot
         /// instance.
