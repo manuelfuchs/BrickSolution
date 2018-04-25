@@ -11,8 +11,6 @@ namespace BrickSolution.Logic
     /// </summary>
     public class Robot
     {
-       
-
         #region Properties
 
         #region States
@@ -165,8 +163,8 @@ namespace BrickSolution.Logic
         #region Private Logic
 
         /// <summary>
-        /// privat constructor thats used in the implemented
-        /// singleton pattern
+        /// this method initializes all needed motors and sensors
+        /// to control the robot accordingly
         /// </summary>
         public static void InitRobot()
         {
@@ -181,6 +179,8 @@ namespace BrickSolution.Logic
             FoodState = Enumerations.FoodState.Searching;
 
             IsInitialized = true;
+
+            WaitToFullyBootProgram();
         }
 
         /// <summary>
@@ -210,6 +210,17 @@ namespace BrickSolution.Logic
             throw new NotImplementedException(nameof(Rotate));
         }
 
+        private static void WaitToFullyBootProgram()
+        {
+            DateTime loadStart = DateTime.Now;
+
+            Robot.Print($"Wait for {Constants.ProgramBootTime} seconds");
+
+            while (!TimerBreakCondition(loadStart, Constants.ProgramBootTime))
+            {
+            }
+        }
+
         /// <summary>
         /// this methods sets the track speed on the two large motors that
         /// are responsible for rotating the robots track
@@ -227,7 +238,7 @@ namespace BrickSolution.Logic
         #region Break-Conditions
 
         /// <summary>
-        /// returns a boolean indicating if a abyss is detected in
+        /// returns a boolean indicating if an abyss is detected in
         /// front of the robot
         /// </summary>
         /// <returns>
@@ -240,7 +251,7 @@ namespace BrickSolution.Logic
         }
 
         /// <summary>
-        /// returns a boolean indicating if a obstacle is detected
+        /// returns a boolean indicating if an obstacle is detected
         /// in front of the robot
         /// </summary>
         /// <returns>
@@ -266,7 +277,7 @@ namespace BrickSolution.Logic
         }
 
         /// <summary>
-        /// returns a boolean indicating if a single bood brick
+        /// returns a boolean indicating if a single fwood brick
         /// is in front of the robot
         /// </summary>
         /// <returns>
@@ -299,9 +310,9 @@ namespace BrickSolution.Logic
         /// true: a certain action should be stopped
         /// false: the action should continue
         /// </returns>
-        public bool TimerBreakCondition()
+        public static bool TimerBreakCondition(DateTime startTime, int duration)
         {
-            throw new NotImplementedException(nameof(TimerBreakCondition));
+            return (DateTime.Now - startTime).TotalMilliseconds >= duration;
         }
 
         #endregion

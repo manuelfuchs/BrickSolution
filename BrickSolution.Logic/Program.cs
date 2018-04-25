@@ -12,7 +12,7 @@ namespace BrickSolution.Logic
             {
                 Robot.InitRobot();
 
-                throw new NotImplementedException("robot logic");
+                throw new NotImplementedException(nameof(NotImplementedException));
             }
             catch (Exception e)
             {
