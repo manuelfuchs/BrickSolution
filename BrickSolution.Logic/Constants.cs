@@ -16,6 +16,7 @@ namespace BrickSolution.Logic
 
         #region
         public static int LcdErrorDuration = 15000;
+        public static int ProgramBootTime = 10000;
         #endregion
 
         #region Error Messages
