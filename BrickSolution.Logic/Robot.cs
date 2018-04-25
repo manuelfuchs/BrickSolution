@@ -1,7 +1,9 @@
 ﻿using MonoBrickFirmware.Display;
 using MonoBrickFirmware.Movement;
 using MonoBrickFirmware.Sensors;
+using MonoBrickFirmware.UserInput;
 using System;
+using System.Threading;
 
 namespace BrickSolution.Logic
 {
@@ -88,6 +90,14 @@ namespace BrickSolution.Logic
         public static void Print(string output)
         {
             LcdConsole.WriteLine("{0}", output);
+        }
+
+        /// <summary>
+        /// prints a empty line seperator to the ev3 lcd console
+        /// </summary>
+        public static void PrintEmptyLine()
+        {
+            LcdConsole.WriteLine("{0}", "");
         }
 
         #endregion
@@ -181,23 +191,45 @@ namespace BrickSolution.Logic
             IsInitialized = true;
 
             WaitToFullyBootProgram();
+            PrintEmptyLine();
             WaitForButtonPress();
         }
 
+        /// <summary>
+        /// waits a certain amount of time to let the program fully boot
+        /// </summary>
         private static void WaitToFullyBootProgram()
         {
             DateTime loadStart = DateTime.Now;
 
-            Robot.Print($"Wait for {Constants.ProgramBootTime} seconds");
+            Robot.Print($"Wait for {Constants.programBootTime} milliseconds");
 
-            while (!TimerBreakCondition(loadStart, Constants.ProgramBootTime))
+            while (!TimerBreakCondition(loadStart, Constants.programBootTime))
             {
             }
         }
 
+        /// <summary>
+        /// waits until the operator presses the middle-button to
+        /// start the competition mode
+        /// </summary>
         private static void WaitForButtonPress()
         {
-            throw new NotImplementedException();
+            bool continueWithCompetition = false;
+
+            ButtonEvents btnEvents = new ButtonEvents();
+
+            btnEvents.EnterPressed += () => {
+                continueWithCompetition = true;
+            };
+
+            Robot.Print(Constants.competitionStartUserMessagePart1);
+            Robot.Print(Constants.competitionStartUserMessagePart2);
+
+            while (!continueWithCompetition)
+            {
+                Thread.Sleep(Constants.samplingRate);
+            }
         }
 
         /// <summary>

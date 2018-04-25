@@ -22,11 +22,11 @@ namespace BrickSolution.Logic
                 }
                 else
                 {
-                    Robot.Print(Constants.INITIALIZE_ERROR_MSG);
+                    Robot.Print(Constants.initializeErrorMessage);
                 }
 
                 Robot.Print(e.Message);
-                Thread.Sleep(Constants.LcdErrorDuration);
+                Thread.Sleep(Constants.lcdErrorDuration);
             }
         }
     }
