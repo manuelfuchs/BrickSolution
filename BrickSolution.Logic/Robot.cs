@@ -181,6 +181,23 @@ namespace BrickSolution.Logic
             IsInitialized = true;
 
             WaitToFullyBootProgram();
+            WaitForButtonPress();
+        }
+
+        private static void WaitToFullyBootProgram()
+        {
+            DateTime loadStart = DateTime.Now;
+
+            Robot.Print($"Wait for {Constants.ProgramBootTime} seconds");
+
+            while (!TimerBreakCondition(loadStart, Constants.ProgramBootTime))
+            {
+            }
+        }
+
+        private static void WaitForButtonPress()
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -208,17 +225,6 @@ namespace BrickSolution.Logic
         private static void Rotate(sbyte leftTrackpeed, sbyte rightTrackpeed, Func<bool> breakCondition)
         {
             throw new NotImplementedException(nameof(Rotate));
-        }
-
-        private static void WaitToFullyBootProgram()
-        {
-            DateTime loadStart = DateTime.Now;
-
-            Robot.Print($"Wait for {Constants.ProgramBootTime} seconds");
-
-            while (!TimerBreakCondition(loadStart, Constants.ProgramBootTime))
-            {
-            }
         }
 
         /// <summary>
