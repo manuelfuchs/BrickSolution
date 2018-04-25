@@ -7,11 +7,16 @@ namespace BrickSolution.Logic
     {
         #region Motors
         public static MotorPort leftTrackPort = MotorPort.OutA;
-        public static MotorPort rightTrackPort = MotorPort.OutD;
+        public static MotorPort rightTrackPort = MotorPort.OutB;
+        public static MotorPort grapplerPort = MotorPort.OutD;
         #endregion
 
         #region Sensors
+        public static SensorPort pressureSensorPort = SensorPort.In1;
         public static SensorPort colorSensorPort = SensorPort.In2;
+        public static SensorPort ev3colorSensorPort = SensorPort.In3;
+
+
         #endregion
 
         #region

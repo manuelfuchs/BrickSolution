@@ -11,23 +11,7 @@ namespace BrickSolution.Logic
     /// </summary>
     public class Robot
     {
-        /// <summary>
-        /// privat constructor thats used in the implemented
-        /// singleton pattern
-        /// </summary>
-        public static void InitRobot()
-        {
-            LeftTrack = new Motor(Constants.leftTrackPort);
-            RightTrack = new Motor(Constants.rightTrackPort);
-            
-            ColorSensor = new EV3ColorSensor(Constants.colorSensorPort);
-
-            GrapplerState = Enumerations.GrapplerState.Open;
-            GrapplerPosition = Enumerations.GrapplerPosition.Down;
-            FoodState = Enumerations.FoodState.Searching;
-
-            IsInitialized = true;
-        }
+       
 
         #region Properties
 
@@ -73,6 +57,12 @@ namespace BrickSolution.Logic
         /// EV3 motor that is responsible for the right track
         /// </summary>
         private static Motor RightTrack { get; set; }
+        /// <summary>
+        /// holds the <see cref="Motor"/> instance to a 
+        /// EV3 motor that is responsible for the grappler
+        /// </summary>
+        private static Motor GrapplerMotor { get; set; }
+
 
         #endregion
 
@@ -173,6 +163,25 @@ namespace BrickSolution.Logic
         #endregion
 
         #region Private Logic
+
+        /// <summary>
+        /// privat constructor thats used in the implemented
+        /// singleton pattern
+        /// </summary>
+        public static void InitRobot()
+        {
+            LeftTrack = new Motor(Constants.leftTrackPort);
+            RightTrack = new Motor(Constants.rightTrackPort);
+            GrapplerMotor = new Motor(Constants.grapplerPort);
+
+            ColorSensor = new EV3ColorSensor(Constants.colorSensorPort);
+
+            GrapplerState = Enumerations.GrapplerState.Open;
+            GrapplerPosition = Enumerations.GrapplerPosition.Down;
+            FoodState = Enumerations.FoodState.Searching;
+
+            IsInitialized = true;
+        }
 
         /// <summary>
         /// this method is responsible for halting the Track when a certain
