@@ -11,8 +11,6 @@ namespace BrickSolution.Logic
     /// </summary>
     public class Robot
     {
-       
-
         #region Properties
 
         #region States
@@ -165,8 +163,8 @@ namespace BrickSolution.Logic
         #region Private Logic
 
         /// <summary>
-        /// privat constructor thats used in the implemented
-        /// singleton pattern
+        /// this method initializes all needed motors and sensors
+        /// to control the robot accordingly
         /// </summary>
         public static void InitRobot()
         {
@@ -181,6 +179,8 @@ namespace BrickSolution.Logic
             FoodState = Enumerations.FoodState.Searching;
 
             IsInitialized = true;
+
+            WaitToFullyBootProgram();
         }
 
         /// <summary>
@@ -214,9 +214,10 @@ namespace BrickSolution.Logic
         {
             DateTime loadStart = DateTime.Now;
 
-            while (TimerBreakCondition(loadStart, Constants.ProgramBootTime))
-            {
+            Robot.Print($"Wait for {Constants.ProgramBootTime} seconds");
 
+            while (!TimerBreakCondition(loadStart, Constants.ProgramBootTime))
+            {
             }
         }
 
@@ -311,7 +312,7 @@ namespace BrickSolution.Logic
         /// </returns>
         public static bool TimerBreakCondition(DateTime startTime, int duration)
         {
-            throw new NotImplementedException(nameof(TimerBreakCondition));
+            return (DateTime.Now - startTime).TotalMilliseconds >= duration;
         }
 
         #endregion
