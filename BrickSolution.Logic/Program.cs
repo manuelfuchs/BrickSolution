@@ -18,9 +18,10 @@ namespace BrickSolution.Logic
                 switch (Robot.LastStopReason)
                 {
                     case StopReason.AbyssDetected:
-                        Robot.RotateClockWise(Constants.RotationSpeed, Constants.RotationDuration);
+                        Robot.RotateClockWise(RotationMode.OtherMode);
                         break;
                     case StopReason.ObstacleDetected:
+                        Robot.RotateClockWise(RotationMode.OtherMode);
                         break;
                     case StopReason.FoodplaceDetected:
                         break;

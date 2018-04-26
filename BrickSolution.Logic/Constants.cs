@@ -25,7 +25,7 @@ namespace BrickSolution.Logic
         public static string InitializeErrorMessage
             = "SOMETHING WENT WRONG WHILE INITLIZING";
         public static string ClosingMessage
-            = "programs finished -> quitting now";
+            = "programs finished -> quitting";
         #endregion
 
         #region Values
@@ -33,8 +33,8 @@ namespace BrickSolution.Logic
         public static int LcdErrorDuration = 15000;
         public static int ProgramBootTime = 10000;
         public static int SamplingRate = 250;
-        public static sbyte RotationSpeed = 75;
-        public static int RotationDuration = 1000;
+        public static sbyte RotationSpeed = 40;
+        public static int RotationDuration = 750;
         #endregion
     }
 }

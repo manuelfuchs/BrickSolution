@@ -113,9 +113,10 @@ namespace BrickSolution.Logic
         /// </summary>
         public static void SearchFood()
         {
-            SetWheelSpeed(Constants.DriveForwardSpeed, Constants.DriveForwardSpeed);
+            Print($"searching for food!");
 
-#if !DEBUG
+            SetWheelSpeed(Constants.DriveForwardSpeed, Constants.DriveForwardSpeed);
+            
             while (!AbyssDetected()
                 && !ObstacleDetected()
                 && !FoodplaceDetected()
@@ -123,20 +124,6 @@ namespace BrickSolution.Logic
                 && !EnclosureDetected())
             {
             }
-#endif
-#if DEBUG
-            DateTime startTime = DateTime.Now;
-
-            while (!TimerBreakCondition(startTime, 10000))
-            {
-            }
-
-            for (int i = 0; i < 15; i++)
-            {
-                RotateClockWise(Constants.RotationSpeed, Constants.RotationDuration);
-                Thread.Sleep(1000);
-            }
-#endif
 
             HaltTracks();
         }
@@ -144,16 +131,27 @@ namespace BrickSolution.Logic
         /// <summary>
         /// lets the robot rotate in a certain speed and a certain duration
         /// </summary>
-        /// <param name="rotationSpeed">the speed of the rotation</param>
-        /// <param name="rotationDuration">the duration of the rotation</param>
-        public static void RotateClockWise(sbyte rotationSpeed, int rotationDuration)
+        /// <param name="rotationMode"></param>
+        public static void RotateClockWise(RotationMode rotationMode)
         {
-            SetWheelSpeed(rotationSpeed, Convert.ToSByte(-rotationSpeed));
+            Print($"rotating clockwise in mode {rotationMode}");
 
-            DateTime startTime = DateTime.Now;
+            SetWheelSpeed(Constants.RotationSpeed,
+                          Convert.ToSByte(-Constants.RotationSpeed));
 
-            while (!TimerBreakCondition(startTime, rotationDuration))
+            if (rotationMode == RotationMode.TimerMode)
             {
+                DateTime startTime = DateTime.Now;
+
+                while (!TimerBreakCondition(startTime, Constants.RotationDuration))
+                {
+                }
+            }
+            else
+            {
+                while (AbyssDetected() || ObstacleDetected())
+                {
+                }
             }
 
             HaltTracks();
@@ -169,9 +167,9 @@ namespace BrickSolution.Logic
             RightTrack.Brake();
         }
 
-#endregion
+        #endregion
 
-#region Public Helper
+        #region Public Helper
 
         /// <summary>
         /// prints a specific output string to the LCD-console of
@@ -191,9 +189,9 @@ namespace BrickSolution.Logic
             LcdConsole.WriteLine("{0}", "");
         }
 
-#endregion
+        #endregion
 
-#region Sensor Facades
+        #region Sensor Facades
 
         /// <summary>
         /// returns the current colorId of the EV3ColorSensor
@@ -217,9 +215,9 @@ namespace BrickSolution.Logic
             return ColorSensor.ReadAsString();
         }
 
-#endregion
+        #endregion
 
-#region Private Logic
+        #region Private Logic
         
         /// <summary>
         /// sets the wheel speed of the two tracks of the robot
@@ -292,8 +290,8 @@ namespace BrickSolution.Logic
         }
 
         /// <summary>
-        /// returns a boolean indicating if an obstacle is detected
-        /// in front of the robot
+        /// returns a boolean indicating if an obstacle (enemy robot
+        /// or animal) is detected in front of the robot
         /// </summary>
         /// <returns>
         /// true:  a obstacle is in front of the robot
@@ -392,8 +390,8 @@ namespace BrickSolution.Logic
             return (DateTime.Now - startTime).TotalMilliseconds >= duration;
         }
 
-#endregion
+        #endregion
 
-#endregion
+        #endregion
     }
 }
