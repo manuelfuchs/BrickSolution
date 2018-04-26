@@ -71,4 +71,17 @@
         /// </summary>
         EnclosureDetected
     }
+
+    public enum RotationMode
+    {
+        /// <summary>
+        /// uses the constant data in the constants file to instruct
+        /// the rotation
+        /// </summary>
+        TimerMode,
+        /// <summary>
+        /// used to evade the abyss, a enemy robot or different animals
+        /// </summary>
+        OtherMode
+    }
 }

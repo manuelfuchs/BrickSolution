@@ -1,13 +1,16 @@
-﻿using MonoBrickFirmware.Display;
+﻿using BrickSolution.Logic.Enumerations;
+using MonoBrickFirmware.Display;
 using MonoBrickFirmware.Movement;
 using MonoBrickFirmware.Sensors;
+using MonoBrickFirmware.UserInput;
 using System;
+using System.Threading;
 
 namespace BrickSolution.Logic
 {
     /// <summary>
-    /// the singleton <see cref="Robot"/> instance holds all necessary methods
-    /// to control it correctly through the SPS tasks
+    /// the class consists of static members that are responsible
+    /// for controlling a EV3 custom build robot
     /// </summary>
     public class Robot
     {
@@ -77,6 +80,94 @@ namespace BrickSolution.Logic
         #endregion
 
         #region Methods
+        
+        #region Public Logic
+
+        /// <summary>
+        /// this method initializes all needed motors and sensors
+        /// to control the robot accordingly
+        /// </summary>
+        public static void InitRobot()
+        {
+            LeftTrack = new Motor(Constants.LeftTrackPort);
+            RightTrack = new Motor(Constants.RightTrackPort);
+            GrapplerMotor = new Motor(Constants.GrapplerPort);
+
+            ColorSensor = new EV3ColorSensor(Constants.ColorSensorPort);
+
+            GrapplerState = GrapplerState.Open;
+            GrapplerPosition = GrapplerPosition.Down;
+            FoodState = FoodState.Searching;
+
+            IsInitialized = true;
+
+            WaitToFullyBootProgram();
+            PrintEmptyLine();
+            WaitForButtonPress();
+        }
+
+        /// <summary>
+        /// drives into a certain direction until something is detected.
+        /// if something is detected, the robot stops and waits for
+        /// further instructions
+        /// </summary>
+        public static void SearchFood()
+        {
+            Print($"searching for food!");
+
+            SetWheelSpeed(Constants.DriveForwardSpeed, Constants.DriveForwardSpeed);
+            
+            while (!AbyssDetected()
+                && !ObstacleDetected()
+                && !FoodplaceDetected()
+                && !SingleFoodDetected()
+                && !EnclosureDetected())
+            {
+            }
+
+            HaltTracks();
+        }
+
+        /// <summary>
+        /// lets the robot rotate in a certain speed and a certain duration
+        /// </summary>
+        /// <param name="rotationMode"></param>
+        public static void RotateClockWise(RotationMode rotationMode)
+        {
+            Print($"rotating clockwise in mode {rotationMode}");
+
+            SetWheelSpeed(Constants.RotationSpeed,
+                          Convert.ToSByte(-Constants.RotationSpeed));
+
+            if (rotationMode == RotationMode.TimerMode)
+            {
+                DateTime startTime = DateTime.Now;
+
+                while (!TimerBreakCondition(startTime, Constants.RotationDuration))
+                {
+                }
+            }
+            else
+            {
+                while (AbyssDetected() || ObstacleDetected())
+                {
+                }
+            }
+
+            HaltTracks();
+        }
+
+        /// <summary>
+        /// this method halts the two large motors that are responsible
+        /// for rotating the two main Track that transport the robot
+        /// </summary>
+        public static void HaltTracks()
+        {
+            LeftTrack.Brake();
+            RightTrack.Brake();
+        }
+
+        #endregion
 
         #region Public Helper
 
@@ -88,6 +179,14 @@ namespace BrickSolution.Logic
         public static void Print(string output)
         {
             LcdConsole.WriteLine("{0}", output);
+        }
+
+        /// <summary>
+        /// prints a empty line seperator to the ev3 lcd console
+        /// </summary>
+        public static void PrintEmptyLine()
+        {
+            LcdConsole.WriteLine("{0}", "");
         }
 
         #endregion
@@ -118,130 +217,55 @@ namespace BrickSolution.Logic
 
         #endregion
 
-        #region Public Logic
-
-        /// <summary>
-        /// this method lets the robot drive in a certain speed until a certain
-        /// breakCondition
-        /// </summary>
-        /// <param name="speed">the speed with that the robot drives</param>
-        /// <param name="breakCondition">when the robot should stop driving</param>
-        /// <param name="parameter">the parameters for the break condition</param>
-        public static void Drive(sbyte speed, Func<bool> breakCondition, object[] parameter)
-        {
-            SetTracksSpeed(speed, speed);
-
-            if (breakCondition != null && parameter != null)
-            {
-                HaltTracksWhen(breakCondition);
-            }
-        }
-
-        /// <summary>
-        /// this method lets the robot rotate clockwise
-        /// </summary>
-        /// <param name="speed">the speed of <see cref="Motor"/>s</param>
-        /// <param name="breakCondition">the condition when the rotation should stop</param>
-        public static void RotateClockWise(sbyte speed, Func<bool> breakCondition)
-        {
-            throw new NotImplementedException(nameof(RotateClockWise));
-            //this.Rotate(speed, speed, breakCondition);
-        }
-
-        /// <summary>
-        /// this method halts the two large motors that are responsible
-        /// for rotating the two main Track that transport the robot
-        /// </summary>
-        public static void HaltTracks()
-        {
-            LeftTrack.Brake();
-            RightTrack.Brake();
-        }
-
-        #endregion
-
         #region Private Logic
-
+        
         /// <summary>
-        /// this method initializes all needed motors and sensors
-        /// to control the robot accordingly
+        /// sets the wheel speed of the two tracks of the robot
         /// </summary>
-        public static void InitRobot()
+        /// <param name="leftTrackSpeed">speed for the left track</param>
+        /// <param name="rightTrackWheelSpeed">speed for the right track</param>
+        private static void SetWheelSpeed(sbyte leftTrackSpeed, sbyte rightTrackWheelSpeed)
         {
-            LeftTrack = new Motor(Constants.leftTrackPort);
-            RightTrack = new Motor(Constants.rightTrackPort);
-            GrapplerMotor = new Motor(Constants.grapplerPort);
-
-            ColorSensor = new EV3ColorSensor(Constants.colorSensorPort);
-
-            GrapplerState = Enumerations.GrapplerState.Open;
-            GrapplerPosition = Enumerations.GrapplerPosition.Down;
-            FoodState = Enumerations.FoodState.Searching;
-
-            IsInitialized = true;
-
-            WaitToFullyBootProgram();
-            WaitForButtonPress();
+            LeftTrack.SetSpeed(leftTrackSpeed);
+            RightTrack.SetSpeed(rightTrackWheelSpeed);
         }
 
+        /// <summary>
+        /// waits a certain amount of time to let the program fully boot
+        /// </summary>
         private static void WaitToFullyBootProgram()
         {
             DateTime loadStart = DateTime.Now;
 
-            Robot.Print($"Wait for {Constants.ProgramBootTime} seconds");
+            Robot.Print($"Wait for {Constants.ProgramBootTime} milliseconds");
 
             while (!TimerBreakCondition(loadStart, Constants.ProgramBootTime))
             {
             }
         }
 
+        /// <summary>
+        /// waits until the operator presses the middle-button to
+        /// start the competition mode
+        /// </summary>
         private static void WaitForButtonPress()
         {
-            throw new NotImplementedException();
-        }
+            bool continueWithCompetition = false;
 
-        /// <summary>
-        /// this method is responsible for halting the Track when a certain
-        /// break condition is met
-        /// </summary>
-        /// <param name="breakCondition">the condition that indicates when
-        /// the Track should halt</param>
-        /// <param name="parameter">the parameters for the breakCondition</param>
-        private static void HaltTracksWhen(Func<bool> breakCondition)
-        {
-            while (!breakCondition())
+            ButtonEvents btnEvents = new ButtonEvents();
+
+            btnEvents.EnterPressed += () => {
+                continueWithCompetition = true;
+            };
+
+            Robot.Print(Constants.CompetitionStartUserMessagePart1);
+            Robot.Print(Constants.CompetitionStartUserMessagePart2);
+
+            while (!continueWithCompetition)
             {
+                Thread.Sleep(Constants.SamplingRate);
             }
-
-            HaltTracks();
         }
-
-        /// <summary>
-        /// rotat
-        /// </summary>
-        /// <param name="leftTrackpeed"></param>
-        /// <param name="rightTrackpeed"></param>
-        /// <param name="breakCondition"></param>
-        private static void Rotate(sbyte leftTrackpeed, sbyte rightTrackpeed, Func<bool> breakCondition)
-        {
-            throw new NotImplementedException(nameof(Rotate));
-        }
-
-        /// <summary>
-        /// this methods sets the track speed on the two large motors that
-        /// are responsible for rotating the robots track
-        /// </summary>
-        /// <param name="leftTrackSpeed">the speed for the left Track</param>
-        /// <param name="rightTrackSpeed">the speed for the right Track</param>
-        private static void SetTracksSpeed(sbyte leftTrackSpeed, sbyte rightTrackSpeed)
-        {
-            LeftTrack.SetSpeed(leftTrackSpeed);
-            RightTrack.SetSpeed(rightTrackSpeed);
-        }
-
-        #endregion
-
-        #region Break-Conditions
 
         /// <summary>
         /// returns a boolean indicating if an abyss is detected in
@@ -253,12 +277,21 @@ namespace BrickSolution.Logic
         /// </returns>
         public static bool AbyssDetected()
         {
-            throw new NotImplementedException(nameof(AbyssDetected));
+            bool result = false;
+
+            //TODO
+
+            if (result)
+            {
+                LastStopReason = StopReason.AbyssDetected;
+            }
+
+            return result;
         }
 
         /// <summary>
-        /// returns a boolean indicating if an obstacle is detected
-        /// in front of the robot
+        /// returns a boolean indicating if an obstacle (enemy robot
+        /// or animal) is detected in front of the robot
         /// </summary>
         /// <returns>
         /// true:  a obstacle is in front of the robot
@@ -266,7 +299,16 @@ namespace BrickSolution.Logic
         /// </returns>
         public static bool ObstacleDetected()
         {
-            throw new NotImplementedException(nameof(ObstacleDetected));
+            bool result = false;
+
+            //TODO
+
+            if (result)
+            {
+                LastStopReason = StopReason.ObstacleDetected;
+            }
+
+            return result;
         }
 
         /// <summary>
@@ -279,7 +321,16 @@ namespace BrickSolution.Logic
         /// </returns>
         public static bool FoodplaceDetected()
         {
-            throw new NotImplementedException(nameof(FoodplaceDetected));
+            bool result = false;
+            
+            //TODO
+
+            if (result)
+            {
+                LastStopReason = StopReason.FoodplaceDetected;
+            }
+
+            return result;
         }
 
         /// <summary>
@@ -292,7 +343,16 @@ namespace BrickSolution.Logic
         /// </returns>
         public static bool SingleFoodDetected()
         {
-            throw new NotImplementedException(nameof(SingleFoodDetected));
+            bool result = false;
+
+            //TODO
+
+            if (result)
+            {
+                LastStopReason = StopReason.SingleFoodDetected;
+            }
+
+            return result;
         }
 
         /// <summary>
@@ -305,7 +365,16 @@ namespace BrickSolution.Logic
         /// </returns>
         public static bool EnclosureDetected()
         {
-            throw new NotImplementedException(nameof(EnclosureDetected));
+            bool result = false;
+
+            //TODO
+
+            if (result)
+            {
+                LastStopReason = StopReason.EnclosureDetected;
+            }
+
+            return result;
         }
 
         /// <summary>
