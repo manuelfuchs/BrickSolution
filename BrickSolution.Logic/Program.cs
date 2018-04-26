@@ -1,4 +1,5 @@
-﻿using MonoBrickFirmware.Display;
+﻿using BrickSolution.Logic.Enumerations;
+using MonoBrickFirmware.Display;
 using System;
 using System.Threading;
 
@@ -12,7 +13,24 @@ namespace BrickSolution.Logic
             {
                 Robot.InitRobot();
 
-                throw new NotImplementedException(nameof(NotImplementedException));
+                Robot.SearchFood();
+
+                switch (Robot.LastStopReason)
+                {
+                    case StopReason.AbyssDetected:
+                        Robot.RotateClockWise(Constants.RotationSpeed, Constants.RotationDuration);
+                        break;
+                    case StopReason.ObstacleDetected:
+                        break;
+                    case StopReason.FoodplaceDetected:
+                        break;
+                    case StopReason.SingleFoodDetected:
+                        break;
+                    case StopReason.EnclosureDetected:
+                        break;
+                    default:
+                        break;
+                }
             }
             catch (Exception e)
             {
@@ -22,11 +40,16 @@ namespace BrickSolution.Logic
                 }
                 else
                 {
-                    Robot.Print(Constants.initializeErrorMessage);
+                    Robot.Print(Constants.InitializeErrorMessage);
                 }
 
                 Robot.Print(e.Message);
-                Thread.Sleep(Constants.lcdErrorDuration);
+            }
+            finally
+            {
+                Robot.PrintEmptyLine();
+                Robot.Print(Constants.ClosingMessage);
+                Thread.Sleep(Constants.LcdErrorDuration);
             }
         }
     }

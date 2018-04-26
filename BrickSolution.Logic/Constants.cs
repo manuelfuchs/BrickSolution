@@ -6,33 +6,35 @@ namespace BrickSolution.Logic
     internal static class Constants
     {
         #region Motors
-        public static MotorPort leftTrackPort = MotorPort.OutA;
-        public static MotorPort rightTrackPort = MotorPort.OutB;
-        public static MotorPort grapplerPort = MotorPort.OutD;
+        public static MotorPort LeftTrackPort = MotorPort.OutA;
+        public static MotorPort RightTrackPort = MotorPort.OutB;
+        public static MotorPort GrapplerPort = MotorPort.OutD;
         #endregion
 
         #region Sensors
-        public static SensorPort pressureSensorPort = SensorPort.In1;
-        public static SensorPort colorSensorPort = SensorPort.In2;
-        public static SensorPort ev3colorSensorPort = SensorPort.In3;
+        public static SensorPort PressureSensorPort = SensorPort.In1;
+        public static SensorPort ColorSensorPort = SensorPort.In2;
+        public static SensorPort LegoColorSensorPort = SensorPort.In3;
         #endregion
 
-        #region LcsOutputs
-        public static string competitionStartUserMessagePart1
+        #region LcdOutputs
+        public static string CompetitionStartUserMessagePart1
             = "Press the middle button to";
-        public static string competitionStartUserMessagePart2
+        public static string CompetitionStartUserMessagePart2
             = "continue with the competition";
-        #endregion
-
-        #region
-        public static int lcdErrorDuration = 15000;
-        public static int programBootTime = 10000;
-        public static int samplingRate = 250;
-        #endregion
-
-        #region Error Messages
-        public static string initializeErrorMessage
+        public static string InitializeErrorMessage
             = "SOMETHING WENT WRONG WHILE INITLIZING";
+        public static string ClosingMessage
+            = "programs finished -> quitting now";
+        #endregion
+
+        #region Values
+        public static sbyte DriveForwardSpeed = 50;
+        public static int LcdErrorDuration = 15000;
+        public static int ProgramBootTime = 10000;
+        public static int SamplingRate = 250;
+        public static sbyte RotationSpeed = 75;
+        public static int RotationDuration = 1000;
         #endregion
     }
 }
