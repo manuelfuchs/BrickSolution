@@ -283,7 +283,7 @@ namespace BrickSolution.Logic
         {
             if (GrapplerPosition == GrapplerPosition.Up
                 && GrapplerState == GrapplerState.Closed
-                /*&& !EnclosureDetected()*/)
+                && !EnclosureDetected())
             {
                 GrapplerMotor.ResetTacho();
                 GrapplerMotor.SetSpeed(Constants.GrapplerMotorDownSpeed);
