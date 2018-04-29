@@ -37,7 +37,7 @@ namespace BrickSolution.Logic
             {
                 if (Robot.IsInitialized)
                 {
-                    Robot.HaltTracks();
+                    Robot.HaltMotors();
                 }
                 else
                 {
@@ -50,7 +50,7 @@ namespace BrickSolution.Logic
             {
                 Robot.PrintEmptyLine();
                 Robot.Print(Constants.ClosingMessage);
-                Thread.Sleep(Constants.LcdErrorDuration);
+                Thread.Sleep(Constants.LcdMessageDisplayDuration);
             }
         }
     }

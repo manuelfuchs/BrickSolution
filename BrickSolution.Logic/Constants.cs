@@ -12,7 +12,7 @@ namespace BrickSolution.Logic
         #endregion
 
         #region Sensors
-        public static SensorPort PressureSensorPort = SensorPort.In1;
+        public static SensorPort GrapplerTouchSensorPort = SensorPort.In1;
         public static SensorPort ColorSensorPort = SensorPort.In2;
         public static SensorPort LegoColorSensorPort = SensorPort.In3;
         #endregion
@@ -30,7 +30,10 @@ namespace BrickSolution.Logic
 
         #region Values
         public static sbyte DriveForwardSpeed = 50;
-        public static int LcdErrorDuration = 15000;
+        public static sbyte GrapplerMotorUpSpeed = 40;
+        public static sbyte GrapplerMotorDownSpeed = -40;
+        public static int GrapplerUpToDownTachoBoundary = -4500;
+        public static int LcdMessageDisplayDuration = 15000;
         public static int ProgramBootTime = 10000;
         public static int SamplingRate = 250;
         public static sbyte RotationSpeed = 40;

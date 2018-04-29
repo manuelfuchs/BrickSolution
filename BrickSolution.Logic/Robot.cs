@@ -22,7 +22,7 @@ namespace BrickSolution.Logic
         /// Is used to indicate if the robot was initialized
         /// correctly
         /// </summary>
-        public static bool IsInitialized { get; set; }
+        public static bool IsInitialized { get; private set; }
 
         /// <summary>
         /// describes the position of the grappler
@@ -58,6 +58,7 @@ namespace BrickSolution.Logic
         /// EV3 motor that is responsible for the right track
         /// </summary>
         private static Motor RightTrack { get; set; }
+
         /// <summary>
         /// holds the <see cref="Motor"/> instance to a 
         /// EV3 motor that is responsible for the grappler
@@ -75,12 +76,18 @@ namespace BrickSolution.Logic
         /// </summary>
         private static EV3ColorSensor ColorSensor { get; set; }
 
+        /// <summary>
+        /// holds the <see cref="EV3TouchSensor"/> instance
+        /// for the EV3TouchSensor that's used in the grappler
+        /// </summary>
+        private static EV3TouchSensor GrapplerTouchSensor { get; set; }
+
         #endregion
 
         #endregion
 
         #region Methods
-        
+
         #region Public Logic
 
         /// <summary>
@@ -94,6 +101,7 @@ namespace BrickSolution.Logic
             GrapplerMotor = new Motor(Constants.GrapplerPort);
 
             ColorSensor = new EV3ColorSensor(Constants.ColorSensorPort);
+            GrapplerTouchSensor = new EV3TouchSensor(Constants.GrapplerTouchSensorPort);
 
             GrapplerState = GrapplerState.Open;
             GrapplerPosition = GrapplerPosition.Down;
@@ -104,6 +112,17 @@ namespace BrickSolution.Logic
             WaitToFullyBootProgram();
             PrintEmptyLine();
             WaitForButtonPress();
+
+            ButtonEvents btnEvents = new ButtonEvents();
+
+            Action action = () =>
+            {
+                throw new Exception();
+            };
+
+            btnEvents.EnterPressed += action;
+
+            InitializeGrappler();
         }
 
         /// <summary>
@@ -167,6 +186,12 @@ namespace BrickSolution.Logic
             RightTrack.Brake();
         }
 
+        public static void HaltMotors()
+        {
+            HaltTracks();
+            GrapplerMotor.Brake();
+        }
+
         #endregion
 
         #region Public Helper
@@ -218,7 +243,60 @@ namespace BrickSolution.Logic
         #endregion
 
         #region Private Logic
-        
+
+        /// <summary>
+        /// puts the grappler in the default-state
+        /// </summary>
+        private static void InitializeGrappler()
+        {
+            CloseAndRiseGrappler();
+            PutDownAndOpenGrapplerOnMeadow();
+        }
+
+        /// <summary>
+        /// closes and rises the grappler if its on the ground
+        /// </summary>
+        private static void CloseAndRiseGrappler()
+        {
+            // no need to check more, because the pressure sensor
+            // stops either way
+            if (GrapplerPosition == GrapplerPosition.Down)
+            {
+                GrapplerMotor.SetSpeed(Constants.GrapplerMotorUpSpeed);
+
+                while (!GrapplerTouchSensor.IsPressed())
+                {
+                }
+
+                GrapplerMotor.Brake();
+            }
+
+            GrapplerPosition = GrapplerPosition.Up;
+            GrapplerState = GrapplerState.Closed;
+        }
+
+        /// <summary>
+        /// puts down the grappler and opens it, if it's in the air
+        /// closed
+        /// </summary>
+        private static void PutDownAndOpenGrapplerOnMeadow()
+        {
+            if (GrapplerPosition == GrapplerPosition.Up
+                && GrapplerState == GrapplerState.Closed
+                /*&& !EnclosureDetected()*/)
+            {
+                GrapplerMotor.ResetTacho();
+                GrapplerMotor.SetSpeed(Constants.GrapplerMotorDownSpeed);
+
+                while (GrapplerMotor.GetTachoCount() > Constants.GrapplerUpToDownTachoBoundary)
+                {
+                    //Robot.Print($"tacho = {GrapplerMotor.GetTachoCount().ToString()}");
+                }
+
+                GrapplerMotor.Brake();
+            }
+        }
+
         /// <summary>
         /// sets the wheel speed of the two tracks of the robot
         /// </summary>
@@ -254,9 +332,11 @@ namespace BrickSolution.Logic
 
             ButtonEvents btnEvents = new ButtonEvents();
 
-            btnEvents.EnterPressed += () => {
+            Action btnAction = () => {
                 continueWithCompetition = true;
             };
+
+            btnEvents.EnterPressed += btnAction;
 
             Robot.Print(Constants.CompetitionStartUserMessagePart1);
             Robot.Print(Constants.CompetitionStartUserMessagePart2);
@@ -265,7 +345,13 @@ namespace BrickSolution.Logic
             {
                 Thread.Sleep(Constants.SamplingRate);
             }
+
+            btnEvents.EnterPressed -= btnAction;
         }
+
+        #endregion
+
+        #region Events
 
         /// <summary>
         /// returns a boolean indicating if an abyss is detected in
