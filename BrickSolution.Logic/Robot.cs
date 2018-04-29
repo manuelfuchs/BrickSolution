@@ -113,15 +113,6 @@ namespace BrickSolution.Logic
             PrintEmptyLine();
             WaitForButtonPress();
 
-            ButtonEvents btnEvents = new ButtonEvents();
-
-            Action action = () =>
-            {
-                throw new Exception();
-            };
-
-            btnEvents.EnterPressed += action;
-
             InitializeGrappler();
         }
 
