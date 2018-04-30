@@ -13,8 +13,9 @@ namespace BrickSolution.Logic
 
         #region Sensors
         public static SensorPort GrapplerTouchSensorPort = SensorPort.In1;
-        public static SensorPort ColorSensorPort = SensorPort.In2;
-        public static SensorPort LegoColorSensorPort = SensorPort.In3;
+        public static SensorPort UltraSonicSensorPort = SensorPort.In2;
+        public static SensorPort IRSensorPort = SensorPort.In3;
+        public static SensorPort LegoColorSensorPort = SensorPort.In4;
         #endregion
 
         #region LcdOutputs
@@ -38,6 +39,7 @@ namespace BrickSolution.Logic
         public static int SamplingRate = 250;
         public static sbyte RotationSpeed = 40;
         public static int RotationDuration = 750;
+        public static int IRValuesNotInterpretableIdenticator = -1;
         #endregion
     }
 }

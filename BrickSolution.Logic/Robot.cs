@@ -82,6 +82,18 @@ namespace BrickSolution.Logic
         /// </summary>
         private static EV3TouchSensor GrapplerTouchSensor { get; set; }
 
+        /// <summary>
+        /// holds the <see cref="EV3IRSensor"/> instance
+        /// for the EV3IRSensor
+        /// </summary>
+        private static EV3IRSensor IRSensor { get; set; }
+
+        /// <summary>
+        /// holds the <see cref="EV3UltrasonicSensor"/> instance
+        /// for the EV3UltrasonicSensor
+        /// </summary>
+        private static EV3UltrasonicSensor UltraSonicSensor { get; set; }
+
         #endregion
 
         #endregion
@@ -100,14 +112,28 @@ namespace BrickSolution.Logic
             RightTrack = new Motor(Constants.RightTrackPort);
             GrapplerMotor = new Motor(Constants.GrapplerPort);
 
-            ColorSensor = new EV3ColorSensor(Constants.ColorSensorPort);
+            ColorSensor = new EV3ColorSensor(Constants.UltraSonicSensorPort);
             GrapplerTouchSensor = new EV3TouchSensor(Constants.GrapplerTouchSensorPort);
+            IRSensor = new EV3IRSensor(Constants.IRSensorPort);
+            UltraSonicSensor = new EV3UltrasonicSensor(Constants.UltraSonicSensorPort);
 
             GrapplerState = GrapplerState.Open;
             GrapplerPosition = GrapplerPosition.Down;
             FoodState = FoodState.Searching;
 
             IsInitialized = true;
+
+#if DEBUG
+            ButtonEvents buttonEvents = new ButtonEvents();
+
+            Action emergencyStopAction = () =>
+            {
+                Robot.HaltMotors();
+                throw new Exception();
+            };
+
+            buttonEvents.EscapePressed += emergencyStopAction;
+#endif
 
             WaitToFullyBootProgram();
             PrintEmptyLine();
@@ -215,7 +241,7 @@ namespace BrickSolution.Logic
         /// <returns>
         /// int: the current colorId seen by the EV3ColorSensor
         /// </returns>
-        public static int GetColorId()
+        private static int GetColorId()
         {
             return ColorSensor.Read();
         }
@@ -226,9 +252,28 @@ namespace BrickSolution.Logic
         /// <returns>
         /// string: the current color name seen by the EV3ColorSensor
         /// </returns>
-        public static string GetColorName()
+        private static string GetColorName()
         {
             return ColorSensor.ReadAsString();
+        }
+
+        /// <summary>
+        /// returns either the current irdistance or a default
+        /// value that indicates, that the irsensor is currently
+        /// covered by the grappler and can't see in the
+        /// distance
+        /// </summary>
+        /// <returns></returns>
+        public static int GetIRDistance()
+        {
+            if (GrapplerPosition == GrapplerPosition.Up)
+            {
+                return IRSensor.ReadDistance();
+            }
+            else
+            {
+                return Constants.IRValuesNotInterpretableIdenticator;
+            }
         }
 
         #endregion
