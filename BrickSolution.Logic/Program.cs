@@ -1,4 +1,5 @@
 ﻿using BrickSolution.Logic.Enumerations;
+using MonoBrickFirmware.UserInput;
 using System;
 using System.Threading;
 
@@ -12,24 +13,38 @@ namespace BrickSolution.Logic
             {
                 Robot.InitRobot();
 
-                Robot.SearchFood();
+#if DEBUG
+                ButtonEvents buttonEvents = new ButtonEvents();
 
-                switch (Robot.LastStopReason)
+                Action emergencyStopAction = () =>
                 {
-                    case StopReason.AbyssDetected:
-                        Robot.RotateClockWise(RotationMode.OtherMode);
-                        break;
-                    case StopReason.ObstacleDetected:
-                        Robot.RotateClockWise(RotationMode.OtherMode);
-                        break;
-                    case StopReason.FoodplaceDetected:
-                        break;
-                    case StopReason.SingleFoodDetected:
-                        break;
-                    case StopReason.EnclosureDetected:
-                        break;
-                    default:
-                        break;
+                    Robot.HaltMotors();
+                    throw new Exception();
+                };
+
+                buttonEvents.EscapePressed += emergencyStopAction;
+#endif
+                for (int i = 0; i < 10; i++)
+                {
+                    Robot.SearchFood();
+
+                    switch (Robot.LastStopReason)
+                    {
+                        case StopReason.AbyssDetected:
+                            Robot.RotateClockWise(RotationMode.OtherMode);
+                            break;
+                        case StopReason.ObstacleDetected:
+                            Robot.RotateClockWise(RotationMode.OtherMode);
+                            break;
+                        case StopReason.FoodplaceDetected:
+                            break;
+                        case StopReason.SingleFoodDetected:
+                            break;
+                        case StopReason.EnclosureDetected:
+                            break;
+                        default:
+                            break;
+                    }
                 }
             }
             catch (Exception e)

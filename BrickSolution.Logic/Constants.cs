@@ -40,6 +40,7 @@ namespace BrickSolution.Logic
         public static sbyte RotationSpeed = 40;
         public static int RotationDuration = 750;
         public static int IRValuesNotInterpretableIdenticator = -1;
+        public static int UltraSonicTableEndValue = 180;
         #endregion
     }
 }

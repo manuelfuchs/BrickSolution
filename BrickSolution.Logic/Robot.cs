@@ -116,6 +116,7 @@ namespace BrickSolution.Logic
             GrapplerTouchSensor = new EV3TouchSensor(Constants.GrapplerTouchSensorPort);
             IRSensor = new EV3IRSensor(Constants.IRSensorPort);
             UltraSonicSensor = new EV3UltrasonicSensor(Constants.UltraSonicSensorPort);
+            UltraSonicSensor.Mode = UltraSonicMode.Centimeter;
 
             GrapplerState = GrapplerState.Open;
             GrapplerPosition = GrapplerPosition.Down;
@@ -123,23 +124,11 @@ namespace BrickSolution.Logic
 
             IsInitialized = true;
 
-#if DEBUG
-            ButtonEvents buttonEvents = new ButtonEvents();
-
-            Action emergencyStopAction = () =>
-            {
-                Robot.HaltMotors();
-                throw new Exception();
-            };
-
-            buttonEvents.EscapePressed += emergencyStopAction;
-#endif
-
             WaitToFullyBootProgram();
             PrintEmptyLine();
-            WaitForButtonPress();
-
-            InitializeGrappler();
+            WaitForStartButtonPress();
+            
+            CalibrizeGrappler();
         }
 
         /// <summary>
@@ -188,6 +177,8 @@ namespace BrickSolution.Logic
                 while (AbyssDetected() || ObstacleDetected())
                 {
                 }
+
+                Thread.Sleep(1000);
             }
 
             HaltTracks();
@@ -221,6 +212,16 @@ namespace BrickSolution.Logic
         public static void Print(string output)
         {
             LcdConsole.WriteLine("{0}", output);
+        }
+
+        /// <summary>
+        /// prints a specific output object (using the toString method)
+        /// to the LCD-console of the Lego EV3 brick
+        /// </summary>
+        /// <param name="output">the output message to the console</param>
+        public static void Print(object outputObject)
+        {
+            Robot.Print(outputObject.ToString());
         }
 
         /// <summary>
@@ -276,6 +277,21 @@ namespace BrickSolution.Logic
             }
         }
 
+        /// <summary>
+        /// returns the value of the distance that the ultrasonic sensor
+        /// currently measures in centimeter
+        /// </summary>
+        /// <returns></returns>
+        public static int GetUltraSonicDistance()
+        {
+            if (UltraSonicSensor.Mode != UltraSonicMode.Centimeter)
+            {
+                UltraSonicSensor.Mode = UltraSonicMode.Centimeter;
+            }
+
+            return UltraSonicSensor.Read();
+        }
+
         #endregion
 
         #region Private Logic
@@ -283,7 +299,7 @@ namespace BrickSolution.Logic
         /// <summary>
         /// puts the grappler in the default-state
         /// </summary>
-        private static void InitializeGrappler()
+        private static void CalibrizeGrappler()
         {
             CloseAndRiseGrappler();
             PutDownAndOpenGrapplerOnMeadow();
@@ -362,7 +378,7 @@ namespace BrickSolution.Logic
         /// waits until the operator presses the middle-button to
         /// start the competition mode
         /// </summary>
-        private static void WaitForButtonPress()
+        private static void WaitForStartButtonPress()
         {
             bool continueWithCompetition = false;
 
@@ -399,9 +415,7 @@ namespace BrickSolution.Logic
         /// </returns>
         public static bool AbyssDetected()
         {
-            bool result = false;
-
-            //TODO
+            bool result = GetUltraSonicDistance() > Constants.UltraSonicTableEndValue;
 
             if (result)
             {
