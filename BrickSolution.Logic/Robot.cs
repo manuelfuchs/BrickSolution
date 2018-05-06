@@ -378,7 +378,7 @@ namespace BrickSolution.Logic
         /// waits until the operator presses the middle-button to
         /// start the competition mode
         /// </summary>
-        private static void WaitForStartButtonPress()
+        public static void WaitForStartButtonPress()
         {
             bool continueWithCompetition = false;
 
