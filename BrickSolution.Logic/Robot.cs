@@ -24,6 +24,19 @@ namespace BrickSolution.Logic
         /// </summary>
         public static bool IsInitialized { get; private set; }
 
+        public static void Drive(int tachoCount)
+        {
+            Robot.LeftTrack.ResetTacho();
+            Robot.SetWheelSpeed(Constants.DRIVE_FORWARD_SPEED,
+                                Constants.DRIVE_FORWARD_SPEED);
+            
+            while (Robot.LeftTrack.GetTachoCount() < tachoCount)
+            {
+            }
+
+            Robot.HaltTracks();
+        }
+
         /// <summary>
         /// describes the position of the grappler
         /// </summary>
