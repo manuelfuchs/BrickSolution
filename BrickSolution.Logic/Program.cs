@@ -1,4 +1,5 @@
 ﻿using BrickSolution.Logic.Enumerations;
+using MonoBrickFirmware.Sensors;
 using MonoBrickFirmware.UserInput;
 using System;
 using System.Threading;
@@ -23,13 +24,22 @@ namespace BrickSolution.Logic
 
                 buttonEvents.EscapePressed += emergencyStopAction;
 #endif
-                for (int i = 0; i < 10; i++)
+                Wait("press the middle button to calibrate");
+                var foodstoneColour = Robot.GetRGBColor();
+
+                for (int i = 0; i < 5; i++)
                 {
-                    Wait();
-                    var color = Robot.GetRGBColor();
-                    Robot.Print($"red: {color.Red}," +
-                                $"green: {color.Green}," +
-                                $"blue: {color.Blue}");
+                    Wait("press to check food");
+                    var currentColour = Robot.GetRGBColor();
+
+                    if (ColourMatchesWithTolerance(foodstoneColour, currentColour))
+                    {
+                        Robot.Print("This is our foodstone!");
+                    }
+                    else
+                    {
+                        Robot.Print("Foodstone is not for us!");
+                    }
                 }
             }
             catch (Exception e)
@@ -53,7 +63,18 @@ namespace BrickSolution.Logic
             }
         }
 
-        private static void Wait()
+        private static bool ColourMatchesWithTolerance(RGBColor foodstoneColour,
+                                                       RGBColor currentColour)
+        {
+            return (foodstoneColour.Red - Constants.COLOUR_TOLERANCE < currentColour.Red
+                    && currentColour.Red < foodstoneColour.Red + Constants.COLOUR_TOLERANCE)
+                && (foodstoneColour.Green - Constants.COLOUR_TOLERANCE < currentColour.Green
+                    && currentColour.Green < foodstoneColour.Green + Constants.COLOUR_TOLERANCE)
+                && (foodstoneColour.Blue - Constants.COLOUR_TOLERANCE < currentColour.Blue
+                    && currentColour.Blue < foodstoneColour.Blue + Constants.COLOUR_TOLERANCE);
+        }
+
+        private static void Wait(string msg)
         {
             bool continueWithCompetition = false;
 
@@ -66,8 +87,7 @@ namespace BrickSolution.Logic
             btnEvents.EnterPressed += btnAction;
 
             Robot.PrintEmptyLine();
-            Robot.Print("press middle button to read");
-            Robot.Print("a colour");
+            Robot.Print(msg);
 
             while (!continueWithCompetition)
             {
