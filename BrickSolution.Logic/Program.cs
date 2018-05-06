@@ -1,4 +1,5 @@
-﻿using MonoBrickFirmware.Display;
+﻿using BrickSolution.Logic.Enumerations;
+using MonoBrickFirmware.UserInput;
 using System;
 using System.Threading;
 
@@ -11,22 +12,58 @@ namespace BrickSolution.Logic
             try
             {
                 Robot.InitRobot();
+#if DEBUG
+                ButtonEvents buttonEvents = new ButtonEvents();
 
-                throw new NotImplementedException("robot logic");
+                Action emergencyStopAction = () =>
+                {
+                    Robot.HaltMotors();
+                    throw new Exception();
+                };
+
+                buttonEvents.EscapePressed += emergencyStopAction;
+#endif
+                for (int i = 0; i < 10; i++)
+                {
+                    Robot.SearchFood();
+
+                    switch (Robot.LastStopReason)
+                    {
+                        case StopReason.AbyssDetected:
+                            Robot.RotateClockWise(RotationMode.OtherMode);
+                            break;
+                        case StopReason.ObstacleDetected:
+                            Robot.RotateClockWise(RotationMode.OtherMode);
+                            break;
+                        case StopReason.FoodplaceDetected:
+                            break;
+                        case StopReason.SingleFoodDetected:
+                            break;
+                        case StopReason.EnclosureDetected:
+                            break;
+                        default:
+                            break;
+                    }
+                }
             }
             catch (Exception e)
             {
                 if (Robot.IsInitialized)
                 {
-                    Robot.HaltTracks();
+                    Robot.HaltMotors();
                 }
                 else
                 {
-                    Robot.Print(Constants.INITIALIZE_ERROR_MSG);
+                    Robot.Print(Constants.INIT_ERROR_MSG);
                 }
 
                 Robot.Print(e.Message);
-                Thread.Sleep(Constants.LcdErrorDuration);
+            }
+            finally
+            {
+                Robot.PrintEmptyLine();
+                Robot.Print(Constants.PROGRAM_FINISHED_MSG);
+                Thread.Sleep(Constants.PROGRAM_ABORTION_DELAY);
             }
         }
     }
