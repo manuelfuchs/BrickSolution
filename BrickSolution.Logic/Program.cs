@@ -25,20 +25,20 @@ namespace BrickSolution.Logic
                 buttonEvents.EscapePressed += emergencyStopAction;
 #endif
                 Wait("press the middle button to calibrate");
-                var foodstoneColour = Robot.GetRGBColor();
+                var enclosureColour = Robot.GetRGBColor();
 
                 for (int i = 0; i < 5; i++)
                 {
                     Wait("press to check food");
                     var currentColour = Robot.GetRGBColor();
 
-                    if (ColourMatchesWithTolerance(foodstoneColour, currentColour))
+                    if (ColourMatchesWithTolerance(enclosureColour, currentColour))
                     {
-                        Robot.Print("This is our foodstone!");
+                        Robot.Print("This is our enclosure!");
                     }
                     else
                     {
-                        Robot.Print("Foodstone is not for us!");
+                        Robot.Print("Enclosure is from the enemy!");
                     }
                 }
             }
