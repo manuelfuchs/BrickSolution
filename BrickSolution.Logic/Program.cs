@@ -1,4 +1,5 @@
 ﻿using BrickSolution.Logic.Enumerations;
+using MonoBrickFirmware.Sensors;
 using MonoBrickFirmware.UserInput;
 using System;
 using System.Threading;
@@ -23,26 +24,21 @@ namespace BrickSolution.Logic
 
                 buttonEvents.EscapePressed += emergencyStopAction;
 #endif
-                for (int i = 0; i < 10; i++)
-                {
-                    Robot.SearchFood();
+                Wait("press the middle button to calibrate");
+                var treeColour = Robot.GetRGBColor();
 
-                    switch (Robot.LastStopReason)
+                for (int i = 0; i < 5; i++)
+                {
+                    Wait("press to check for tree");
+                    var currentColour = Robot.GetRGBColor();
+
+                    if (ColourMatchesWithTolerance(treeColour, currentColour))
                     {
-                        case StopReason.AbyssDetected:
-                            Robot.RotateClockWise(RotationMode.OtherMode);
-                            break;
-                        case StopReason.ObstacleDetected:
-                            Robot.RotateClockWise(RotationMode.OtherMode);
-                            break;
-                        case StopReason.FoodplaceDetected:
-                            break;
-                        case StopReason.SingleFoodDetected:
-                            break;
-                        case StopReason.EnclosureDetected:
-                            break;
-                        default:
-                            break;
+                        Robot.Print("This is a tree!");
+                    }
+                    else
+                    {
+                        Robot.Print("This is NOT a tree!");
                     }
                 }
             }
@@ -65,6 +61,40 @@ namespace BrickSolution.Logic
                 Robot.Print(Constants.PROGRAM_FINISHED_MSG);
                 Thread.Sleep(Constants.PROGRAM_ABORTION_DELAY);
             }
+        }
+
+        private static bool ColourMatchesWithTolerance(RGBColor colour1,
+                                                       RGBColor colour2)
+        {
+            return (colour1.Red - Constants.COLOUR_TOLERANCE < colour2.Red
+                    && colour2.Red < colour1.Red + Constants.COLOUR_TOLERANCE)
+                && (colour1.Green - Constants.COLOUR_TOLERANCE < colour2.Green
+                    && colour2.Green < colour1.Green + Constants.COLOUR_TOLERANCE)
+                && (colour1.Blue - Constants.COLOUR_TOLERANCE < colour2.Blue
+                    && colour2.Blue < colour1.Blue + Constants.COLOUR_TOLERANCE);
+        }
+
+        private static void Wait(string msg)
+        {
+            bool continueWithCompetition = false;
+
+            ButtonEvents btnEvents = new ButtonEvents();
+
+            Action btnAction = () => {
+                continueWithCompetition = true;
+            };
+
+            btnEvents.EnterPressed += btnAction;
+
+            Robot.PrintEmptyLine();
+            Robot.Print(msg);
+
+            while (!continueWithCompetition)
+            {
+                Thread.Sleep(Constants.SAMPLING_RATE);
+            }
+
+            btnEvents.EnterPressed -= btnAction;
         }
     }
 }
