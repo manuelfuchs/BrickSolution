@@ -108,14 +108,14 @@ namespace BrickSolution.Logic
         /// </summary>
         public static void InitRobot()
         {
-            LeftTrack = new Motor(Constants.LeftTrackPort);
-            RightTrack = new Motor(Constants.RightTrackPort);
-            GrapplerMotor = new Motor(Constants.GrapplerPort);
+            LeftTrack = new Motor(Constants.LEFT_TRACK_PORT);
+            RightTrack = new Motor(Constants.RIGHT_TRACK_PORT);
+            GrapplerMotor = new Motor(Constants.GRAPPLER_PORT);
 
-            ColorSensor = new EV3ColorSensor(Constants.UltraSonicSensorPort);
-            GrapplerTouchSensor = new EV3TouchSensor(Constants.GrapplerTouchSensorPort);
-            IRSensor = new EV3IRSensor(Constants.IRSensorPort);
-            UltraSonicSensor = new EV3UltrasonicSensor(Constants.UltraSonicSensorPort);
+            ColorSensor = new EV3ColorSensor(Constants.ULTRASONIC_SENSOR_PORT);
+            GrapplerTouchSensor = new EV3TouchSensor(Constants.GRAPPLER_TOUCH_SENSOR_PORT);
+            IRSensor = new EV3IRSensor(Constants.IR_SENSOR_PORT);
+            UltraSonicSensor = new EV3UltrasonicSensor(Constants.ULTRASONIC_SENSOR_PORT);
             UltraSonicSensor.Mode = UltraSonicMode.Centimeter;
 
             GrapplerState = GrapplerState.Open;
@@ -140,7 +140,7 @@ namespace BrickSolution.Logic
         {
             Print($"searching for food!");
 
-            SetWheelSpeed(Constants.DriveForwardSpeed, Constants.DriveForwardSpeed);
+            SetWheelSpeed(Constants.DRIVE_FORWARD_SPEED, Constants.DRIVE_FORWARD_SPEED);
             
             while (!AbyssDetected()
                 && !ObstacleDetected()
@@ -161,14 +161,14 @@ namespace BrickSolution.Logic
         {
             Print($"rotating clockwise in mode {rotationMode}");
 
-            SetWheelSpeed(Constants.RotationSpeed,
-                          Convert.ToSByte(-Constants.RotationSpeed));
+            SetWheelSpeed(Constants.ROTATION_SPEED,
+                          Convert.ToSByte(-Constants.ROTATION_SPEED));
 
             if (rotationMode == RotationMode.TimerMode)
             {
                 DateTime startTime = DateTime.Now;
 
-                while (!TimerBreakCondition(startTime, Constants.RotationDuration))
+                while (!TimerBreakCondition(startTime, Constants.ROTATION_DURATION))
                 {
                 }
             }
@@ -273,7 +273,7 @@ namespace BrickSolution.Logic
             }
             else
             {
-                return Constants.IRValuesNotInterpretableIdenticator;
+                return Constants.IR_VALUES_NOT_INTERPRETABLE_VALUE;
             }
         }
 
@@ -314,7 +314,7 @@ namespace BrickSolution.Logic
             // stops either way
             if (GrapplerPosition == GrapplerPosition.Down)
             {
-                GrapplerMotor.SetSpeed(Constants.GrapplerMotorUpSpeed);
+                GrapplerMotor.SetSpeed(Constants.GRAPPLER_MOTOR_UP_SPEED);
 
                 while (!GrapplerTouchSensor.IsPressed())
                 {
@@ -338,9 +338,9 @@ namespace BrickSolution.Logic
                 && !EnclosureDetected())
             {
                 GrapplerMotor.ResetTacho();
-                GrapplerMotor.SetSpeed(Constants.GrapplerMotorDownSpeed);
+                GrapplerMotor.SetSpeed(Constants.GRAPPLER_MOTOR_DOWN_SPEED);
 
-                while (GrapplerMotor.GetTachoCount() > Constants.GrapplerUpToDownTachoBoundary)
+                while (GrapplerMotor.GetTachoCount() > Constants.GRAPPLER_UP_TO_DOWN_TACHO_BOUNDARY)
                 {
                     //Robot.Print($"tacho = {GrapplerMotor.GetTachoCount().ToString()}");
                 }
@@ -367,9 +367,9 @@ namespace BrickSolution.Logic
         {
             DateTime loadStart = DateTime.Now;
 
-            Robot.Print($"Wait for {Constants.ProgramBootTime} milliseconds");
+            Robot.Print($"Wait for {Constants.PROGRAM_BOOT_DELAY} milliseconds");
 
-            while (!TimerBreakCondition(loadStart, Constants.ProgramBootTime))
+            while (!TimerBreakCondition(loadStart, Constants.PROGRAM_BOOT_DELAY))
             {
             }
         }
@@ -390,12 +390,12 @@ namespace BrickSolution.Logic
 
             btnEvents.EnterPressed += btnAction;
 
-            Robot.Print(Constants.CompetitionStartUserMessagePart1);
-            Robot.Print(Constants.CompetitionStartUserMessagePart2);
+            Robot.Print(Constants.COMPETITION_START_USER_MSG_PART1);
+            Robot.Print(Constants.COMPETITION_START_USER_MSG_PART2);
 
             while (!continueWithCompetition)
             {
-                Thread.Sleep(Constants.SamplingRate);
+                Thread.Sleep(Constants.SAMPLING_RATE);
             }
 
             btnEvents.EnterPressed -= btnAction;
@@ -415,7 +415,7 @@ namespace BrickSolution.Logic
         /// </returns>
         public static bool AbyssDetected()
         {
-            bool result = GetUltraSonicDistance() > Constants.UltraSonicTableEndValue;
+            bool result = GetUltraSonicDistance() > Constants.ULTRA_SONIC_TABLE_END_VALUE;
 
             if (result)
             {

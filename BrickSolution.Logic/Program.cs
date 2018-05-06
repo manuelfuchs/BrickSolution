@@ -12,7 +12,6 @@ namespace BrickSolution.Logic
             try
             {
                 Robot.InitRobot();
-
 #if DEBUG
                 ButtonEvents buttonEvents = new ButtonEvents();
 
@@ -55,7 +54,7 @@ namespace BrickSolution.Logic
                 }
                 else
                 {
-                    Robot.Print(Constants.InitializeErrorMessage);
+                    Robot.Print(Constants.INIT_ERROR_MSG);
                 }
 
                 Robot.Print(e.Message);
@@ -63,8 +62,8 @@ namespace BrickSolution.Logic
             finally
             {
                 Robot.PrintEmptyLine();
-                Robot.Print(Constants.ClosingMessage);
-                Thread.Sleep(Constants.LcdMessageDisplayDuration);
+                Robot.Print(Constants.PROGRAM_FINISHED_MSG);
+                Thread.Sleep(Constants.PROGRAM_ABORTION_DELAY);
             }
         }
     }
