@@ -25,25 +25,11 @@ namespace BrickSolution.Logic
 #endif
                 for (int i = 0; i < 10; i++)
                 {
-                    Robot.SearchFood();
-
-                    switch (Robot.LastStopReason)
-                    {
-                        case StopReason.AbyssDetected:
-                            Robot.RotateClockWise(RotationMode.OtherMode);
-                            break;
-                        case StopReason.ObstacleDetected:
-                            Robot.RotateClockWise(RotationMode.OtherMode);
-                            break;
-                        case StopReason.FoodplaceDetected:
-                            break;
-                        case StopReason.SingleFoodDetected:
-                            break;
-                        case StopReason.EnclosureDetected:
-                            break;
-                        default:
-                            break;
-                    }
+                    Wait();
+                    var color = Robot.GetRGBColor();
+                    Robot.Print($"red: {color.Red}," +
+                                $"green: {color.Green}," +
+                                $"blue: {color.Blue}");
                 }
             }
             catch (Exception e)
@@ -65,6 +51,30 @@ namespace BrickSolution.Logic
                 Robot.Print(Constants.PROGRAM_FINISHED_MSG);
                 Thread.Sleep(Constants.PROGRAM_ABORTION_DELAY);
             }
+        }
+
+        private static void Wait()
+        {
+            bool continueWithCompetition = false;
+
+            ButtonEvents btnEvents = new ButtonEvents();
+
+            Action btnAction = () => {
+                continueWithCompetition = true;
+            };
+
+            btnEvents.EnterPressed += btnAction;
+
+            Robot.PrintEmptyLine();
+            Robot.Print("press middle button to read");
+            Robot.Print("a colour");
+
+            while (!continueWithCompetition)
+            {
+                Thread.Sleep(Constants.SAMPLING_RATE);
+            }
+
+            btnEvents.EnterPressed -= btnAction;
         }
     }
 }
