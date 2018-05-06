@@ -42,6 +42,7 @@ namespace BrickSolution.Logic
         public static int IR_VALUES_NOT_INTERPRETABLE_VALUE = -1;
         public static int ULTRA_SONIC_TABLE_END_VALUE = 180;
         public static int COLOUR_TOLERANCE = 15;
+        public static int FENCE_US_TOLERANCE = 5;
         #endregion
     }
 }

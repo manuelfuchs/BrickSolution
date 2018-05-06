@@ -25,20 +25,21 @@ namespace BrickSolution.Logic
                 buttonEvents.EscapePressed += emergencyStopAction;
 #endif
                 Wait("press the middle button to calibrate");
-                var treeColour = Robot.GetRGBColor();
+                int fenceUsDistance = Robot.GetUltraSonicDistance();
 
                 for (int i = 0; i < 5; i++)
                 {
-                    Wait("press to check for tree");
-                    var currentColour = Robot.GetRGBColor();
+                    Wait("press to check for fence");
+                    int currentUsDistance = Robot.GetUltraSonicDistance();
 
-                    if (ColourMatchesWithTolerance(treeColour, currentColour))
+                    if (fenceUsDistance - Constants.FENCE_US_TOLERANCE < currentUsDistance
+                        && currentUsDistance < fenceUsDistance + Constants.FENCE_US_TOLERANCE)
                     {
-                        Robot.Print("This is a tree!");
+                        Robot.Print("This is a fence!");
                     }
                     else
                     {
-                        Robot.Print("This is NOT a tree!");
+                        Robot.Print("This is NOT a fence!");
                     }
                 }
             }
