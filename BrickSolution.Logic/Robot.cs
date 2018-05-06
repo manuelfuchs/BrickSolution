@@ -118,8 +118,8 @@ namespace BrickSolution.Logic
             UltraSonicSensor = new EV3UltrasonicSensor(Constants.ULTRASONIC_SENSOR_PORT);
             UltraSonicSensor.Mode = UltraSonicMode.Centimeter;
 
-            GrapplerState = GrapplerState.Open;
-            GrapplerPosition = GrapplerPosition.Down;
+            GrapplerState = GrapplerState.Closed;
+            GrapplerPosition = GrapplerPosition.Up;
             FoodState = FoodState.Searching;
 
             IsInitialized = true;
@@ -302,7 +302,6 @@ namespace BrickSolution.Logic
         private static void CalibrizeGrappler()
         {
             CloseAndRiseGrappler();
-            PutDownAndOpenGrapplerOnMeadow();
         }
 
         /// <summary>
@@ -331,7 +330,7 @@ namespace BrickSolution.Logic
         /// puts down the grappler and opens it, if it's in the air
         /// closed
         /// </summary>
-        private static void PutDownAndOpenGrapplerOnMeadow()
+        public static void PutDownAndOpenGrapplerOnMeadow()
         {
             if (GrapplerPosition == GrapplerPosition.Up
                 && GrapplerState == GrapplerState.Closed
@@ -340,7 +339,29 @@ namespace BrickSolution.Logic
                 GrapplerMotor.ResetTacho();
                 GrapplerMotor.SetSpeed(Constants.GRAPPLER_MOTOR_DOWN_SPEED);
 
-                while (GrapplerMotor.GetTachoCount() > Constants.GRAPPLER_UP_TO_DOWN_TACHO_BOUNDARY)
+                while (GrapplerMotor.GetTachoCount() > Constants.GRAPPLER_UP_TO_DOWN_TACHO_BOUNDARY_MEDOW)
+                {
+                    //Robot.Print($"tacho = {GrapplerMotor.GetTachoCount().ToString()}");
+                }
+
+                GrapplerMotor.Brake();
+            }
+        }
+
+        /// <summary>
+        /// puts down the grappler and opens it on enclosure, if it's in the air
+        /// closed
+        /// </summary>
+        public static void PutDownAndOpenGrapplerOnEnlcosure()
+        {
+            if (GrapplerPosition == GrapplerPosition.Up
+                && GrapplerState == GrapplerState.Closed
+                && !EnclosureDetected())
+            {
+                GrapplerMotor.ResetTacho();
+                GrapplerMotor.SetSpeed(Constants.GRAPPLER_MOTOR_DOWN_SPEED);
+
+                while (GrapplerMotor.GetTachoCount() > Constants.GRAPPLER_UP_TO_DOWN_TACHO_BOUNDARY_ENCLOSURE)
                 {
                     //Robot.Print($"tacho = {GrapplerMotor.GetTachoCount().ToString()}");
                 }

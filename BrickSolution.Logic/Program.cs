@@ -23,28 +23,9 @@ namespace BrickSolution.Logic
 
                 buttonEvents.EscapePressed += emergencyStopAction;
 #endif
-                for (int i = 0; i < 10; i++)
-                {
-                    Robot.SearchFood();
 
-                    switch (Robot.LastStopReason)
-                    {
-                        case StopReason.AbyssDetected:
-                            Robot.RotateClockWise(RotationMode.OtherMode);
-                            break;
-                        case StopReason.ObstacleDetected:
-                            Robot.RotateClockWise(RotationMode.OtherMode);
-                            break;
-                        case StopReason.FoodplaceDetected:
-                            break;
-                        case StopReason.SingleFoodDetected:
-                            break;
-                        case StopReason.EnclosureDetected:
-                            break;
-                        default:
-                            break;
-                    }
-                }
+                Robot.PutDownAndOpenGrapplerOnEnlcosure();
+                
             }
             catch (Exception e)
             {
