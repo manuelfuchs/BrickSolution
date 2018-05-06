@@ -139,15 +139,13 @@ namespace BrickSolution.Logic
         public static void SearchFood()
         {
             Print($"searching for food!");
+      
 
             SetWheelSpeed(Constants.DRIVE_FORWARD_SPEED, Constants.DRIVE_FORWARD_SPEED);
             
-            while (!AbyssDetected()
-                && !ObstacleDetected()
-                && !FoodplaceDetected()
-                && !SingleFoodDetected()
-                && !EnclosureDetected())
+            while (!EnclosureDetected())
             {
+                Print("Ultra Sonic Distance = "+ GetUltraSonicDistance());
             }
 
             HaltTracks();
@@ -501,9 +499,7 @@ namespace BrickSolution.Logic
         /// </returns>
         public static bool EnclosureDetected()
         {
-            bool result = false;
-
-            //TODO
+            bool result = GetUltraSonicDistance() < Constants.ULTRA_SONIC_ENCLOSURE_VALUE;
 
             if (result)
             {

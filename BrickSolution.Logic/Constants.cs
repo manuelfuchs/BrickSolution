@@ -41,6 +41,7 @@ namespace BrickSolution.Logic
         public static int ROTATION_DURATION = 750;
         public static int IR_VALUES_NOT_INTERPRETABLE_VALUE = -1;
         public static int ULTRA_SONIC_TABLE_END_VALUE = 180;
+        public static int ULTRA_SONIC_ENCLOSURE_VALUE = 20;
         #endregion
     }
 }
