@@ -308,7 +308,7 @@ namespace BrickSolution.Logic
         /// <summary>
         /// closes and rises the grappler if its on the ground
         /// </summary>
-        private static void CloseAndRiseGrappler()
+        public static void CloseAndRiseGrappler()
         {
             // no need to check more, because the pressure sensor
             // stops either way
@@ -378,7 +378,7 @@ namespace BrickSolution.Logic
         /// waits until the operator presses the middle-button to
         /// start the competition mode
         /// </summary>
-        private static void WaitForStartButtonPress()
+        public static void WaitForStartButtonPress()
         {
             bool continueWithCompetition = false;
 
