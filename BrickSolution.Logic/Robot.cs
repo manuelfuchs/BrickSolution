@@ -242,9 +242,9 @@ namespace BrickSolution.Logic
         /// <returns>
         /// int: the current colorId seen by the EV3ColorSensor
         /// </returns>
-        private static int GetColorId()
+        public static RGBColor GetRGBColor()
         {
-            return ColorSensor.Read();
+            return ColorSensor.ReadRGB();
         }
 
         /// <summary>
@@ -253,7 +253,7 @@ namespace BrickSolution.Logic
         /// <returns>
         /// string: the current color name seen by the EV3ColorSensor
         /// </returns>
-        private static string GetColorName()
+        public static string GetColorName()
         {
             return ColorSensor.ReadAsString();
         }
