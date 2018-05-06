@@ -25,20 +25,20 @@ namespace BrickSolution.Logic
                 buttonEvents.EscapePressed += emergencyStopAction;
 #endif
                 Wait("press the middle button to calibrate");
-                var enclosureColour = Robot.GetRGBColor();
+                var treeColour = Robot.GetRGBColor();
 
                 for (int i = 0; i < 5; i++)
                 {
-                    Wait("press to check food");
+                    Wait("press to check for tree");
                     var currentColour = Robot.GetRGBColor();
 
-                    if (ColourMatchesWithTolerance(enclosureColour, currentColour))
+                    if (ColourMatchesWithTolerance(treeColour, currentColour))
                     {
-                        Robot.Print("This is our enclosure!");
+                        Robot.Print("This is a tree!");
                     }
                     else
                     {
-                        Robot.Print("Enclosure is from the enemy!");
+                        Robot.Print("This is NOT a tree!");
                     }
                 }
             }
@@ -63,15 +63,15 @@ namespace BrickSolution.Logic
             }
         }
 
-        private static bool ColourMatchesWithTolerance(RGBColor foodstoneColour,
-                                                       RGBColor currentColour)
+        private static bool ColourMatchesWithTolerance(RGBColor colour1,
+                                                       RGBColor colour2)
         {
-            return (foodstoneColour.Red - Constants.COLOUR_TOLERANCE < currentColour.Red
-                    && currentColour.Red < foodstoneColour.Red + Constants.COLOUR_TOLERANCE)
-                && (foodstoneColour.Green - Constants.COLOUR_TOLERANCE < currentColour.Green
-                    && currentColour.Green < foodstoneColour.Green + Constants.COLOUR_TOLERANCE)
-                && (foodstoneColour.Blue - Constants.COLOUR_TOLERANCE < currentColour.Blue
-                    && currentColour.Blue < foodstoneColour.Blue + Constants.COLOUR_TOLERANCE);
+            return (colour1.Red - Constants.COLOUR_TOLERANCE < colour2.Red
+                    && colour2.Red < colour1.Red + Constants.COLOUR_TOLERANCE)
+                && (colour1.Green - Constants.COLOUR_TOLERANCE < colour2.Green
+                    && colour2.Green < colour1.Green + Constants.COLOUR_TOLERANCE)
+                && (colour1.Blue - Constants.COLOUR_TOLERANCE < colour2.Blue
+                    && colour2.Blue < colour1.Blue + Constants.COLOUR_TOLERANCE);
         }
 
         private static void Wait(string msg)
