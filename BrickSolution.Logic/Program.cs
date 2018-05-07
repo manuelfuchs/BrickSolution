@@ -11,7 +11,7 @@ namespace BrickSolution.Logic
         {
             try
             {
-                
+                Robot.InitRobot();
 #if DEBUG
                 ButtonEvents buttonEvents = new ButtonEvents();
 

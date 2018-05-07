@@ -128,7 +128,6 @@ namespace BrickSolution.Logic
             PrintEmptyLine();
             WaitForStartButtonPress();
             
-            CalibrizeGrappler();
         }
 
         /// <summary>
