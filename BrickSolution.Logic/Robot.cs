@@ -117,6 +117,7 @@ namespace BrickSolution.Logic
             IRSensor = new EV3IRSensor(Constants.IR_SENSOR_PORT);
             UltraSonicSensor = new EV3UltrasonicSensor(Constants.ULTRASONIC_SENSOR_PORT);
             UltraSonicSensor.Mode = UltraSonicMode.Centimeter;
+            ColorSensor.Mode = ColorMode.RGB;
 
             GrapplerState = GrapplerState.Open;
             GrapplerPosition = GrapplerPosition.Down;
@@ -128,7 +129,7 @@ namespace BrickSolution.Logic
             PrintEmptyLine();
             WaitForStartButtonPress();
             
-            CalibrizeGrappler();
+            //CalibrizeGrappler();
         }
 
         /// <summary>
@@ -244,7 +245,15 @@ namespace BrickSolution.Logic
         /// </returns>
         public static RGBColor GetRGBColor()
         {
-            return ColorSensor.ReadRGB();
+            if (ColorSensor != null)
+            {
+                return ColorSensor.ReadRGB();
+            }
+            else
+            {
+                Robot.Print("color sensor not initialized!");
+                return null;
+            }
         }
 
         /// <summary>

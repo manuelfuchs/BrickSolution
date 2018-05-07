@@ -27,9 +27,17 @@ namespace BrickSolution.Logic
                 {
                     Wait();
                     var color = Robot.GetRGBColor();
-                    Robot.Print($"red: {color.Red}," +
-                                $"green: {color.Green}," +
-                                $"blue: {color.Blue}");
+
+                    if (color != null)
+                    {
+                        Robot.Print($"red: {color.Red},");
+                        Robot.Print($"green: {color.Green},");
+                        Robot.Print($"blue: {color.Blue}");
+                    }
+                    else
+                    {
+                        Robot.Print("color == null");
+                    }
                 }
             }
             catch (Exception e)
