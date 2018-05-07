@@ -34,7 +34,7 @@ namespace BrickSolution.Logic
         public static sbyte GRAPPLER_MOTOR_UP_SPEED = 40;
         public static sbyte GRAPPLER_MOTOR_DOWN_SPEED = -40;
         public static int GRAPPLER_UP_TO_DOWN_TACHO_BOUNDARY_MEDOW = -4500;
-        public static int GRAPPLER_UP_TO_DOWN_TACHO_BOUNDARY_ENCLOSURE = -3000;
+        public static int GRAPPLER_UP_TO_DOWN_TACHO_BOUNDARY_ENCLOSURE = -3500;
         public static int PROGRAM_ABORTION_DELAY = 15000;
         public static int PROGRAM_BOOT_DELAY = 10000;
         public static int SAMPLING_RATE = 250;
