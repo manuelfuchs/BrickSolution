@@ -127,7 +127,8 @@ namespace BrickSolution.Logic
             WaitToFullyBootProgram();
             PrintEmptyLine();
             WaitForStartButtonPress();
-            
+
+            CalibrizeGrappler();
         }
 
         /// <summary>
@@ -309,6 +310,7 @@ namespace BrickSolution.Logic
         /// </summary>
         public static void CloseAndRiseGrappler()
         {
+            GrapplerPosition = GrapplerPosition.Down;
             // no need to check more, because the pressure sensor
             // stops either way
             if (GrapplerPosition == GrapplerPosition.Down)
