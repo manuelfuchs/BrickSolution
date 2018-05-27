@@ -17,6 +17,10 @@ namespace BrickSolution.Logic
 
                 Robot.CollectFood();
 
+                Thread.Sleep(5000);
+
+                Robot.ReleaseFood();
+
 
                 //for (int i = 0; i < 10; i++)
                 //{

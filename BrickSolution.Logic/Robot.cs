@@ -127,22 +127,8 @@ namespace BrickSolution.Logic
             WaitForStartButtonPress();
         }
 
-        /// <summary>
-        /// adds a button event on the escape button that throws
-        /// an exception and halts the motors
-        /// </summary>
-        private static void AddEmergencyStopOption()
         public static void DisposeComponents()
         {
-            ButtonEvents buttonEvents = new ButtonEvents();
-
-            Action emergencyStopAction = () =>
-            {
-                Robot.HaltMotors();
-                throw new Exception();
-            };
-
-            buttonEvents.EscapePressed += emergencyStopAction;
             if (IsInitialized)
             { 
                 GC.SuppressFinalize(LeftTrack);
@@ -248,15 +234,38 @@ namespace BrickSolution.Logic
         /// </summary>
         public static void CollectFood()
         {
-            SetTrackSpeed(Constants.DRIVE_BACKWARD_SPEED, Constants.DRIVE_BACKWARD_SPEED);
-            Thread.Sleep(1500);
-            TurnOffGrappler();
-            GrapplerWheelMotor.SetSpeed(Constants.GRAPPLER_WHEEL_SPEED);
-            SetTrackSpeed(Constants.DRIVE_FORWARD_AFT_BACKWARD_SPEED,
-                          Constants.DRIVE_FORWARD_AFT_BACKWARD_SPEED);
-            Thread.Sleep(1500);
-            HaltMotors();
-            RiseGrappler();
+            if (FoodState == FoodState.Searching)
+            {
+                SetTrackSpeed(Constants.DRIVE_BACKWARD_SPEED, Constants.DRIVE_BACKWARD_SPEED);
+                Thread.Sleep(1500);
+                TurnOffGrappler();
+                GrapplerWheelMotor.SetSpeed(Constants.GRAPPLER_WHEEL_SPEED);
+                SetTrackSpeed(Constants.DRIVE_FORWARD_AFT_BACKWARD_SPEED,
+                              Constants.DRIVE_FORWARD_AFT_BACKWARD_SPEED);
+                Thread.Sleep(1500);
+                HaltMotors();
+                RiseGrappler();
+
+                FoodState = FoodState.Carrying;
+            }
+        }
+
+        public static void ReleaseFood()
+        {
+            if (FoodState == FoodState.Carrying)
+            {
+                GrapplerWheelMotor.ResetTacho();
+                GrapplerWheelMotor.SetSpeed(Constants.GRAPPLER_WHEEL_SPEED);
+
+                while (Math.Abs(GrapplerWheelMotor.GetTachoCount())
+                    < Constants.GRAPPLER_WHEEL_BOUNDARY)
+                {
+                }
+
+                GrapplerWheelMotor.Off();
+
+                FoodState = FoodState.Searching;
+            }
         }
 
         #endregion
@@ -354,6 +363,23 @@ namespace BrickSolution.Logic
         #endregion
 
         #region Private Logic
+
+        /// <summary>
+        /// adds a button event on the escape button that throws
+        /// an exception and halts the motors
+        /// </summary>
+        private static void AddEmergencyStopOption()
+        {
+            ButtonEvents buttonEvents = new ButtonEvents();
+
+            Action emergencyStopAction = () =>
+            {
+                Robot.HaltMotors();
+                throw new Exception();
+            };
+
+            buttonEvents.EscapePressed += emergencyStopAction;
+        }
 
         /// <summary>
         /// puts the grappler in the default-state
