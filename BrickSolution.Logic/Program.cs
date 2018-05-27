@@ -17,7 +17,11 @@ namespace BrickSolution.Logic
 
                 Robot.CollectFood();
 
-                Thread.Sleep(5000);
+                Thread.Sleep(3000);
+
+                Robot.Drive();
+
+                Thread.Sleep(3000);
 
                 Robot.ReleaseFood();
 

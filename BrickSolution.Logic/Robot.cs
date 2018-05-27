@@ -147,7 +147,7 @@ namespace BrickSolution.Logic
         /// if something is detected, the robot stops and waits for
         /// further instructions
         /// </summary>
-        public static void SearchFood()
+        public static void Drive()
         {
             Print($"searching for food!");
 
