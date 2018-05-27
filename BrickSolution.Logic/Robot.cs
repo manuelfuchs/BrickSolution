@@ -39,6 +39,11 @@ namespace BrickSolution.Logic
         /// </summary>
         public static Enumerations.StopReason LastStopReason { get; private set; }
 
+        /// <summary>
+        /// describes for which Team the Robot is delivering food
+        /// </summary>
+        public static Enumerations.TeamMode TeamMode  { get; private set; }
+
         #endregion
 
         #region Motors
@@ -124,8 +129,24 @@ namespace BrickSolution.Logic
             CalibrizeGrappler();
 
             PrintEmptyLine();
+
             WaitForStartButtonPress();
+
+            InitColour();
         }
+
+        public static void InitColour()
+        {
+            if (ColourMatchesWithTolerance(Constants.WINNIE_FOODSTONE_COLOR, GetColorId)
+            {
+                TeamMode = TeamMode.WinnieTeam;
+            }
+            else if (ColourMatchesWithTolerance(Constants.IAH_FOODSTONE_COLOR, GetColorId))
+            {
+                TeamMode = TeamMode.IAhTeam;
+            }
+        }
+
 
         /// <summary>
         /// disposes all components
@@ -249,15 +270,15 @@ namespace BrickSolution.Logic
             RiseGrappler();
         }
 
-        public static bool ColourMatchesWithTolerance(RGBColor foundColour,
+        public static bool ColourMatchesWithTolerance(RGBColor foodstoneColour,
                                                        RGBColor currentColour)
         {
-            return (foundColour.Red - Constants.COLOUR_TOLERANCE < currentColour.Red
-                    && currentColour.Red < foundColour.Red + Constants.COLOUR_TOLERANCE)
-                && (foundColour.Green - Constants.COLOUR_TOLERANCE < currentColour.Green
-                    && currentColour.Green < foundColour.Green + Constants.COLOUR_TOLERANCE)
-                && (foundColour.Blue - Constants.COLOUR_TOLERANCE < currentColour.Blue
-                    && currentColour.Blue < foundColour.Blue + Constants.COLOUR_TOLERANCE);
+            return (foodstoneColour.Red - Constants.COLOUR_TOLERANCE < currentColour.Red
+                    && currentColour.Red < foodstoneColour.Red + Constants.COLOUR_TOLERANCE)
+                && (foodstoneColour.Green - Constants.COLOUR_TOLERANCE < currentColour.Green
+                    && currentColour.Green < foodstoneColour.Green + Constants.COLOUR_TOLERANCE)
+                && (foodstoneColour.Blue - Constants.COLOUR_TOLERANCE < currentColour.Blue
+                    && currentColour.Blue < foodstoneColour.Blue + Constants.COLOUR_TOLERANCE);
         }
 
         #endregion

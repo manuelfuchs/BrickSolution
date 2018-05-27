@@ -69,4 +69,18 @@
         /// </summary>
         OtherMode
     }
+
+    public enum TeamMode
+    {
+        /// <summary>
+        /// describes what Team the Robot is and which colors to react to
+        /// food: green, meadow: 
+        /// </summary>
+       WinnieTeam,
+        /// <summary>
+        /// describes what Team the Robot is and which colors to react to
+        /// food: yellow, meadow: 
+        /// </summary>
+        IAhTeam
+    }
 }
