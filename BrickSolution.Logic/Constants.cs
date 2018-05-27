@@ -31,7 +31,7 @@ namespace BrickSolution.Logic
         #endregion
 
         #region Values
-        public static readonly sbyte DRIVE_FORWARD_SPEED = -50;
+        public static readonly sbyte DRIVE_FORWARD_SPEED = -30;
         public static readonly sbyte DRIVE_BACKWARD_SPEED = 30;
         public static readonly sbyte DRIVE_FORWARD_AFT_BACKWARD_SPEED = -30;
         public static readonly sbyte GRAPPLER_RISER_SPEED = -40;
@@ -47,14 +47,16 @@ namespace BrickSolution.Logic
         public static readonly int IR_VALUES_NOT_INTERPRETABLE_VALUE = -1;
         public static readonly int ULTRA_SONIC_TABLE_END_VALUE = 150;
         public static readonly int IR_TABLE_END_VALUE = 28;
-        public static readonly int COLOUR_TOLERANCE = 30;
+        public static readonly int COLOUR_TOLERANCE = 20;
+        public static readonly int MEADOW_US_DISTANCE = 55;
+        public static readonly int MEADOW_IR_DISTANCE = 10;
 
         #endregion
 
         #region TeamValues
-        public static readonly RGBColor WINNIE_TEAM_FOODSTONE_COLOR = new RGBColor(0, 0, 0);
-        public static readonly RGBColor IAH_TEAM_FOODSTONE_COLOR = new RGBColor(0, 0, 0);
+        public static readonly RGBColor WINNIE_TEAM_FOODSTONE_COLOR = new RGBColor(96, 19, 6);
         public static readonly RGBColor WINNIE_TEAM_MEADOW_COLOR = new RGBColor(0, 0, 0);
+        public static readonly RGBColor IAH_TEAM_FOODSTONE_COLOR = new RGBColor(0, 0, 0);
         public static readonly RGBColor IAH_TEAM_MEADOW_COLOR = new RGBColor(0, 0, 0);
         #endregion
     }

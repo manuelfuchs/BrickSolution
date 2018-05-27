@@ -134,7 +134,8 @@ namespace BrickSolution.Logic
 
             WaitForStartButtonPress();
 
-            InitColour();
+            TeamMode = TeamMode.WinnieTeam;
+            //InitColour();
         }
 
         public static void InitColour()
@@ -157,6 +158,7 @@ namespace BrickSolution.Logic
                 Constants.ROTATION_SPEED_BACKWARD);
 
             GrapplerRiserMotor.Off();
+            GrapplerPosition = GrapplerPosition.Down;
 
             Thread.Sleep(1000);
 
@@ -298,12 +300,21 @@ namespace BrickSolution.Logic
         public static bool ColourMatchesWithTolerance(RGBColor expectedColour,
                                                       RGBColor actualColour)
         {
-            return (expectedColour.Red - Constants.COLOUR_TOLERANCE < actualColour.Red
-                    && actualColour.Red < expectedColour.Red + Constants.COLOUR_TOLERANCE)
-                && (expectedColour.Green - Constants.COLOUR_TOLERANCE < actualColour.Green
-                    && actualColour.Green < expectedColour.Green + Constants.COLOUR_TOLERANCE)
-                && (expectedColour.Blue - Constants.COLOUR_TOLERANCE < actualColour.Blue
-                    && actualColour.Blue < expectedColour.Blue + Constants.COLOUR_TOLERANCE);
+
+            bool result = expectedColour.Red - (Constants.COLOUR_TOLERANCE / 2) < actualColour.Red
+                && actualColour.Red < expectedColour.Red + (Constants.COLOUR_TOLERANCE / 2)
+                && expectedColour.Green - (Constants.COLOUR_TOLERANCE / 2) < actualColour.Green
+                && actualColour.Green < expectedColour.Green + (Constants.COLOUR_TOLERANCE / 2)
+                && expectedColour.Blue - (Constants.COLOUR_TOLERANCE / 2) < actualColour.Blue
+                && actualColour.Blue < expectedColour.Blue + (Constants.COLOUR_TOLERANCE / 2);
+
+            if (result)
+            {
+                Print($"expected: {expectedColour.Red}, {expectedColour.Blue}, {expectedColour.Green}");
+                Print($"actual: {actualColour.Red}, {actualColour.Blue}, {actualColour.Green}");
+            }
+
+            return result;
         }
         
         /// <summary>
@@ -327,8 +338,7 @@ namespace BrickSolution.Logic
         public static void RealeaseBrickOnMeadow()
         {
             if (GrapplerPosition == GrapplerPosition.Up
-                && FoodState == FoodState.Carrying
-                && MeadowDetected())
+                && FoodState == FoodState.Carrying)
             {
                 GrapplerWheelMotor.ResetTacho();
                 GrapplerWheelMotor.SetSpeed(Constants.GRAPPLER_WHEEL_SPEED);
@@ -339,7 +349,8 @@ namespace BrickSolution.Logic
                     //Robot.Print($"tacho = {GrapplerMotor.GetTachoCount().ToString()}");
                 }
 
-                GrapplerRiserMotor.Off();
+                GrapplerWheelMotor.Off();
+                FoodState = FoodState.Searching;
             }
         }
 
@@ -654,9 +665,10 @@ namespace BrickSolution.Logic
         /// </returns>
         public static bool SingleFoodDetected()
         {
-            bool result = false;
-
-            //TODO
+            bool result = (TeamMode == TeamMode.WinnieTeam
+                    && ColourMatchesWithTolerance(Constants.WINNIE_TEAM_FOODSTONE_COLOR, GetRGBColor()))
+                 || (TeamMode == TeamMode.IAhTeam
+                    && ColourMatchesWithTolerance(Constants.IAH_TEAM_FOODSTONE_COLOR, GetRGBColor()));
 
             if (result)
             {
@@ -676,9 +688,14 @@ namespace BrickSolution.Logic
         /// </returns>
         public static bool MeadowDetected()
         {
-            bool result = false;
+            bool result =
+                GetIRDistance() < Constants.MEADOW_IR_DISTANCE
+              || GetUltraSonicDistance() < Constants.MEADOW_US_DISTANCE;
 
-            //TODO
+            Print($"ir-dist: {GetIRDistance()}");
+            Print($"us-dist: {GetUltraSonicDistance()}");
+            Print($"cond1: {GetIRDistance() < Constants.MEADOW_IR_DISTANCE}");
+            Print($"cond2: {GetUltraSonicDistance() < Constants.MEADOW_US_DISTANCE}");
 
             if (result)
             {
