@@ -6,16 +6,16 @@ namespace BrickSolution.Logic
     internal static class Constants
     {
         #region Motors
-        public static MotorPort LEFT_TRACK_PORT = MotorPort.OutA;
-        public static MotorPort RIGHT_TRACK_PORT = MotorPort.OutB;
-        public static MotorPort GRAPPLER_PORT = MotorPort.OutD;
+        public static readonly MotorPort LEFT_TRACK_PORT = MotorPort.OutA;
+        public static readonly MotorPort RIGHT_TRACK_PORT = MotorPort.OutB;
+        public static readonly MotorPort GRAPPLER_RISER_PORT = MotorPort.OutC;
+        public static readonly MotorPort GRAPPLER_WHEEL_PORT = MotorPort.OutD;
         #endregion
 
         #region Sensors
-        public static SensorPort GRAPPLER_TOUCH_SENSOR_PORT = SensorPort.In1;
-        public static SensorPort ULTRASONIC_SENSOR_PORT = SensorPort.In2;
-        public static SensorPort IR_SENSOR_PORT = SensorPort.In3;
-        public static SensorPort EV3_COLOR_SENSOR_PORT = SensorPort.In4;
+        public static readonly SensorPort EV3_COLOR_SENSOR_PORT = SensorPort.In1;
+        public static readonly SensorPort ULTRASONIC_SENSOR_PORT = SensorPort.In2;
+        public static readonly SensorPort IR_SENSOR_PORT = SensorPort.In4;
         #endregion
 
         #region LcdOutputs

@@ -108,21 +108,9 @@ namespace BrickSolution.Logic
         /// </summary>
         public static void InitRobot()
         {
-            LeftTrack = new Motor(Constants.LEFT_TRACK_PORT);
-            RightTrack = new Motor(Constants.RIGHT_TRACK_PORT);
-            GrapplerMotor = new Motor(Constants.GRAPPLER_PORT);
-
             ColorSensor = new EV3ColorSensor(Constants.EV3_COLOR_SENSOR_PORT);
-            GrapplerTouchSensor = new EV3TouchSensor(Constants.GRAPPLER_TOUCH_SENSOR_PORT);
-            IRSensor = new EV3IRSensor(Constants.IR_SENSOR_PORT);
-            UltraSonicSensor = new EV3UltrasonicSensor(Constants.ULTRASONIC_SENSOR_PORT);
-            UltraSonicSensor.Mode = UltraSonicMode.Centimeter;
             ColorSensor.Mode = ColorMode.RGB;
-
-            GrapplerState = GrapplerState.Open;
-            GrapplerPosition = GrapplerPosition.Down;
-            FoodState = FoodState.Searching;
-
+            
             IsInitialized = true;
 
             WaitToFullyBootProgram();
