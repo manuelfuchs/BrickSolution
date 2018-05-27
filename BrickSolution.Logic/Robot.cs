@@ -30,11 +30,6 @@ namespace BrickSolution.Logic
         public static Enumerations.GrapplerPosition GrapplerPosition { get; private set; }
 
         /// <summary>
-        /// describes the state of the grappler
-        /// </summary>
-        public static Enumerations.GrapplerState GrapplerState { get; private set; }
-
-        /// <summary>
         /// describes if the robot is carrying food or searching currently
         /// </summary>
         public static Enumerations.FoodState FoodState { get; private set; }
@@ -60,11 +55,16 @@ namespace BrickSolution.Logic
         private static Motor RightTrack { get; set; }
 
         /// <summary>
-        /// holds the <see cref="Motor"/> instance to a 
-        /// EV3 motor that is responsible for the grappler
+        /// holds the <see cref="Motor"/> instance to a EV3 motor
+        /// that is responsible for the grappler rising
         /// </summary>
-        private static Motor GrapplerMotor { get; set; }
+        private static Motor GrapplerRiserMotor { get; set; }
 
+        /// <summary>
+        /// holds the <see cref="Motor"/> instance to a EV3 motor
+        /// that is responsible for the grappler wheel
+        /// </summary>
+        private static Motor GrapplerWheelMotor { get; set; }
 
         #endregion
 
@@ -75,12 +75,6 @@ namespace BrickSolution.Logic
         /// for the EV3ColorSensor
         /// </summary>
         private static EV3ColorSensor ColorSensor { get; set; }
-
-        /// <summary>
-        /// holds the <see cref="EV3TouchSensor"/> instance
-        /// for the EV3TouchSensor that's used in the grappler
-        /// </summary>
-        private static EV3TouchSensor GrapplerTouchSensor { get; set; }
 
         /// <summary>
         /// holds the <see cref="EV3IRSensor"/> instance
@@ -108,17 +102,18 @@ namespace BrickSolution.Logic
         /// </summary>
         public static void InitRobot()
         {
+            AddEmergencyStopOption();
+
             LeftTrack = new Motor(Constants.LEFT_TRACK_PORT);
             RightTrack = new Motor(Constants.RIGHT_TRACK_PORT);
-            GrapplerMotor = new Motor(Constants.GRAPPLER_PORT);
+            GrapplerRiserMotor = new Motor(Constants.GRAPPLER_RISER_PORT);
+            GrapplerWheelMotor = new Motor(Constants.GRAPPLER_WHEEL_PORT);
 
             ColorSensor = new EV3ColorSensor(Constants.ULTRASONIC_SENSOR_PORT);
-            GrapplerTouchSensor = new EV3TouchSensor(Constants.GRAPPLER_TOUCH_SENSOR_PORT);
             IRSensor = new EV3IRSensor(Constants.IR_SENSOR_PORT);
             UltraSonicSensor = new EV3UltrasonicSensor(Constants.ULTRASONIC_SENSOR_PORT);
             UltraSonicSensor.Mode = UltraSonicMode.Centimeter;
-
-            GrapplerState = GrapplerState.Open;
+            
             GrapplerPosition = GrapplerPosition.Down;
             FoodState = FoodState.Searching;
 
@@ -129,6 +124,23 @@ namespace BrickSolution.Logic
             WaitForStartButtonPress();
             
             CalibrizeGrappler();
+        }
+
+        /// <summary>
+        /// adds a button event on the escape button that throws
+        /// an exception and halts the motors
+        /// </summary>
+        private static void AddEmergencyStopOption()
+        {
+            ButtonEvents buttonEvents = new ButtonEvents();
+
+            Action emergencyStopAction = () =>
+            {
+                Robot.HaltMotors();
+                throw new Exception();
+            };
+
+            buttonEvents.EscapePressed += emergencyStopAction;
         }
 
         /// <summary>
@@ -194,10 +206,23 @@ namespace BrickSolution.Logic
             RightTrack.Brake();
         }
 
+        /// <summary>
+        /// halts the two motors that are responsible for rising/lowering
+        /// and turning the grappler
+        /// </summary>
+        public static void TurnOffGrappler()
+        {
+            GrapplerRiserMotor.Off();
+            GrapplerWheelMotor.Off();
+        }
+
+        /// <summary>
+        /// halts all motors of the robot
+        /// </summary>
         public static void HaltMotors()
         {
             HaltTracks();
-            GrapplerMotor.Brake();
+            TurnOffGrappler();
         }
 
         #endregion
@@ -301,51 +326,54 @@ namespace BrickSolution.Logic
         /// </summary>
         private static void CalibrizeGrappler()
         {
-            CloseAndRiseGrappler();
-            PutDownAndOpenGrapplerOnMeadow();
+            TurnOffGrappler();
+            Thread.Sleep(2000);
+            RiseGrappler();
         }
 
         /// <summary>
         /// closes and rises the grappler if its on the ground
         /// </summary>
-        private static void CloseAndRiseGrappler()
+        private static void RiseGrappler()
         {
             // no need to check more, because the pressure sensor
             // stops either way
             if (GrapplerPosition == GrapplerPosition.Down)
             {
-                GrapplerMotor.SetSpeed(Constants.GRAPPLER_MOTOR_UP_SPEED);
+                GrapplerRiserMotor.ResetTacho();
+                GrapplerRiserMotor.SetSpeed(Constants.GRAPPLER_RISER_SPEED);
 
-                while (!GrapplerTouchSensor.IsPressed())
+                while (Math.Abs(GrapplerRiserMotor.GetTachoCount())
+                    < Constants.GRAPPLER_RISER_TACHO_BOUNDARY)
                 {
                 }
 
-                GrapplerMotor.Brake();
+                GrapplerRiserMotor.Brake();
             }
 
             GrapplerPosition = GrapplerPosition.Up;
-            GrapplerState = GrapplerState.Closed;
         }
 
         /// <summary>
         /// puts down the grappler and opens it, if it's in the air
         /// closed
         /// </summary>
-        private static void PutDownAndOpenGrapplerOnMeadow()
+        private static void RealeaseBrickOnMeadow()
         {
             if (GrapplerPosition == GrapplerPosition.Up
-                && GrapplerState == GrapplerState.Closed
-                && !EnclosureDetected())
+                && FoodState == FoodState.Carrying
+                && EnclosureDetected())
             {
-                GrapplerMotor.ResetTacho();
-                GrapplerMotor.SetSpeed(Constants.GRAPPLER_MOTOR_DOWN_SPEED);
+                GrapplerWheelMotor.ResetTacho();
+                GrapplerWheelMotor.SetSpeed(Constants.GRAPPLER_WHEEL_SPEED);
 
-                while (GrapplerMotor.GetTachoCount() > Constants.GRAPPLER_UP_TO_DOWN_TACHO_BOUNDARY)
+                while (Math.Abs(GrapplerWheelMotor.GetTachoCount())
+                    < Constants.GRAPPLER_WHEEL_BOUNDARY)
                 {
                     //Robot.Print($"tacho = {GrapplerMotor.GetTachoCount().ToString()}");
                 }
 
-                GrapplerMotor.Brake();
+                GrapplerRiserMotor.Off();
             }
         }
 
@@ -415,7 +443,8 @@ namespace BrickSolution.Logic
         /// </returns>
         public static bool AbyssDetected()
         {
-            bool result = GetUltraSonicDistance() > Constants.ULTRA_SONIC_TABLE_END_VALUE;
+            bool result = GetUltraSonicDistance() > Constants.ULTRA_SONIC_TABLE_END_VALUE
+                       || GetIRDistance() > Constants.IR_TABLE_END_VALUE;
 
             if (result)
             {
