@@ -12,39 +12,29 @@ namespace BrickSolution.Logic
             try
             {
                 Robot.InitRobot();
-#if DEBUG
-                ButtonEvents buttonEvents = new ButtonEvents();
 
-                Action emergencyStopAction = () =>
-                {
-                    Robot.HaltMotors();
-                    throw new Exception();
-                };
+                //for (int i = 0; i < 10; i++)
+                //{
+                //    Robot.SearchFood();
 
-                buttonEvents.EscapePressed += emergencyStopAction;
-#endif
-                for (int i = 0; i < 10; i++)
-                {
-                    Robot.SearchFood();
-
-                    switch (Robot.LastStopReason)
-                    {
-                        case StopReason.AbyssDetected:
-                            Robot.RotateClockWise(RotationMode.OtherMode);
-                            break;
-                        case StopReason.ObstacleDetected:
-                            Robot.RotateClockWise(RotationMode.OtherMode);
-                            break;
-                        case StopReason.FoodplaceDetected:
-                            break;
-                        case StopReason.SingleFoodDetected:
-                            break;
-                        case StopReason.EnclosureDetected:
-                            break;
-                        default:
-                            break;
-                    }
-                }
+                //    switch (Robot.LastStopReason)
+                //    {
+                //        case StopReason.AbyssDetected:
+                //            Robot.RotateClockWise(RotationMode.OtherMode);
+                //            break;
+                //        case StopReason.ObstacleDetected:
+                //            Robot.RotateClockWise(RotationMode.OtherMode);
+                //            break;
+                //        case StopReason.FoodplaceDetected:
+                //            break;
+                //        case StopReason.SingleFoodDetected:
+                //            break;
+                //        case StopReason.EnclosureDetected:
+                //            break;
+                //        default:
+                //            break;
+                //    }
+                //}
             }
             catch (Exception e)
             {

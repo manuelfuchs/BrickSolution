@@ -6,16 +6,16 @@ namespace BrickSolution.Logic
     internal static class Constants
     {
         #region Motors
-        public static MotorPort LEFT_TRACK_PORT = MotorPort.OutA;
-        public static MotorPort RIGHT_TRACK_PORT = MotorPort.OutB;
-        public static MotorPort GRAPPLER_PORT = MotorPort.OutD;
+        public static readonly MotorPort LEFT_TRACK_PORT = MotorPort.OutA;
+        public static readonly MotorPort RIGHT_TRACK_PORT = MotorPort.OutB;
+        public static readonly MotorPort GRAPPLER_RISER_PORT = MotorPort.OutC;
+        public static readonly MotorPort GRAPPLER_WHEEL_PORT = MotorPort.OutD;
         #endregion
 
         #region Sensors
-        public static SensorPort GRAPPLER_TOUCH_SENSOR_PORT = SensorPort.In1;
-        public static SensorPort ULTRASONIC_SENSOR_PORT = SensorPort.In2;
-        public static SensorPort IR_SENSOR_PORT = SensorPort.In3;
-        public static SensorPort EV3_COLOR_SENSOR_PORT = SensorPort.In4;
+        public static readonly SensorPort EV3_COLOR_SENSOR_PORT = SensorPort.In1;
+        public static readonly SensorPort ULTRASONIC_SENSOR_PORT = SensorPort.In2;
+        public static readonly SensorPort IR_SENSOR_PORT = SensorPort.In4;
         #endregion
 
         #region LcdOutputs
@@ -30,17 +30,19 @@ namespace BrickSolution.Logic
         #endregion
 
         #region Values
-        public static sbyte DRIVE_FORWARD_SPEED = 50;
-        public static sbyte GRAPPLER_MOTOR_UP_SPEED = 40;
-        public static sbyte GRAPPLER_MOTOR_DOWN_SPEED = -40;
-        public static int GRAPPLER_UP_TO_DOWN_TACHO_BOUNDARY = -4500;
-        public static int PROGRAM_ABORTION_DELAY = 15000;
-        public static int PROGRAM_BOOT_DELAY = 10000;
-        public static int SAMPLING_RATE = 250;
-        public static sbyte ROTATION_SPEED = 40;
-        public static int ROTATION_DURATION = 750;
-        public static int IR_VALUES_NOT_INTERPRETABLE_VALUE = -1;
-        public static int ULTRA_SONIC_TABLE_END_VALUE = 180;
+        public static readonly sbyte DRIVE_FORWARD_SPEED = 50;
+        public static readonly sbyte GRAPPLER_RISER_SPEED = 40;
+        public static readonly sbyte GRAPPLER_WHEEL_SPEED = 20;
+        public static readonly sbyte ROTATION_SPEED = 40;
+        public static readonly int GRAPPLER_RISER_TACHO_BOUNDARY = 90;
+        public static readonly int PROGRAM_ABORTION_DELAY = 15000;
+        public static readonly int PROGRAM_BOOT_DELAY = 10000;
+        public static readonly int SAMPLING_RATE = 250;
+        public static readonly int ROTATION_DURATION = 750;
+        public static readonly int IR_VALUES_NOT_INTERPRETABLE_VALUE = -1;
+        public static readonly int ULTRA_SONIC_TABLE_END_VALUE = 180;
+        public static readonly int IR_TABLE_END_VALUE = 20;
+        public static readonly int GRAPPLER_WHEEL_BOUNDARY = 360;
         #endregion
     }
 }
