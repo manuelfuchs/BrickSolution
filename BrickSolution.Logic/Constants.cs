@@ -47,6 +47,16 @@ namespace BrickSolution.Logic
         public static readonly int ULTRA_SONIC_TABLE_END_VALUE = 180;
         public static readonly int IR_TABLE_END_VALUE = 20;
         public static readonly int COLOUR_TOLERANCE = 30;
+
+        #endregion
+
+        #region TeamValues
+        public static readonly RGBColor WINNIE_TEAM_FOODSTONE_COLOR = new RGBColor(0, 0, 0);
+        public static readonly RGBColor IAH_TEAM_FOODSTONE_COLOR = new RGBColor(0, 0, 0);
+        public static readonly RGBColor WINNIE_TEAM_MEADOW_COLOR = new RGBColor(0, 0, 0);
+        public static readonly RGBColor IAH_TEAM_MEADOW_COLOR = new RGBColor(0, 0, 0);
         #endregion
     }
+
+
 }
