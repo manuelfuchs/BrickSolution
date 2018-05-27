@@ -16,21 +16,6 @@
     }
 
     /// <summary>
-    /// describes the state of the grappler
-    /// </summary>
-    public enum GrapplerState
-    {
-        /// <summary>
-        /// the grappler is open
-        /// </summary>
-        Open,
-        /// <summary>
-        /// the grappler is closed
-        /// </summary>
-        Closed
-    }
-
-    /// <summary>
     /// describes if the robot is carrying food or searching currently
     /// </summary>
     public enum FoodState
