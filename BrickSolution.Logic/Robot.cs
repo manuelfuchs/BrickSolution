@@ -120,10 +120,11 @@ namespace BrickSolution.Logic
             IsInitialized = true;
 
             WaitToFullyBootProgram();
-            PrintEmptyLine();
-            WaitForStartButtonPress();
             
             CalibrizeGrappler();
+
+            PrintEmptyLine();
+            WaitForStartButtonPress();
         }
 
         /// <summary>
@@ -152,7 +153,7 @@ namespace BrickSolution.Logic
         {
             Print($"searching for food!");
 
-            SetWheelSpeed(Constants.DRIVE_FORWARD_SPEED, Constants.DRIVE_FORWARD_SPEED);
+            SetTrackSpeed(Constants.DRIVE_FORWARD_SPEED, Constants.DRIVE_FORWARD_SPEED);
             
             while (!AbyssDetected()
                 && !ObstacleDetected()
@@ -173,7 +174,7 @@ namespace BrickSolution.Logic
         {
             Print($"rotating clockwise in mode {rotationMode}");
 
-            SetWheelSpeed(Constants.ROTATION_SPEED,
+            SetTrackSpeed(Constants.ROTATION_SPEED,
                           Convert.ToSByte(-Constants.ROTATION_SPEED));
 
             if (rotationMode == RotationMode.TimerMode)
@@ -214,6 +215,7 @@ namespace BrickSolution.Logic
         {
             GrapplerRiserMotor.Off();
             GrapplerWheelMotor.Off();
+            GrapplerPosition = GrapplerPosition.Down;
         }
 
         /// <summary>
@@ -223,6 +225,26 @@ namespace BrickSolution.Logic
         {
             HaltTracks();
             TurnOffGrappler();
+        }
+
+        /// <summary>
+        /// contains logic to collect food:
+        ///   .) drive a bit back
+        ///   .) lower grappler
+        ///   .) drive a bit forward with rotating grappler-wheel
+        ///   .) rise grappler
+        /// </summary>
+        public static void CollectFood()
+        {
+            SetTrackSpeed(Constants.DRIVE_BACKWARD_SPEED, Constants.DRIVE_BACKWARD_SPEED);
+            Thread.Sleep(1500);
+            TurnOffGrappler();
+            GrapplerWheelMotor.SetSpeed(Constants.GRAPPLER_WHEEL_SPEED);
+            SetTrackSpeed(Constants.DRIVE_FORWARD_AFT_BACKWARD_SPEED,
+                          Constants.DRIVE_FORWARD_AFT_BACKWARD_SPEED);
+            Thread.Sleep(1500);
+            HaltMotors();
+            RiseGrappler();
         }
 
         #endregion
@@ -326,6 +348,7 @@ namespace BrickSolution.Logic
         /// </summary>
         private static void CalibrizeGrappler()
         {
+            Print("Calibrizing grappler");
             TurnOffGrappler();
             Thread.Sleep(2000);
             RiseGrappler();
@@ -382,7 +405,7 @@ namespace BrickSolution.Logic
         /// </summary>
         /// <param name="leftTrackSpeed">speed for the left track</param>
         /// <param name="rightTrackWheelSpeed">speed for the right track</param>
-        private static void SetWheelSpeed(sbyte leftTrackSpeed, sbyte rightTrackWheelSpeed)
+        private static void SetTrackSpeed(sbyte leftTrackSpeed, sbyte rightTrackWheelSpeed)
         {
             LeftTrack.SetSpeed(leftTrackSpeed);
             RightTrack.SetSpeed(rightTrackWheelSpeed);

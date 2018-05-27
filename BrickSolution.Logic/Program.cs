@@ -13,6 +13,11 @@ namespace BrickSolution.Logic
             {
                 Robot.InitRobot();
 
+                Thread.Sleep(10000);
+
+                Robot.CollectFood();
+
+
                 //for (int i = 0; i < 10; i++)
                 //{
                 //    Robot.SearchFood();
