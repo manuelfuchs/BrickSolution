@@ -137,16 +137,32 @@ namespace BrickSolution.Logic
 
         public static void InitColour()
         {
-            if (ColourMatchesWithTolerance(Constants.WINNIE_FOODSTONE_COLOR, GetColorId)
+            if (ColourMatchesWithTolerance(Constants.WINNIE_TEAM_FOODSTONE_COLOR, GetRGBColor()))
             {
                 TeamMode = TeamMode.WinnieTeam;
             }
-            else if (ColourMatchesWithTolerance(Constants.IAH_FOODSTONE_COLOR, GetColorId))
+            else if (ColourMatchesWithTolerance(Constants.IAH_TEAM_FOODSTONE_COLOR, GetRGBColor()))
             {
                 TeamMode = TeamMode.IAhTeam;
             }
         }
 
+        public static void PushObjectInFrontToLeft()
+        {
+            Rotate(
+                RotationMode.TimerMode,
+                Constants.ROTATION_SPEED_FORWARD,
+                Constants.ROTATION_SPEED_BACKWARD);
+
+            GrapplerRiserMotor.Off();
+
+            Rotate(
+                RotationMode.TimerMode, 
+                Constants.ROTATION_SPEED_BACKWARD,
+                Constants.ROTATION_SPEED_FORWARD);
+            
+            RiseGrappler();
+        }
 
         /// <summary>
         /// disposes all components
@@ -165,7 +181,6 @@ namespace BrickSolution.Logic
                 GC.SuppressFinalize(UltraSonicSensor);
             }
         }
-
 
         /// <summary>
         /// drives into a certain direction until something is detected.
@@ -188,18 +203,17 @@ namespace BrickSolution.Logic
 
             HaltTracks();
         }
-
+        
         /// <summary>
         /// lets the robot rotate in a certain speed and a certain duration
         /// </summary>
         /// <param name="rotationMode"></param>
-        public static void RotateClockWise(RotationMode rotationMode)
+        public static void Rotate(RotationMode rotationMode, sbyte leftTrackSpeed, sbyte rightTrackSpeed)
         {
-            Print($"rotating clockwise in mode {rotationMode}");
+            Print($"rotating in mode {rotationMode}");
 
-            SetTrackSpeed(Constants.ROTATION_SPEED,
-                          Convert.ToSByte(-Constants.ROTATION_SPEED));
-
+            SetTrackSpeed(leftTrackSpeed, rightTrackSpeed);
+            
             if (rotationMode == RotationMode.TimerMode)
             {
                 DateTime startTime = DateTime.Now;
@@ -268,6 +282,8 @@ namespace BrickSolution.Logic
             Thread.Sleep(1500);
             HaltMotors();
             RiseGrappler();
+
+            FoodState = FoodState.Carrying;
         }
 
         public static bool ColourMatchesWithTolerance(RGBColor foodstoneColour,
@@ -337,6 +353,25 @@ namespace BrickSolution.Logic
         private static string GetColorName()
         {
             return ColorSensor.ReadAsString();
+        }
+
+        /// <summary>
+        /// returns the current colorId of the EV3ColorSensor
+        /// </summary>
+        /// <returns>
+        /// int: the current colorId seen by the EV3ColorSensor
+        /// </returns>
+        public static RGBColor GetRGBColor()
+        {
+            if (ColorSensor != null)
+            {
+                return ColorSensor.ReadRGB();
+            }
+            else
+            {
+                Robot.Print("color sensor not initialized!");
+                return null;
+            }
         }
 
         /// <summary>

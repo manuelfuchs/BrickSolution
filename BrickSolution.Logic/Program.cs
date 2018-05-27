@@ -17,22 +17,32 @@ namespace BrickSolution.Logic
 
                 Robot.CollectFood();
 
+                Thread.Sleep(5000);
 
-                //for (int i = 0; i < 10; i++)
+                Robot.PushObjectInFrontToLeft();
+
+                //while (Robot.FoodState == FoodState.Carrying)
                 //{
-                //    Robot.SearchFood();
+                //    Robot.Drive();
 
                 //    switch (Robot.LastStopReason)
                 //    {
                 //        case StopReason.AbyssDetected:
-                //            Robot.RotateClockWise(RotationMode.OtherMode);
+                //            Robot.Rotate(
+                //                RotationMode.OtherMode,
+                //                Constants.ROTATION_SPEED_FORWARD,
+                //                Constants.ROTATION_SPEED_BACKWARD);
                 //            break;
                 //        case StopReason.ObstacleDetected:
-                //            Robot.RotateClockWise(RotationMode.OtherMode);
+                //            Robot.Rotate(
+                //                RotationMode.OtherMode,
+                //                Constants.ROTATION_SPEED_FORWARD,
+                //                Constants.ROTATION_SPEED_BACKWARD);
                 //            break;
                 //        case StopReason.FoodplaceDetected:
                 //            break;
                 //        case StopReason.SingleFoodDetected:
+                //            Robot.PushObjectInFrontToLeft();
                 //            break;
                 //        case StopReason.EnclosureDetected:
                 //            break;
