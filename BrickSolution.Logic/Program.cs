@@ -56,6 +56,7 @@ namespace BrickSolution.Logic
             }
             finally
             {
+                Robot.DisposeComponents();
                 Robot.PrintEmptyLine();
                 Robot.Print(Constants.PROGRAM_FINISHED_MSG);
                 Thread.Sleep(Constants.PROGRAM_ABORTION_DELAY);
