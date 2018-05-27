@@ -128,20 +128,21 @@ namespace BrickSolution.Logic
         }
 
         /// <summary>
-        /// adds a button event on the escape button that throws
-        /// an exception and halts the motors
+        /// disposes all components
         /// </summary>
-        private static void AddEmergencyStopOption()
+        public static void DisposeComponents()
         {
-            ButtonEvents buttonEvents = new ButtonEvents();
-
-            Action emergencyStopAction = () =>
+            if (IsInitialized)
             {
-                Robot.HaltMotors();
-                throw new Exception();
-            };
+                GC.SuppressFinalize(LeftTrack);
+                GC.SuppressFinalize(RightTrack);
+                GC.SuppressFinalize(GrapplerRiserMotor);
+                GC.SuppressFinalize(GrapplerWheelMotor);
 
-            buttonEvents.EscapePressed += emergencyStopAction;
+                GC.SuppressFinalize(ColorSensor);
+                GC.SuppressFinalize(IRSensor);
+                GC.SuppressFinalize(UltraSonicSensor);
+            }
         }
 
 
@@ -354,6 +355,23 @@ namespace BrickSolution.Logic
         #endregion
 
         #region Private Logic
+
+        /// <summary>
+        /// adds a button event on the escape button that throws
+        /// an exception and halts the motors
+        /// </summary>
+        private static void AddEmergencyStopOption()
+        {
+            ButtonEvents buttonEvents = new ButtonEvents();
+
+            Action emergencyStopAction = () =>
+            {
+                Robot.HaltMotors();
+                throw new Exception();
+            };
+
+            buttonEvents.EscapePressed += emergencyStopAction;
+        }
 
         /// <summary>
         /// puts the grappler in the default-state
