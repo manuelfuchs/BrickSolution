@@ -14,69 +14,13 @@ namespace BrickSolution.Logic
                 Robot.InitRobot();
 
                 Thread.Sleep(10000);
-                
-                Robot.Drive();
 
-                Robot.CollectFood();
-
-                Thread.Sleep(5000);
-
-                while (Robot.FoodState == FoodState.Carrying)
+                for (int i = 0; i < 10; i++)
                 {
-                    Robot.Drive();
+                    Wait();
 
-                    switch (Robot.LastStopReason)
-                    {
-                        case StopReason.AbyssDetected:
-                            Robot.Rotate(
-                                RotationMode.OtherMode,
-                                Constants.ROTATION_SPEED_FORWARD,
-                                Constants.ROTATION_SPEED_BACKWARD);
-                            break;
-                        case StopReason.ObstacleDetected:
-                            Robot.Rotate(
-                                RotationMode.OtherMode,
-                                Constants.ROTATION_SPEED_FORWARD,
-                                Constants.ROTATION_SPEED_BACKWARD);
-                            break;
-                        case StopReason.FenceDetected:
-                            if (Robot.TeamMode == TeamMode.IAhTeam)
-                            {
-                                Robot.PushObjectInFrontToLeft();
-                            }
-                            else
-                            {
-                                Robot.Rotate(
-                                    RotationMode.TimerMode,
-                                    Constants.ROTATION_SPEED_FORWARD,
-                                    Constants.ROTATION_SPEED_BACKWARD);
-                            }
-                            break;
-                        case StopReason.TreeDetected:
-                            Robot.Rotate(
-                                RotationMode.TimerMode,
-                                Constants.ROTATION_SPEED_FORWARD,
-                                Constants.ROTATION_SPEED_BACKWARD);
-                            break;
-                        case StopReason.SingleFoodDetected:
-                            Robot.PushObjectInFrontToLeft();
-                            break;
-                        case StopReason.MeadowDetected:
-                            if (Robot.MeadowIsOurs())
-                            {
-                                Robot.RealeaseBrickOnMeadow();
-                            }
-                            else
-                            {
-                                Robot.Rotate(
-                                    RotationMode.HalfRotationMode,
-                                    Constants.ROTATION_SPEED_FORWARD,
-                                    Constants.ROTATION_SPEED_BACKWARD);
-                            }
-                            break;
-                        default:
-                            break;
-                    }
+                    Robot.Print($"us-dist: {Robot.GetUltraSonicDistance()}");
+                    Robot.Print($"ir-dist: {Robot.GetIRDistance()}");
                 }
             }
             catch (Exception e)
@@ -99,6 +43,30 @@ namespace BrickSolution.Logic
                 Robot.Print(Constants.PROGRAM_FINISHED_MSG);
                 Thread.Sleep(Constants.PROGRAM_ABORTION_DELAY);
             }
+        }
+
+        private static void Wait()
+        {
+            bool continueWithCompetition = false;
+
+            ButtonEvents btnEvents = new ButtonEvents();
+
+            Action btnAction = () => {
+                continueWithCompetition = true;
+            };
+
+            btnEvents.EnterPressed += btnAction;
+
+            Robot.PrintEmptyLine();
+            Robot.Print("press middle button to read");
+            Robot.Print("a colour");
+
+            while (!continueWithCompetition)
+            {
+                Thread.Sleep(Constants.SAMPLING_RATE);
+            }
+
+            btnEvents.EnterPressed -= btnAction;
         }
     }
 }
