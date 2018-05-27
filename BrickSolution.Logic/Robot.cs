@@ -144,6 +144,7 @@ namespace BrickSolution.Logic
             buttonEvents.EscapePressed += emergencyStopAction;
         }
 
+
         /// <summary>
         /// drives into a certain direction until something is detected.
         /// if something is detected, the robot stops and waits for
@@ -245,6 +246,17 @@ namespace BrickSolution.Logic
             Thread.Sleep(1500);
             HaltMotors();
             RiseGrappler();
+        }
+
+        public static bool ColourMatchesWithTolerance(RGBColor foundColour,
+                                                       RGBColor currentColour)
+        {
+            return (foundColour.Red - Constants.COLOUR_TOLERANCE < currentColour.Red
+                    && currentColour.Red < foundColour.Red + Constants.COLOUR_TOLERANCE)
+                && (foundColour.Green - Constants.COLOUR_TOLERANCE < currentColour.Green
+                    && currentColour.Green < foundColour.Green + Constants.COLOUR_TOLERANCE)
+                && (foundColour.Blue - Constants.COLOUR_TOLERANCE < currentColour.Blue
+                    && currentColour.Blue < foundColour.Blue + Constants.COLOUR_TOLERANCE);
         }
 
         #endregion
@@ -424,6 +436,9 @@ namespace BrickSolution.Logic
             {
             }
         }
+
+
+       
 
         /// <summary>
         /// waits until the operator presses the middle-button to
