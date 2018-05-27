@@ -132,6 +132,7 @@ namespace BrickSolution.Logic
         /// an exception and halts the motors
         /// </summary>
         private static void AddEmergencyStopOption()
+        public static void DisposeComponents()
         {
             ButtonEvents buttonEvents = new ButtonEvents();
 
@@ -142,6 +143,17 @@ namespace BrickSolution.Logic
             };
 
             buttonEvents.EscapePressed += emergencyStopAction;
+            if (IsInitialized)
+            { 
+                GC.SuppressFinalize(LeftTrack);
+                GC.SuppressFinalize(RightTrack);
+                GC.SuppressFinalize(GrapplerRiserMotor);
+                GC.SuppressFinalize(GrapplerWheelMotor);
+
+                GC.SuppressFinalize(ColorSensor);
+                GC.SuppressFinalize(IRSensor);
+                GC.SuppressFinalize(UltraSonicSensor);
+            }
         }
 
         /// <summary>
