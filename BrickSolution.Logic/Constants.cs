@@ -35,8 +35,8 @@ namespace BrickSolution.Logic
         public static readonly sbyte DRIVE_BACKWARD_SPEED = 30;
         public static readonly sbyte DRIVE_FORWARD_AFT_BACKWARD_SPEED = -30;
         public static readonly sbyte GRAPPLER_RISER_SPEED = -40;
-        public static readonly sbyte GRAPPLER_WHEEL_SPEED = 15;
-        public static readonly int GRAPPLER_WHEEL_BOUNDARY = 180;
+        public static readonly sbyte GRAPPLER_WHEEL_SPEED = 25;
+        public static readonly int GRAPPLER_WHEEL_BOUNDARY = 210;
         public static readonly sbyte ROTATION_SPEED_FORWARD = -40;
         public static readonly sbyte ROTATION_SPEED_BACKWARD = 40;
         public static readonly int GRAPPLER_RISER_TACHO_BOUNDARY = 100;
@@ -45,19 +45,25 @@ namespace BrickSolution.Logic
         public static readonly int SAMPLING_RATE = 250;
         public static readonly int ROTATION_DURATION = 1000;
         public static readonly int IR_VALUES_NOT_INTERPRETABLE_VALUE = -1;
-        public static readonly int ULTRA_SONIC_TABLE_END_VALUE = 150;
-        public static readonly int IR_TABLE_END_VALUE = 28;
-        public static readonly int COLOUR_TOLERANCE = 20;
-        public static readonly int MEADOW_US_DISTANCE = 55;
-        public static readonly int MEADOW_IR_DISTANCE = 10;
-
+        public static readonly int ULTRA_SONIC_TABLE_END_VALUE = 820;
+        public static readonly int ULTRA_SONIC_REFLECTION_TOLL = 900;
+        public static readonly int IR_TABLE_END_VALUE = 45;
+        public static readonly int COLOUR_TOLERANCE = 30;
+        public static readonly int US_MEADOW_DISTANCE_TOLL_DOWN = 90;
+        public static readonly int US_MEADOW_DISTANCE_TOLL_UP = 101;
+        public static readonly int IR_MEADOW_DISTANCE_TOLL_DOWN = 4;
+        public static readonly int IR_MEADOW_DISTANCE_TOLL_UP = 9;
+        public static readonly int US_FENCE_DISTANCE_TOLL_DOWN = 102;
+        public static readonly int US_FENCE_DISTANCE_TOLL_UP = 110;
+        public static readonly int IR_FENCE_DISTANCE_TOLL_DOWN = 10;
+        public static readonly int IR_FENCE_DISTANCE_TOLL_UP = 13;
         #endregion
 
         #region TeamValues
-        public static readonly RGBColor WINNIE_TEAM_FOODSTONE_COLOR = new RGBColor(96, 19, 6);
-        public static readonly RGBColor WINNIE_TEAM_MEADOW_COLOR = new RGBColor(0, 0, 0);
-        public static readonly RGBColor IAH_TEAM_FOODSTONE_COLOR = new RGBColor(0, 0, 0);
-        public static readonly RGBColor IAH_TEAM_MEADOW_COLOR = new RGBColor(0, 0, 0);
+        public static readonly RGBColor WINNIE_TEAM_FOODSTONE_COLOR = new RGBColor(173, 115, 21);
+        public static readonly RGBColor WINNIE_TEAM_MEADOW_COLOR = new RGBColor(17, 43, 52);
+        public static readonly RGBColor IAH_TEAM_FOODSTONE_COLOR = new RGBColor(24, 104, 25);
+        public static readonly RGBColor IAH_TEAM_MEADOW_COLOR = new RGBColor(158, 106, 17);
         #endregion
     }
 }

@@ -203,7 +203,8 @@ namespace BrickSolution.Logic
                 && !ObstacleDetected()
                 && !TreeDetected()
                 && !FenceDetected()
-                && !SingleFoodDetected()
+                && !OurFoodDetected()
+                && !EnemyFoodDetected()
                 && !MeadowDetected())
             {
             }
@@ -218,11 +219,11 @@ namespace BrickSolution.Logic
         public static void Rotate(RotationMode rotationMode, sbyte leftTrackSpeed, sbyte rightTrackSpeed)
         {
             Print($"rotating in mode {rotationMode}");
-
-            SetTrackSpeed(leftTrackSpeed, rightTrackSpeed);
             
             if (rotationMode == RotationMode.TimerMode)
             {
+                SetTrackSpeed(leftTrackSpeed, rightTrackSpeed);
+
                 DateTime startTime = DateTime.Now;
 
                 while (!TimerBreakCondition(startTime, Constants.ROTATION_DURATION))
@@ -231,6 +232,10 @@ namespace BrickSolution.Logic
             }
             else if (rotationMode == RotationMode.OtherMode)
             {
+                SetTrackSpeed(Constants.DRIVE_BACKWARD_SPEED, Constants.DRIVE_BACKWARD_SPEED);
+                Thread.Sleep(1500);
+                SetTrackSpeed(leftTrackSpeed, rightTrackSpeed);
+
                 while (AbyssDetected() || ObstacleDetected())
                 {
                 }
@@ -239,6 +244,8 @@ namespace BrickSolution.Logic
             }
             else if (rotationMode == RotationMode.HalfRotationMode)
             {
+                SetTrackSpeed(leftTrackSpeed, rightTrackSpeed);
+
                 Thread.Sleep(2500);
             }
 
@@ -300,7 +307,6 @@ namespace BrickSolution.Logic
         public static bool ColourMatchesWithTolerance(RGBColor expectedColour,
                                                       RGBColor actualColour)
         {
-
             bool result = expectedColour.Red - (Constants.COLOUR_TOLERANCE / 2) < actualColour.Red
                 && actualColour.Red < expectedColour.Red + (Constants.COLOUR_TOLERANCE / 2)
                 && expectedColour.Green - (Constants.COLOUR_TOLERANCE / 2) < actualColour.Green
@@ -325,6 +331,18 @@ namespace BrickSolution.Logic
         /// <returns></returns>
         public static bool MeadowIsOurs()
         {
+            SetTrackSpeed(Constants.DRIVE_FORWARD_SPEED, Constants.DRIVE_FORWARD_SPEED);
+
+            Thread.Sleep(1000);
+
+            HaltTracks();
+
+            SetTrackSpeed(Constants.DRIVE_BACKWARD_SPEED, Constants.DRIVE_BACKWARD_SPEED);
+
+            Thread.Sleep(300);
+
+            HaltTracks();
+
             return (TeamMode == TeamMode.WinnieTeam
                 && ColourMatchesWithTolerance(Constants.WINNIE_TEAM_MEADOW_COLOR, GetRGBColor()))
             ||     (TeamMode == TeamMode.IAhTeam
@@ -340,6 +358,12 @@ namespace BrickSolution.Logic
             if (GrapplerPosition == GrapplerPosition.Up
                 && FoodState == FoodState.Carrying)
             {
+                SetTrackSpeed(Constants.DRIVE_FORWARD_SPEED, Constants.DRIVE_FORWARD_SPEED);
+
+                Thread.Sleep(500);
+
+                HaltTracks();
+
                 GrapplerWheelMotor.ResetTacho();
                 GrapplerWheelMotor.SetSpeed(Constants.GRAPPLER_WHEEL_SPEED);
 
@@ -586,11 +610,21 @@ namespace BrickSolution.Logic
         /// </returns>
         public static bool AbyssDetected()
         {
-            bool result = GetUltraSonicDistance() > Constants.ULTRA_SONIC_TABLE_END_VALUE
-                       || GetIRDistance() > Constants.IR_TABLE_END_VALUE;
+            int usDist = GetUltraSonicDistance();
+            int irDist = GetIRDistance();
+
+            bool result = 
+                (usDist > Constants.ULTRA_SONIC_TABLE_END_VALUE
+                    && usDist < Constants.ULTRA_SONIC_REFLECTION_TOLL)
+                || irDist > Constants.IR_TABLE_END_VALUE;
 
             if (result)
             {
+                Print($"us-dist: {usDist}");
+                Print($"ir-dist: {irDist}");
+                Print($"cond1: {usDist > Constants.ULTRA_SONIC_TABLE_END_VALUE && usDist < Constants.ULTRA_SONIC_REFLECTION_TOLL}");
+                Print($"cond2: {irDist > Constants.IR_TABLE_END_VALUE}");
+
                 LastStopReason = StopReason.AbyssDetected;
             }
 
@@ -643,12 +677,19 @@ namespace BrickSolution.Logic
         /// </returns>
         public static bool FenceDetected()
         {
-            bool result = false;
-            
-            //TODO
-
+            bool result =
+                (GetUltraSonicDistance() < Constants.US_FENCE_DISTANCE_TOLL_UP
+                    && GetUltraSonicDistance() > Constants.US_FENCE_DISTANCE_TOLL_DOWN)
+                || (GetIRDistance() < Constants.IR_FENCE_DISTANCE_TOLL_UP
+                    && GetIRDistance() > Constants.IR_FENCE_DISTANCE_TOLL_DOWN);
+            result = false;
             if (result)
             {
+                Print($"ir-dist: {GetIRDistance()}");
+                Print($"us-dist: {GetUltraSonicDistance()}");
+                Print($"cond1: {GetUltraSonicDistance() < Constants.US_FENCE_DISTANCE_TOLL_UP && GetUltraSonicDistance() > Constants.US_FENCE_DISTANCE_TOLL_DOWN}");
+                Print($"cond2: {GetIRDistance() < Constants.IR_FENCE_DISTANCE_TOLL_UP && GetIRDistance() > Constants.IR_FENCE_DISTANCE_TOLL_DOWN}");
+
                 LastStopReason = StopReason.FenceDetected;
             }
 
@@ -663,7 +704,7 @@ namespace BrickSolution.Logic
         /// true:  a food brick was found in front of the robot
         /// false: no food brick in front of the robot
         /// </returns>
-        public static bool SingleFoodDetected()
+        public static bool OurFoodDetected()
         {
             bool result = (TeamMode == TeamMode.WinnieTeam
                     && ColourMatchesWithTolerance(Constants.WINNIE_TEAM_FOODSTONE_COLOR, GetRGBColor()))
@@ -672,7 +713,22 @@ namespace BrickSolution.Logic
 
             if (result)
             {
-                LastStopReason = StopReason.SingleFoodDetected;
+                LastStopReason = StopReason.OurFoodDetected;
+            }
+
+            return result;
+        }
+
+        public static bool EnemyFoodDetected()
+        {
+            bool result = (TeamMode != TeamMode.WinnieTeam
+                    && ColourMatchesWithTolerance(Constants.WINNIE_TEAM_FOODSTONE_COLOR, GetRGBColor()))
+                 || (TeamMode != TeamMode.IAhTeam
+                    && ColourMatchesWithTolerance(Constants.IAH_TEAM_FOODSTONE_COLOR, GetRGBColor()));
+
+            if (result)
+            {
+                LastStopReason = StopReason.EnemyFoodDetected;
             }
 
             return result;
@@ -689,16 +745,18 @@ namespace BrickSolution.Logic
         public static bool MeadowDetected()
         {
             bool result =
-                GetIRDistance() < Constants.MEADOW_IR_DISTANCE
-              || GetUltraSonicDistance() < Constants.MEADOW_US_DISTANCE;
-
-            Print($"ir-dist: {GetIRDistance()}");
-            Print($"us-dist: {GetUltraSonicDistance()}");
-            Print($"cond1: {GetIRDistance() < Constants.MEADOW_IR_DISTANCE}");
-            Print($"cond2: {GetUltraSonicDistance() < Constants.MEADOW_US_DISTANCE}");
-
+                (GetUltraSonicDistance() < Constants.US_MEADOW_DISTANCE_TOLL_UP
+                    && GetUltraSonicDistance() > Constants.US_MEADOW_DISTANCE_TOLL_DOWN)
+                || (GetIRDistance() < Constants.IR_MEADOW_DISTANCE_TOLL_UP
+                    && GetIRDistance() > Constants.IR_MEADOW_DISTANCE_TOLL_DOWN);
+            
             if (result)
             {
+                Print($"ir-dist: {GetIRDistance()}");
+                Print($"us-dist: {GetUltraSonicDistance()}");
+                Print($"cond1: {GetUltraSonicDistance() < Constants.US_MEADOW_DISTANCE_TOLL_UP && GetUltraSonicDistance() > Constants.US_MEADOW_DISTANCE_TOLL_DOWN}");
+                Print($"cond2: {GetIRDistance() < Constants.IR_MEADOW_DISTANCE_TOLL_UP && GetIRDistance() > Constants.IR_MEADOW_DISTANCE_TOLL_DOWN}");
+
                 LastStopReason = StopReason.MeadowDetected;
             }
 

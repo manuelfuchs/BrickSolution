@@ -13,15 +13,14 @@ namespace BrickSolution.Logic
             {
                 Robot.InitRobot();
 
-                Thread.Sleep(10000);
+                Thread.Sleep(1000);
                 
-                int cnt = 0;
-                while (Robot.FoodState == FoodState.Carrying || cnt == 0)
+                while (true)
                 {
                     Robot.Drive();
 
                     Robot.Print($"last-stop-reason: {Robot.LastStopReason}");
-                    Thread.Sleep(15000);
+                    Thread.Sleep(3000);
 
                     switch (Robot.LastStopReason)
                     {
@@ -56,10 +55,9 @@ namespace BrickSolution.Logic
                                 Constants.ROTATION_SPEED_FORWARD,
                                 Constants.ROTATION_SPEED_BACKWARD);
                             break;
-                        case StopReason.SingleFoodDetected:
+                        case StopReason.OurFoodDetected:
                             if (Robot.FoodState == FoodState.Searching)
                             {
-                                cnt = 1;
                                 Robot.CollectFood();
                             }
                             else
@@ -68,9 +66,10 @@ namespace BrickSolution.Logic
                             }
                             
                             break;
+                        case StopReason.EnemyFoodDetected:
+                            Robot.PushObjectInFrontToLeft();
+                            break;
                         case StopReason.MeadowDetected:
-                            Thread.Sleep(5000);
-
                             if (Robot.MeadowIsOurs()
                                 && Robot.FoodState == FoodState.Carrying)
                             {

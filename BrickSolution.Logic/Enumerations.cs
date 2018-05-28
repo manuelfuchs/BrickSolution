@@ -52,9 +52,13 @@
         /// </summary>
         FenceDetected,
         /// <summary>
-        /// robot stopped due to detecting a single food piece in the front
+        /// robot stopped due to detecting our single food piece in the front
         /// </summary>
-        SingleFoodDetected,
+        OurFoodDetected,
+        /// <summary>
+        /// robot stopped due to detecting enemies food piece in the front
+        /// </summary>
+        EnemyFoodDetected,
         /// <summary>
         /// robot stopped due to detecting a enclosure in front
         /// </summary>
