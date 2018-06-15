@@ -13,33 +13,80 @@ namespace BrickSolution.Logic
             {
                 Robot.InitRobot();
 
-                Thread.Sleep(10000);
+                Thread.Sleep(1000);
+                
+                while (true)
+                {
+                    Robot.Drive();
 
-                Robot.CollectFood();
+                    Robot.Print($"last-stop-reason: {Robot.LastStopReason}");
+                    Thread.Sleep(3000);
 
-
-                //for (int i = 0; i < 10; i++)
-                //{
-                //    Robot.SearchFood();
-
-                //    switch (Robot.LastStopReason)
-                //    {
-                //        case StopReason.AbyssDetected:
-                //            Robot.RotateClockWise(RotationMode.OtherMode);
-                //            break;
-                //        case StopReason.ObstacleDetected:
-                //            Robot.RotateClockWise(RotationMode.OtherMode);
-                //            break;
-                //        case StopReason.FoodplaceDetected:
-                //            break;
-                //        case StopReason.SingleFoodDetected:
-                //            break;
-                //        case StopReason.EnclosureDetected:
-                //            break;
-                //        default:
-                //            break;
-                //    }
-                //}
+                    switch (Robot.LastStopReason)
+                    {
+                        case StopReason.AbyssDetected:
+                            Robot.Rotate(
+                                RotationMode.OtherMode,
+                                Constants.ROTATION_SPEED_FORWARD,
+                                Constants.ROTATION_SPEED_BACKWARD);
+                            break;
+                        case StopReason.ObstacleDetected:
+                            Robot.Rotate(
+                                RotationMode.OtherMode,
+                                Constants.ROTATION_SPEED_FORWARD,
+                                Constants.ROTATION_SPEED_BACKWARD);
+                            break;
+                        case StopReason.FenceDetected:
+                            if (Robot.TeamMode == TeamMode.IAhTeam)
+                            {
+                                Robot.PushObjectInFrontToLeft();
+                            }
+                            else
+                            {
+                                Robot.Rotate(
+                                    RotationMode.TimerMode,
+                                    Constants.ROTATION_SPEED_FORWARD,
+                                    Constants.ROTATION_SPEED_BACKWARD);
+                            }
+                            break;
+                        case StopReason.TreeDetected:
+                            Robot.Rotate(
+                                RotationMode.TimerMode,
+                                Constants.ROTATION_SPEED_FORWARD,
+                                Constants.ROTATION_SPEED_BACKWARD);
+                            break;
+                        case StopReason.OurFoodDetected:
+                            if (Robot.FoodState == FoodState.Searching)
+                            {
+                                Robot.CollectFood();
+                            }
+                            else
+                            {
+                                Robot.PushObjectInFrontToLeft();
+                            }
+                            
+                            break;
+                        case StopReason.EnemyFoodDetected:
+                            Robot.PushObjectInFrontToLeft();
+                            break;
+                        case StopReason.MeadowDetected:
+                            if (Robot.MeadowIsOurs()
+                                && Robot.FoodState == FoodState.Carrying)
+                            {
+                                Robot.RealeaseBrickOnMeadow();
+                            }
+                            else
+                            {
+                                Robot.Rotate(
+                                    RotationMode.HalfRotationMode,
+                                    Constants.ROTATION_SPEED_FORWARD,
+                                    Constants.ROTATION_SPEED_BACKWARD);
+                            }
+                            break;
+                        default:
+                            break;
+                    }
+                }
             }
             catch (Exception e)
             {

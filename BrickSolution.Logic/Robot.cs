@@ -114,9 +114,11 @@ namespace BrickSolution.Logic
             GrapplerRiserMotor = new Motor(Constants.GRAPPLER_RISER_PORT);
             GrapplerWheelMotor = new Motor(Constants.GRAPPLER_WHEEL_PORT);
 
-            ColorSensor = new EV3ColorSensor(Constants.ULTRASONIC_SENSOR_PORT);
+            ColorSensor = new EV3ColorSensor(Constants.EV3_COLOR_SENSOR_PORT);
             IRSensor = new EV3IRSensor(Constants.IR_SENSOR_PORT);
             UltraSonicSensor = new EV3UltrasonicSensor(Constants.ULTRASONIC_SENSOR_PORT);
+
+            ColorSensor.Mode = ColorMode.RGB;
             UltraSonicSensor.Mode = UltraSonicMode.Centimeter;
             
             GrapplerPosition = GrapplerPosition.Down;
@@ -132,21 +134,41 @@ namespace BrickSolution.Logic
 
             WaitForStartButtonPress();
 
-            InitColour();
+            TeamMode = TeamMode.WinnieTeam;
+            //InitColour();
         }
 
         public static void InitColour()
         {
-            if (ColourMatchesWithTolerance(Constants.WINNIE_FOODSTONE_COLOR, GetColorId)
+            if (ColourMatchesWithTolerance(Constants.WINNIE_TEAM_FOODSTONE_COLOR, GetRGBColor()))
             {
                 TeamMode = TeamMode.WinnieTeam;
             }
-            else if (ColourMatchesWithTolerance(Constants.IAH_FOODSTONE_COLOR, GetColorId))
+            else if (ColourMatchesWithTolerance(Constants.IAH_TEAM_FOODSTONE_COLOR, GetRGBColor()))
             {
                 TeamMode = TeamMode.IAhTeam;
             }
         }
 
+        public static void PushObjectInFrontToLeft()
+        {
+            Rotate(
+                RotationMode.TimerMode,
+                Constants.ROTATION_SPEED_FORWARD,
+                Constants.ROTATION_SPEED_BACKWARD);
+
+            GrapplerRiserMotor.Off();
+            GrapplerPosition = GrapplerPosition.Down;
+
+            Thread.Sleep(1000);
+
+            Rotate(
+                RotationMode.TimerMode, 
+                Constants.ROTATION_SPEED_BACKWARD,
+                Constants.ROTATION_SPEED_FORWARD);
+            
+            RiseGrappler();
+        }
 
         /// <summary>
         /// disposes all components
@@ -166,7 +188,6 @@ namespace BrickSolution.Logic
             }
         }
 
-
         /// <summary>
         /// drives into a certain direction until something is detected.
         /// if something is detected, the robot stops and waits for
@@ -180,41 +201,52 @@ namespace BrickSolution.Logic
             
             while (!AbyssDetected()
                 && !ObstacleDetected()
-                && !FoodplaceDetected()
-                && !SingleFoodDetected()
-                && !EnclosureDetected())
+                && !TreeDetected()
+                && !FenceDetected()
+                && !OurFoodDetected()
+                && !EnemyFoodDetected()
+                && !MeadowDetected())
             {
             }
 
             HaltTracks();
         }
-
+        
         /// <summary>
         /// lets the robot rotate in a certain speed and a certain duration
         /// </summary>
         /// <param name="rotationMode"></param>
-        public static void RotateClockWise(RotationMode rotationMode)
+        public static void Rotate(RotationMode rotationMode, sbyte leftTrackSpeed, sbyte rightTrackSpeed)
         {
-            Print($"rotating clockwise in mode {rotationMode}");
-
-            SetTrackSpeed(Constants.ROTATION_SPEED,
-                          Convert.ToSByte(-Constants.ROTATION_SPEED));
-
+            Print($"rotating in mode {rotationMode}");
+            
             if (rotationMode == RotationMode.TimerMode)
             {
+                SetTrackSpeed(leftTrackSpeed, rightTrackSpeed);
+
                 DateTime startTime = DateTime.Now;
 
                 while (!TimerBreakCondition(startTime, Constants.ROTATION_DURATION))
                 {
                 }
             }
-            else
+            else if (rotationMode == RotationMode.OtherMode)
             {
+                SetTrackSpeed(Constants.DRIVE_BACKWARD_SPEED, Constants.DRIVE_BACKWARD_SPEED);
+                Thread.Sleep(1500);
+                SetTrackSpeed(leftTrackSpeed, rightTrackSpeed);
+
                 while (AbyssDetected() || ObstacleDetected())
                 {
                 }
 
                 Thread.Sleep(1000);
+            }
+            else if (rotationMode == RotationMode.HalfRotationMode)
+            {
+                SetTrackSpeed(leftTrackSpeed, rightTrackSpeed);
+
+                Thread.Sleep(2500);
             }
 
             HaltTracks();
@@ -268,17 +300,82 @@ namespace BrickSolution.Logic
             Thread.Sleep(1500);
             HaltMotors();
             RiseGrappler();
+
+            FoodState = FoodState.Carrying;
         }
 
-        public static bool ColourMatchesWithTolerance(RGBColor foodstoneColour,
-                                                       RGBColor currentColour)
+        public static bool ColourMatchesWithTolerance(RGBColor expectedColour,
+                                                      RGBColor actualColour)
         {
-            return (foodstoneColour.Red - Constants.COLOUR_TOLERANCE < currentColour.Red
-                    && currentColour.Red < foodstoneColour.Red + Constants.COLOUR_TOLERANCE)
-                && (foodstoneColour.Green - Constants.COLOUR_TOLERANCE < currentColour.Green
-                    && currentColour.Green < foodstoneColour.Green + Constants.COLOUR_TOLERANCE)
-                && (foodstoneColour.Blue - Constants.COLOUR_TOLERANCE < currentColour.Blue
-                    && currentColour.Blue < foodstoneColour.Blue + Constants.COLOUR_TOLERANCE);
+            bool result = expectedColour.Red - (Constants.COLOUR_TOLERANCE / 2) < actualColour.Red
+                && actualColour.Red < expectedColour.Red + (Constants.COLOUR_TOLERANCE / 2)
+                && expectedColour.Green - (Constants.COLOUR_TOLERANCE / 2) < actualColour.Green
+                && actualColour.Green < expectedColour.Green + (Constants.COLOUR_TOLERANCE / 2)
+                && expectedColour.Blue - (Constants.COLOUR_TOLERANCE / 2) < actualColour.Blue
+                && actualColour.Blue < expectedColour.Blue + (Constants.COLOUR_TOLERANCE / 2);
+
+            if (result)
+            {
+                Print($"expected: {expectedColour.Red}, {expectedColour.Blue}, {expectedColour.Green}");
+                Print($"actual: {actualColour.Red}, {actualColour.Blue}, {actualColour.Green}");
+            }
+
+            return result;
+        }
+        
+        /// <summary>
+        /// returns a boolean indicating if the detected meadow is ours or
+        /// the one of the enemy
+        /// expects that the ultrasonic/infrared sensors detected a meadow
+        /// </summary>
+        /// <returns></returns>
+        public static bool MeadowIsOurs()
+        {
+            SetTrackSpeed(Constants.DRIVE_FORWARD_SPEED, Constants.DRIVE_FORWARD_SPEED);
+
+            Thread.Sleep(1000);
+
+            HaltTracks();
+
+            SetTrackSpeed(Constants.DRIVE_BACKWARD_SPEED, Constants.DRIVE_BACKWARD_SPEED);
+
+            Thread.Sleep(300);
+
+            HaltTracks();
+
+            return (TeamMode == TeamMode.WinnieTeam
+                && ColourMatchesWithTolerance(Constants.WINNIE_TEAM_MEADOW_COLOR, GetRGBColor()))
+            ||     (TeamMode == TeamMode.IAhTeam
+                && ColourMatchesWithTolerance(Constants.IAH_TEAM_MEADOW_COLOR, GetRGBColor()));
+        }
+        
+        /// <summary>
+        /// puts down the grappler and opens it, if it's in the air
+        /// closed
+        /// </summary>
+        public static void RealeaseBrickOnMeadow()
+        {
+            if (GrapplerPosition == GrapplerPosition.Up
+                && FoodState == FoodState.Carrying)
+            {
+                SetTrackSpeed(Constants.DRIVE_FORWARD_SPEED, Constants.DRIVE_FORWARD_SPEED);
+
+                Thread.Sleep(500);
+
+                HaltTracks();
+
+                GrapplerWheelMotor.ResetTacho();
+                GrapplerWheelMotor.SetSpeed(Constants.GRAPPLER_WHEEL_SPEED);
+
+                while (Math.Abs(GrapplerWheelMotor.GetTachoCount())
+                    < Constants.GRAPPLER_WHEEL_BOUNDARY)
+                {
+                    //Robot.Print($"tacho = {GrapplerMotor.GetTachoCount().ToString()}");
+                }
+
+                GrapplerWheelMotor.Off();
+                FoodState = FoodState.Searching;
+            }
         }
 
         #endregion
@@ -337,6 +434,25 @@ namespace BrickSolution.Logic
         private static string GetColorName()
         {
             return ColorSensor.ReadAsString();
+        }
+
+        /// <summary>
+        /// returns the current colorId of the EV3ColorSensor
+        /// </summary>
+        /// <returns>
+        /// int: the current colorId seen by the EV3ColorSensor
+        /// </returns>
+        public static RGBColor GetRGBColor()
+        {
+            if (ColorSensor != null)
+            {
+                return ColorSensor.ReadRGB();
+            }
+            else
+            {
+                Robot.Print("color sensor not initialized!");
+                return null;
+            }
         }
 
         /// <summary>
@@ -423,31 +539,8 @@ namespace BrickSolution.Logic
                 }
 
                 GrapplerRiserMotor.Brake();
-            }
 
-            GrapplerPosition = GrapplerPosition.Up;
-        }
-
-        /// <summary>
-        /// puts down the grappler and opens it, if it's in the air
-        /// closed
-        /// </summary>
-        private static void RealeaseBrickOnMeadow()
-        {
-            if (GrapplerPosition == GrapplerPosition.Up
-                && FoodState == FoodState.Carrying
-                && EnclosureDetected())
-            {
-                GrapplerWheelMotor.ResetTacho();
-                GrapplerWheelMotor.SetSpeed(Constants.GRAPPLER_WHEEL_SPEED);
-
-                while (Math.Abs(GrapplerWheelMotor.GetTachoCount())
-                    < Constants.GRAPPLER_WHEEL_BOUNDARY)
-                {
-                    //Robot.Print($"tacho = {GrapplerMotor.GetTachoCount().ToString()}");
-                }
-
-                GrapplerRiserMotor.Off();
+                GrapplerPosition = GrapplerPosition.Up;
             }
         }
 
@@ -475,10 +568,7 @@ namespace BrickSolution.Logic
             {
             }
         }
-
-
-       
-
+        
         /// <summary>
         /// waits until the operator presses the middle-button to
         /// start the competition mode
@@ -520,11 +610,21 @@ namespace BrickSolution.Logic
         /// </returns>
         public static bool AbyssDetected()
         {
-            bool result = GetUltraSonicDistance() > Constants.ULTRA_SONIC_TABLE_END_VALUE
-                       || GetIRDistance() > Constants.IR_TABLE_END_VALUE;
+            int usDist = GetUltraSonicDistance();
+            int irDist = GetIRDistance();
+
+            bool result = 
+                (usDist > Constants.ULTRA_SONIC_TABLE_END_VALUE
+                    && usDist < Constants.ULTRA_SONIC_REFLECTION_TOLL)
+                || irDist > Constants.IR_TABLE_END_VALUE;
 
             if (result)
             {
+                Print($"us-dist: {usDist}");
+                Print($"ir-dist: {irDist}");
+                Print($"cond1: {usDist > Constants.ULTRA_SONIC_TABLE_END_VALUE && usDist < Constants.ULTRA_SONIC_REFLECTION_TOLL}");
+                Print($"cond2: {irDist > Constants.IR_TABLE_END_VALUE}");
+
                 LastStopReason = StopReason.AbyssDetected;
             }
 
@@ -553,6 +653,20 @@ namespace BrickSolution.Logic
             return result;
         }
 
+        public static bool TreeDetected()
+        {
+            bool result = false;
+
+            //TODO
+
+            if (result)
+            {
+                LastStopReason = StopReason.TreeDetected;
+            }
+
+            return result;
+        }
+
         /// <summary>
         /// returns a boolean indicating if a foodplace was found
         /// in front of the robot
@@ -561,15 +675,22 @@ namespace BrickSolution.Logic
         /// true:  a food place was found
         /// false: no food place found
         /// </returns>
-        public static bool FoodplaceDetected()
+        public static bool FenceDetected()
         {
-            bool result = false;
-            
-            //TODO
-
+            bool result =
+                (GetUltraSonicDistance() < Constants.US_FENCE_DISTANCE_TOLL_UP
+                    && GetUltraSonicDistance() > Constants.US_FENCE_DISTANCE_TOLL_DOWN)
+                || (GetIRDistance() < Constants.IR_FENCE_DISTANCE_TOLL_UP
+                    && GetIRDistance() > Constants.IR_FENCE_DISTANCE_TOLL_DOWN);
+            result = false;
             if (result)
             {
-                LastStopReason = StopReason.FoodplaceDetected;
+                Print($"ir-dist: {GetIRDistance()}");
+                Print($"us-dist: {GetUltraSonicDistance()}");
+                Print($"cond1: {GetUltraSonicDistance() < Constants.US_FENCE_DISTANCE_TOLL_UP && GetUltraSonicDistance() > Constants.US_FENCE_DISTANCE_TOLL_DOWN}");
+                Print($"cond2: {GetIRDistance() < Constants.IR_FENCE_DISTANCE_TOLL_UP && GetIRDistance() > Constants.IR_FENCE_DISTANCE_TOLL_DOWN}");
+
+                LastStopReason = StopReason.FenceDetected;
             }
 
             return result;
@@ -583,15 +704,31 @@ namespace BrickSolution.Logic
         /// true:  a food brick was found in front of the robot
         /// false: no food brick in front of the robot
         /// </returns>
-        public static bool SingleFoodDetected()
+        public static bool OurFoodDetected()
         {
-            bool result = false;
-
-            //TODO
+            bool result = (TeamMode == TeamMode.WinnieTeam
+                    && ColourMatchesWithTolerance(Constants.WINNIE_TEAM_FOODSTONE_COLOR, GetRGBColor()))
+                 || (TeamMode == TeamMode.IAhTeam
+                    && ColourMatchesWithTolerance(Constants.IAH_TEAM_FOODSTONE_COLOR, GetRGBColor()));
 
             if (result)
             {
-                LastStopReason = StopReason.SingleFoodDetected;
+                LastStopReason = StopReason.OurFoodDetected;
+            }
+
+            return result;
+        }
+
+        public static bool EnemyFoodDetected()
+        {
+            bool result = (TeamMode != TeamMode.WinnieTeam
+                    && ColourMatchesWithTolerance(Constants.WINNIE_TEAM_FOODSTONE_COLOR, GetRGBColor()))
+                 || (TeamMode != TeamMode.IAhTeam
+                    && ColourMatchesWithTolerance(Constants.IAH_TEAM_FOODSTONE_COLOR, GetRGBColor()));
+
+            if (result)
+            {
+                LastStopReason = StopReason.EnemyFoodDetected;
             }
 
             return result;
@@ -605,15 +742,22 @@ namespace BrickSolution.Logic
         /// true:  there's a enclosure in front of the robot
         /// false: no enclosure in front of the robot
         /// </returns>
-        public static bool EnclosureDetected()
+        public static bool MeadowDetected()
         {
-            bool result = false;
-
-            //TODO
-
+            bool result =
+                (GetUltraSonicDistance() < Constants.US_MEADOW_DISTANCE_TOLL_UP
+                    && GetUltraSonicDistance() > Constants.US_MEADOW_DISTANCE_TOLL_DOWN)
+                || (GetIRDistance() < Constants.IR_MEADOW_DISTANCE_TOLL_UP
+                    && GetIRDistance() > Constants.IR_MEADOW_DISTANCE_TOLL_DOWN);
+            
             if (result)
             {
-                LastStopReason = StopReason.EnclosureDetected;
+                Print($"ir-dist: {GetIRDistance()}");
+                Print($"us-dist: {GetUltraSonicDistance()}");
+                Print($"cond1: {GetUltraSonicDistance() < Constants.US_MEADOW_DISTANCE_TOLL_UP && GetUltraSonicDistance() > Constants.US_MEADOW_DISTANCE_TOLL_DOWN}");
+                Print($"cond2: {GetIRDistance() < Constants.IR_MEADOW_DISTANCE_TOLL_UP && GetIRDistance() > Constants.IR_MEADOW_DISTANCE_TOLL_DOWN}");
+
+                LastStopReason = StopReason.MeadowDetected;
             }
 
             return result;
