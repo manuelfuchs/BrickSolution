@@ -40,7 +40,7 @@ namespace BrickSolution.Logic
         public static readonly sbyte ROTATION_SPEED_FORWARD = -40;
         public static readonly sbyte ROTATION_SPEED_BACKWARD = 40;
         public static readonly int GRAPPLER_RISER_TACHO_BOUNDARY = 100;
-        public static readonly int PROGRAM_ABORTION_DELAY = 15000;
+        public static readonly int PROGRAM_ABORTION_DELAY = 10000;
         public static readonly int PROGRAM_BOOT_DELAY = 10000;
         public static readonly int SAMPLING_RATE = 250;
         public static readonly int ROTATION_DURATION = 1000;

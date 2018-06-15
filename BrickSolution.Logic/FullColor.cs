@@ -55,12 +55,7 @@ namespace BrickSolution.Logic
         /// <returns>the string representation of this object</returns>
         public override string ToString()
         {
-            return $"RGB:{System.Environment.NewLine}"
-                 + $"  red:   {this.RGBColor.Red}{System.Environment.NewLine}"
-                 + $"  blue:  {this.RGBColor.Blue}{System.Environment.NewLine}"
-                 + $"  green: {this.RGBColor.Green}{System.Environment.NewLine}"
-                 + $"{System.Environment.NewLine}"
-                 + $"color-intensity: {this.Intensity}";
+            return $"({this.RGBColor.Red}, {this.RGBColor.Blue}, {this.RGBColor.Green}) / {this.Intensity}";
         }
 
         public override int GetHashCode()

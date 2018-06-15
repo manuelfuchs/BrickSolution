@@ -118,7 +118,6 @@ namespace BrickSolution.Logic
             IRSensor = new EV3IRSensor(Constants.IR_SENSOR_PORT);
             UltraSonicSensor = new EV3UltrasonicSensor(Constants.ULTRASONIC_SENSOR_PORT);
 
-            ColorSensor.Mode = ColorMode.RGB;
             UltraSonicSensor.Mode = UltraSonicMode.Centimeter;
             
             GrapplerPosition = GrapplerPosition.Down;
@@ -408,7 +407,7 @@ namespace BrickSolution.Logic
         /// <returns>
         /// a <see cref="FullColor"/> object containing current values
         /// </returns>
-        private static FullColor GetFullColor()
+        public static FullColor GetFullColor()
         {
             if (ColorSensor != null)
             {
@@ -431,8 +430,14 @@ namespace BrickSolution.Logic
         /// <returns> int describing current grey levels </returns>
         private static int GetColorIntensity()
         {
+            ColorSensor.Mode = ColorMode.Ambient;
             return ColorSensor.Read();
         }
+
+        // gelb: 13-15
+        // blau: 11-12
+        // grün: 9(-10)
+        // nix: 16
 
         /// <summary>
         /// reads and returns the current rgb colors
@@ -442,6 +447,7 @@ namespace BrickSolution.Logic
         /// </returns>
         private static RGBColor GetRGBColor()
         {
+            ColorSensor.Mode = ColorMode.RGB;
             return ColorSensor.ReadRGB();
         }
 
@@ -452,7 +458,7 @@ namespace BrickSolution.Logic
         /// distance
         /// </summary>
         /// <returns></returns>
-        public static int GetIRDistance()
+        private static int GetIRDistance()
         {
             if (GrapplerPosition == GrapplerPosition.Up)
             {
@@ -469,7 +475,7 @@ namespace BrickSolution.Logic
         /// currently measures in centimeter
         /// </summary>
         /// <returns></returns>
-        public static int GetUltraSonicDistance()
+        private static int GetUltraSonicDistance()
         {
             if (UltraSonicSensor.Mode != UltraSonicMode.Centimeter)
             {

@@ -14,77 +14,21 @@ namespace BrickSolution.Logic
                 Robot.InitRobot();
 
                 Thread.Sleep(1000);
-                
-                while (true)
+
+                for (int i = 0; i < 10; i++)
                 {
-                    Robot.Drive();
+                    Robot.Print("press button:");
 
-                    Robot.Print($"last-stop-reason: {Robot.LastStopReason}");
-                    Thread.Sleep(3000);
+                    Wait();
+                    FullColor color = Robot.GetFullColor();
 
-                    switch (Robot.LastStopReason)
+                    if (color != null)
                     {
-                        case StopReason.AbyssDetected:
-                            Robot.Rotate(
-                                RotationMode.OtherMode,
-                                Constants.ROTATION_SPEED_FORWARD,
-                                Constants.ROTATION_SPEED_BACKWARD);
-                            break;
-                        case StopReason.ObstacleDetected:
-                            Robot.Rotate(
-                                RotationMode.OtherMode,
-                                Constants.ROTATION_SPEED_FORWARD,
-                                Constants.ROTATION_SPEED_BACKWARD);
-                            break;
-                        case StopReason.FenceDetected:
-                            if (Robot.TeamMode == TeamMode.IAhTeam)
-                            {
-                                Robot.PushObjectInFrontToLeft();
-                            }
-                            else
-                            {
-                                Robot.Rotate(
-                                    RotationMode.TimerMode,
-                                    Constants.ROTATION_SPEED_FORWARD,
-                                    Constants.ROTATION_SPEED_BACKWARD);
-                            }
-                            break;
-                        case StopReason.TreeDetected:
-                            Robot.Rotate(
-                                RotationMode.TimerMode,
-                                Constants.ROTATION_SPEED_FORWARD,
-                                Constants.ROTATION_SPEED_BACKWARD);
-                            break;
-                        case StopReason.OurFoodDetected:
-                            if (Robot.FoodState == FoodState.Searching)
-                            {
-                                Robot.CollectFood();
-                            }
-                            else
-                            {
-                                Robot.PushObjectInFrontToLeft();
-                            }
-                            
-                            break;
-                        case StopReason.EnemyFoodDetected:
-                            Robot.PushObjectInFrontToLeft();
-                            break;
-                        case StopReason.MeadowDetected:
-                            if (Robot.MeadowIsOurs()
-                                && Robot.FoodState == FoodState.Carrying)
-                            {
-                                Robot.RealeaseBrickOnMeadow();
-                            }
-                            else
-                            {
-                                Robot.Rotate(
-                                    RotationMode.HalfRotationMode,
-                                    Constants.ROTATION_SPEED_FORWARD,
-                                    Constants.ROTATION_SPEED_BACKWARD);
-                            }
-                            break;
-                        default:
-                            break;
+                        Robot.Print("  " + color.ToString());
+                    }
+                    else
+                    {
+                        Robot.Print("color == null");
                     }
                 }
             }
@@ -103,11 +47,39 @@ namespace BrickSolution.Logic
             }
             finally
             {
+                if (Robot.IsInitialized)
+                {
+                    Robot.HaltMotors();
+                }
                 Robot.DisposeComponents();
                 Robot.PrintEmptyLine();
                 Robot.Print(Constants.PROGRAM_FINISHED_MSG);
                 Thread.Sleep(Constants.PROGRAM_ABORTION_DELAY);
             }
+        }
+
+        private static void Wait()
+        {
+            bool continueWithCompetition = false;
+
+            ButtonEvents btnEvents = new ButtonEvents();
+
+            Action btnAction = () => {
+                continueWithCompetition = true;
+            };
+
+            btnEvents.EnterPressed += btnAction;
+
+            Robot.PrintEmptyLine();
+            Robot.Print("press middle button to read");
+            Robot.Print("a colour");
+
+            while (!continueWithCompetition)
+            {
+                Thread.Sleep(Constants.SAMPLING_RATE);
+            }
+
+            btnEvents.EnterPressed -= btnAction;
         }
     }
 }
