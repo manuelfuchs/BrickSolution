@@ -44,17 +44,25 @@
         /// </summary>
         ObstacleDetected,
         /// <summary>
-        /// robot stopped due to detecting a foodplace in the front
+        /// robot stopped due to detecting the tree in the front
         /// </summary>
-        FoodplaceDetected,
+        TreeDetected,
         /// <summary>
-        /// robot stopped due to detecting a single food piece in the front
+        /// robot stopped due to detecting the fence in the front
         /// </summary>
-        SingleFoodDetected,
+        FenceDetected,
+        /// <summary>
+        /// robot stopped due to detecting our single food piece in the front
+        /// </summary>
+        OurFoodDetected,
+        /// <summary>
+        /// robot stopped due to detecting enemies food piece in the front
+        /// </summary>
+        EnemyFoodDetected,
         /// <summary>
         /// robot stopped due to detecting a enclosure in front
         /// </summary>
-        EnclosureDetected
+        MeadowDetected
     }
 
     public enum RotationMode
@@ -67,6 +75,24 @@
         /// <summary>
         /// used to evade the abyss, a enemy robot or different animals
         /// </summary>
-        OtherMode
+        OtherMode,
+        /// <summary>
+        /// tells the rotation method to rotate the robot half
+        /// </summary>
+        HalfRotationMode
+    }
+
+    public enum TeamMode
+    {
+        /// <summary>
+        /// describes what Team the Robot is and which colors to react to
+        /// food: green, meadow: 
+        /// </summary>
+       WinnieTeam,
+        /// <summary>
+        /// describes what Team the Robot is and which colors to react to
+        /// food: yellow, meadow: 
+        /// </summary>
+        IAhTeam
     }
 }
