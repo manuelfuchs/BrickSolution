@@ -134,17 +134,21 @@ namespace BrickSolution.Logic
 
             WaitForStartButtonPress();
 
+#if DEBUG
             TeamMode = TeamMode.WinnieTeam;
+#endif
             //InitColour();
         }
 
         public static void InitColour()
         {
-            if (ColourMatchesWithTolerance(Constants.WINNIE_TEAM_FOODSTONE_COLOR, GetRGBColor()))
+            FullColor currentColor = GetFullColor();
+
+            if (currentColor.Equals(Constants.WINNIE_TEAM_FOODSTONE_COLOR))
             {
                 TeamMode = TeamMode.WinnieTeam;
             }
-            else if (ColourMatchesWithTolerance(Constants.IAH_TEAM_FOODSTONE_COLOR, GetRGBColor()))
+            else if (currentColor.Equals(Constants.IAH_TEAM_FOODSTONE_COLOR))
             {
                 TeamMode = TeamMode.IAhTeam;
             }
@@ -303,25 +307,6 @@ namespace BrickSolution.Logic
 
             FoodState = FoodState.Carrying;
         }
-
-        public static bool ColourMatchesWithTolerance(RGBColor expectedColour,
-                                                      RGBColor actualColour)
-        {
-            bool result = expectedColour.Red - (Constants.COLOUR_TOLERANCE / 2) < actualColour.Red
-                && actualColour.Red < expectedColour.Red + (Constants.COLOUR_TOLERANCE / 2)
-                && expectedColour.Green - (Constants.COLOUR_TOLERANCE / 2) < actualColour.Green
-                && actualColour.Green < expectedColour.Green + (Constants.COLOUR_TOLERANCE / 2)
-                && expectedColour.Blue - (Constants.COLOUR_TOLERANCE / 2) < actualColour.Blue
-                && actualColour.Blue < expectedColour.Blue + (Constants.COLOUR_TOLERANCE / 2);
-
-            if (result)
-            {
-                Print($"expected: {expectedColour.Red}, {expectedColour.Blue}, {expectedColour.Green}");
-                Print($"actual: {actualColour.Red}, {actualColour.Blue}, {actualColour.Green}");
-            }
-
-            return result;
-        }
         
         /// <summary>
         /// returns a boolean indicating if the detected meadow is ours or
@@ -343,10 +328,12 @@ namespace BrickSolution.Logic
 
             HaltTracks();
 
+            FullColor currentColor = GetFullColor();
+
             return (TeamMode == TeamMode.WinnieTeam
-                && ColourMatchesWithTolerance(Constants.WINNIE_TEAM_MEADOW_COLOR, GetRGBColor()))
+                && currentColor.Equals(Constants.WINNIE_TEAM_MEADOW_COLOR))
             ||     (TeamMode == TeamMode.IAhTeam
-                && ColourMatchesWithTolerance(Constants.IAH_TEAM_MEADOW_COLOR, GetRGBColor()));
+                && currentColor.Equals(Constants.IAH_TEAM_MEADOW_COLOR));
         }
         
         /// <summary>
@@ -415,44 +402,47 @@ namespace BrickSolution.Logic
         #region Sensor Facades
 
         /// <summary>
-        /// returns the current colorId of the EV3ColorSensor
+        /// Returns a color object that contains current rgb values plus
+        /// gray levels
         /// </summary>
         /// <returns>
-        /// int: the current colorId seen by the EV3ColorSensor
+        /// a <see cref="FullColor"/> object containing current values
         /// </returns>
-        private static int GetColorId()
-        {
-            return ColorSensor.Read();
-        }
-
-        /// <summary>
-        /// returns the current color name of the EV3ColorSensor
-        /// </summary>
-        /// <returns>
-        /// string: the current color name seen by the EV3ColorSensor
-        /// </returns>
-        private static string GetColorName()
-        {
-            return ColorSensor.ReadAsString();
-        }
-
-        /// <summary>
-        /// returns the current colorId of the EV3ColorSensor
-        /// </summary>
-        /// <returns>
-        /// int: the current colorId seen by the EV3ColorSensor
-        /// </returns>
-        public static RGBColor GetRGBColor()
+        private static FullColor GetFullColor()
         {
             if (ColorSensor != null)
             {
-                return ColorSensor.ReadRGB();
+                return new FullColor()
+                {
+                    Intensity = GetColorIntensity(),
+                    RGBColor = GetRGBColor()
+                };
             }
             else
             {
                 Robot.Print("color sensor not initialized!");
                 return null;
             }
+        }
+
+        /// <summary>
+        /// reads the current grey levels and returns it
+        /// </summary>
+        /// <returns> int describing current grey levels </returns>
+        private static int GetColorIntensity()
+        {
+            return ColorSensor.Read();
+        }
+
+        /// <summary>
+        /// reads and returns the current rgb colors
+        /// </summary>
+        /// <returns>
+        /// <see cref="RGBColor"/> object describing current values
+        /// </returns>
+        private static RGBColor GetRGBColor()
+        {
+            return ColorSensor.ReadRGB();
         }
 
         /// <summary>
@@ -706,10 +696,13 @@ namespace BrickSolution.Logic
         /// </returns>
         public static bool OurFoodDetected()
         {
-            bool result = (TeamMode == TeamMode.WinnieTeam
-                    && ColourMatchesWithTolerance(Constants.WINNIE_TEAM_FOODSTONE_COLOR, GetRGBColor()))
+            FullColor currentColor = GetFullColor();
+
+            bool result = 
+                    (TeamMode == TeamMode.WinnieTeam
+                    && currentColor.Equals(Constants.WINNIE_TEAM_FOODSTONE_COLOR))
                  || (TeamMode == TeamMode.IAhTeam
-                    && ColourMatchesWithTolerance(Constants.IAH_TEAM_FOODSTONE_COLOR, GetRGBColor()));
+                    && currentColor.Equals(Constants.IAH_TEAM_FOODSTONE_COLOR));
 
             if (result)
             {
@@ -721,10 +714,13 @@ namespace BrickSolution.Logic
 
         public static bool EnemyFoodDetected()
         {
-            bool result = (TeamMode != TeamMode.WinnieTeam
-                    && ColourMatchesWithTolerance(Constants.WINNIE_TEAM_FOODSTONE_COLOR, GetRGBColor()))
+            FullColor currentColor = GetFullColor();
+
+            bool result =
+                    (TeamMode != TeamMode.WinnieTeam
+                    && currentColor.Equals(Constants.WINNIE_TEAM_FOODSTONE_COLOR))
                  || (TeamMode != TeamMode.IAhTeam
-                    && ColourMatchesWithTolerance(Constants.IAH_TEAM_FOODSTONE_COLOR, GetRGBColor()));
+                    && currentColor.Equals(Constants.IAH_TEAM_FOODSTONE_COLOR));
 
             if (result)
             {
@@ -745,7 +741,7 @@ namespace BrickSolution.Logic
         public static bool MeadowDetected()
         {
             bool result =
-                (GetUltraSonicDistance() < Constants.US_MEADOW_DISTANCE_TOLL_UP
+                   (GetUltraSonicDistance() < Constants.US_MEADOW_DISTANCE_TOLL_UP
                     && GetUltraSonicDistance() > Constants.US_MEADOW_DISTANCE_TOLL_DOWN)
                 || (GetIRDistance() < Constants.IR_MEADOW_DISTANCE_TOLL_UP
                     && GetIRDistance() > Constants.IR_MEADOW_DISTANCE_TOLL_DOWN);

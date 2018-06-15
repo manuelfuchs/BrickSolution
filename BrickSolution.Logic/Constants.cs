@@ -49,6 +49,7 @@ namespace BrickSolution.Logic
         public static readonly int ULTRA_SONIC_REFLECTION_TOLL = 900;
         public static readonly int IR_TABLE_END_VALUE = 45;
         public static readonly int COLOUR_TOLERANCE = 30;
+        public static readonly int INTENSITY_TOLERANCE = 10;
         public static readonly int US_MEADOW_DISTANCE_TOLL_DOWN = 90;
         public static readonly int US_MEADOW_DISTANCE_TOLL_UP = 101;
         public static readonly int IR_MEADOW_DISTANCE_TOLL_DOWN = 4;
@@ -60,10 +61,26 @@ namespace BrickSolution.Logic
         #endregion
 
         #region TeamValues
-        public static readonly RGBColor WINNIE_TEAM_FOODSTONE_COLOR = new RGBColor(173, 115, 21);
-        public static readonly RGBColor WINNIE_TEAM_MEADOW_COLOR = new RGBColor(17, 43, 52);
-        public static readonly RGBColor IAH_TEAM_FOODSTONE_COLOR = new RGBColor(24, 104, 25);
-        public static readonly RGBColor IAH_TEAM_MEADOW_COLOR = new RGBColor(158, 106, 17);
+        public static FullColor WINNIE_TEAM_FOODSTONE_COLOR = new FullColor()
+        {
+            Intensity = -1,
+            RGBColor = new RGBColor(173, 115, 21)
+        };
+        public static readonly FullColor WINNIE_TEAM_MEADOW_COLOR = new FullColor()
+        {
+            Intensity = -1,
+            RGBColor = new RGBColor(17, 43, 52)
+        };
+        public static readonly FullColor IAH_TEAM_FOODSTONE_COLOR = new FullColor()
+        {
+            Intensity = -1,
+            RGBColor = new RGBColor(24, 104, 25)
+        };
+        public static readonly FullColor IAH_TEAM_MEADOW_COLOR = new FullColor()
+        {
+            Intensity = -1,
+            RGBColor = new RGBColor(158, 106, 17)
+        };
         #endregion
     }
 }
