@@ -37,9 +37,9 @@ namespace BrickSolution.Logic
                     && this.RGBColor.Green < expectedColor.RGBColor.Green + (Constants.COLOUR_TOLERANCE / 2)
                     && expectedColor.RGBColor.Blue - (Constants.COLOUR_TOLERANCE / 2) < this.RGBColor.Blue
                     && this.RGBColor.Blue < expectedColor.RGBColor.Blue + (Constants.COLOUR_TOLERANCE / 2);
-
-                // to implement
-                bool intensityMatch = true;
+                
+                bool intensityMatch = expectedColor.Intensity - (Constants.INTENSITY_TOLERANCE / 2) < this.Intensity
+                    && this.Intensity < expectedColor.Intensity + (Constants.INTENSITY_TOLERANCE / 2);
 
                 return colourMatch && intensityMatch;
             }
@@ -47,6 +47,20 @@ namespace BrickSolution.Logic
             {
                 return false;
             }
+        }
+
+        /// <summary>
+        /// returns a string representation of the object
+        /// </summary>
+        /// <returns>the string representation of this object</returns>
+        public override string ToString()
+        {
+            return $"RGB:{System.Environment.NewLine}"
+                 + $"  red:   {this.RGBColor.Red}{System.Environment.NewLine}"
+                 + $"  blue:  {this.RGBColor.Blue}{System.Environment.NewLine}"
+                 + $"  green: {this.RGBColor.Green}{System.Environment.NewLine}"
+                 + $"{System.Environment.NewLine}"
+                 + $"color-intensity: {this.Intensity}";
         }
 
         public override int GetHashCode()

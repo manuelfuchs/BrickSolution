@@ -49,6 +49,7 @@ namespace BrickSolution.Logic
         public static readonly int ULTRA_SONIC_REFLECTION_TOLL = 900;
         public static readonly int IR_TABLE_END_VALUE = 45;
         public static readonly int COLOUR_TOLERANCE = 30;
+        public static readonly int INTENSITY_TOLERANCE = 10;
         public static readonly int US_MEADOW_DISTANCE_TOLL_DOWN = 90;
         public static readonly int US_MEADOW_DISTANCE_TOLL_UP = 101;
         public static readonly int IR_MEADOW_DISTANCE_TOLL_DOWN = 4;
