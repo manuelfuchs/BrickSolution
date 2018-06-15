@@ -676,7 +676,7 @@ namespace BrickSolution.Logic
                     && GetUltraSonicDistance() > Constants.US_FENCE_DISTANCE_TOLL_DOWN)
                 || (GetIRDistance() < Constants.IR_FENCE_DISTANCE_TOLL_UP
                     && GetIRDistance() > Constants.IR_FENCE_DISTANCE_TOLL_DOWN);
-            result = false;
+            
             if (result)
             {
                 Print($"ir-dist: {GetIRDistance()}");
