@@ -643,11 +643,15 @@ namespace BrickSolution.Logic
             return result;
         }
 
+        /// <summary>
+        /// returns a boolean indicating if a tree is detected
+        /// </summary>
+        /// <returns></returns>
         public static bool TreeDetected()
         {
-            bool result = false;
+            FullColor currentColor = GetFullColor();
 
-            //TODO
+            bool result = currentColor.Equals(Constants.TREE_COLOR);
 
             if (result)
             {
@@ -672,7 +676,7 @@ namespace BrickSolution.Logic
                     && GetUltraSonicDistance() > Constants.US_FENCE_DISTANCE_TOLL_DOWN)
                 || (GetIRDistance() < Constants.IR_FENCE_DISTANCE_TOLL_UP
                     && GetIRDistance() > Constants.IR_FENCE_DISTANCE_TOLL_DOWN);
-            result = false;
+            
             if (result)
             {
                 Print($"ir-dist: {GetIRDistance()}");

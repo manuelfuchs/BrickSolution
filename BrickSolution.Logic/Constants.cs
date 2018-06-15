@@ -81,6 +81,11 @@ namespace BrickSolution.Logic
             Intensity = -1,
             RGBColor = new RGBColor(158, 106, 17)
         };
+        public static readonly FullColor TREE_COLOR = new FullColor()
+        {
+            Intensity = -1,
+            RGBColor = new RGBColor(0, 0, 0)
+        };
         #endregion
     }
 }
