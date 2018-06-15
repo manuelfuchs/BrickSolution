@@ -643,11 +643,15 @@ namespace BrickSolution.Logic
             return result;
         }
 
+        /// <summary>
+        /// returns a boolean indicating if a tree is detected
+        /// </summary>
+        /// <returns></returns>
         public static bool TreeDetected()
         {
-            bool result = false;
+            FullColor currentColor = GetFullColor();
 
-            //TODO
+            bool result = currentColor.Equals(Constants.TREE_COLOR);
 
             if (result)
             {
