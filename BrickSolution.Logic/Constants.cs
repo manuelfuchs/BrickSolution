@@ -7,61 +7,57 @@ namespace BrickSolution.Logic
     internal static class Constants
     {
         #region Motors
-        public static readonly MotorPort LEFT_TRACK_PORT = MotorPort.OutA;
-        public static readonly MotorPort RIGHT_TRACK_PORT = MotorPort.OutB;
-        public static readonly MotorPort GRAPPLER_RISER_PORT = MotorPort.OutC;
-        public static readonly MotorPort GRAPPLER_WHEEL_PORT = MotorPort.OutD;
+        public const MotorPort LEFT_TRACK_PORT = MotorPort.OutA;
+        public const MotorPort RIGHT_TRACK_PORT = MotorPort.OutB;
+        public const MotorPort GRAPPLER_RISER_PORT = MotorPort.OutC;
+        public const MotorPort GRAPPLER_WHEEL_PORT = MotorPort.OutD;
         #endregion
 
         #region Sensors
-        public static readonly SensorPort EV3_COLOR_SENSOR_PORT = SensorPort.In1;
-        public static readonly SensorPort ULTRASONIC_SENSOR_PORT = SensorPort.In2;
-        public static readonly SensorPort IR_SENSOR_PORT = SensorPort.In4;
+        public const SensorPort EV3_COLOR_SENSOR_PORT = SensorPort.In1;
+        public const SensorPort ULTRASONIC_SENSOR_PORT = SensorPort.In2;
+        public const SensorPort IR_SENSOR_PORT = SensorPort.In4;
         #endregion
 
         #region LcdOutputs
-        public static string COMPETITION_START_USER_MSG_PART1
-            = "Press the middle button to";
-        public static string COMPETITION_START_USER_MSG_PART2
-            = "continue with the competition";
-        public static string INIT_ERROR_MSG
-            = "SOMETHING WENT WRONG WHILE INITLIZING";
-        public static string PROGRAM_FINISHED_MSG
-            = "programs finished -> quitting";
+        public const string COMPETITION_START_USER_MSG_PART1 = "Press the middle button to";
+        public const string COMPETITION_START_USER_MSG_PART2  = "continue with the competition";
+        public const string INIT_ERROR_MSG = "SOMETHING WENT WRONG WHILE INITLIZING";
+        public const string PROGRAM_FINISHED_MSG = "programs finished -> quitting";
         #endregion
 
         #region Values
-        public static readonly sbyte DRIVE_FORWARD_SPEED = -30;
-        public static readonly sbyte DRIVE_BACKWARD_SPEED = 30;
-        public static readonly sbyte DRIVE_FORWARD_AFT_BACKWARD_SPEED = -30;
-        public static readonly sbyte GRAPPLER_RISER_SPEED = -40;
-        public static readonly sbyte GRAPPLER_WHEEL_SPEED = 25;
-        public static readonly int GRAPPLER_WHEEL_BOUNDARY = 210;
-        public static readonly sbyte ROTATION_SPEED_FORWARD = -40;
-        public static readonly sbyte ROTATION_SPEED_BACKWARD = 40;
-        public static readonly int GRAPPLER_RISER_TACHO_BOUNDARY = 100;
-        public static readonly int PROGRAM_ABORTION_DELAY = 15000;
-        public static readonly int PROGRAM_BOOT_DELAY = 10000;
-        public static readonly int SAMPLING_RATE = 250;
-        public static readonly int ROTATION_DURATION = 1000;
-        public static readonly int IR_VALUES_NOT_INTERPRETABLE_VALUE = -1;
-        public static readonly int ULTRA_SONIC_TABLE_END_VALUE = 820;
-        public static readonly int ULTRA_SONIC_REFLECTION_TOLL = 900;
-        public static readonly int IR_TABLE_END_VALUE = 45;
-        public static readonly int COLOUR_TOLERANCE = 15;
-        public static readonly int INTENSITY_TOLERANCE = 10;
-        public static readonly int US_MEADOW_DISTANCE_TOLL_DOWN = 90;
-        public static readonly int US_MEADOW_DISTANCE_TOLL_UP = 101;
-        public static readonly int IR_MEADOW_DISTANCE_TOLL_DOWN = 4;
-        public static readonly int IR_MEADOW_DISTANCE_TOLL_UP = 8;
-        public static readonly int US_FENCE_DISTANCE_TOLL_DOWN = 102;
-        public static readonly int US_FENCE_DISTANCE_TOLL_UP = 110;
-        public static readonly int IR_FENCE_DISTANCE_TOLL_DOWN = 9;
-        public static readonly int IR_FENCE_DISTANCE_TOLL_UP = 11;
+        public const sbyte DRIVE_FORWARD_SPEED = -30;
+        public const sbyte DRIVE_BACKWARD_SPEED = 30;
+        public const sbyte DRIVE_FORWARD_AFT_BACKWARD_SPEED = -30;
+        public const sbyte GRAPPLER_RISER_SPEED = -40;
+        public const sbyte GRAPPLER_WHEEL_SPEED = 25;
+        public const int GRAPPLER_WHEEL_BOUNDARY = 210;
+        public const sbyte ROTATION_SPEED_FORWARD = -40;
+        public const sbyte ROTATION_SPEED_BACKWARD = 40;
+        public const int GRAPPLER_RISER_TACHO_BOUNDARY = 100;
+        public const int PROGRAM_ABORTION_DELAY = 15000;
+        public const int PROGRAM_BOOT_DELAY = 10000;
+        public const int SAMPLING_RATE = 250;
+        public const int ROTATION_DURATION = 1000;
+        public const int IR_VALUES_NOT_INTERPRETABLE_VALUE = -1;
+        public const int ULTRA_SONIC_TABLE_END_VALUE = 820;
+        public const int ULTRA_SONIC_REFLECTION_TOLL = 900;
+        public const int IR_TABLE_END_VALUE = 45;
+        public const int COLOUR_TOLERANCE = 15;
+        public const int INTENSITY_TOLERANCE = 10;
+        public const int US_MEADOW_DISTANCE_TOLL_DOWN = 90;
+        public const int US_MEADOW_DISTANCE_TOLL_UP = 101;
+        public const int IR_MEADOW_DISTANCE_TOLL_DOWN = 4;
+        public const int IR_MEADOW_DISTANCE_TOLL_UP = 8;
+        public const int US_FENCE_DISTANCE_TOLL_DOWN = 102;
+        public const int US_FENCE_DISTANCE_TOLL_UP = 110;
+        public const int IR_FENCE_DISTANCE_TOLL_DOWN = 9;
+        public const int IR_FENCE_DISTANCE_TOLL_UP = 11;
         #endregion
 
         #region TeamValues
-        public static FullColor WINNIE_TEAM_FOODSTONE_COLOR = new FullColor()
+        public static readonly FullColor WINNIE_TEAM_FOODSTONE_COLOR = new FullColor()
         //gelb
         {
             Intensity = 16,
