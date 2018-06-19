@@ -62,26 +62,31 @@ namespace BrickSolution.Logic
 
         #region TeamValues
         public static FullColor WINNIE_TEAM_FOODSTONE_COLOR = new FullColor()
+        //gelb
         {
-            Intensity = -1,
-            RGBColor = new RGBColor(173, 115, 21)
+            Intensity = 16,
+            RGBColor = new RGBColor(150, 18, 103)
         };
         public static readonly FullColor WINNIE_TEAM_MEADOW_COLOR = new FullColor()
+        //blau
         {
             Intensity = -1,
             RGBColor = new RGBColor(17, 43, 52)
         };
         public static readonly FullColor IAH_TEAM_FOODSTONE_COLOR = new FullColor()
+        //grün
         {
-            Intensity = -1,
-            RGBColor = new RGBColor(24, 104, 25)
+            Intensity = 11,
+            RGBColor = new RGBColor(8, 9, 41)
         };
         public static readonly FullColor IAH_TEAM_MEADOW_COLOR = new FullColor()
+        //weiß
         {
-            Intensity = -1,
-            RGBColor = new RGBColor(158, 106, 17)
+            Intensity = 16,
+            RGBColor = new RGBColor(90, 73, 100)
         };
         public static readonly FullColor TREE_COLOR = new FullColor()
+        //braun
         {
             Intensity = -1,
             RGBColor = new RGBColor(0, 0, 0)
