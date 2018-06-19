@@ -41,6 +41,7 @@ namespace BrickSolution.Logic
             }
             finally
             {
+                Robot.HaltMotors();
                 Robot.DisposeComponents();
                 Robot.PrintEmptyLine();
                 Robot.Print(Constants.PROGRAM_FINISHED_MSG);
