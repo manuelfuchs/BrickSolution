@@ -31,6 +31,13 @@ namespace BrickSolution.Logic
             {
                 FullColor expectedColor = other as FullColor;
 
+                //double redProportion = this.RGBColor.Red / expectedColor.RGBColor.Red;
+                //double blueProportion = this.RGBColor.Blue / expectedColor.RGBColor.Blue;
+                //double greenProportion = this.RGBColor.Green / expectedColor.RGBColor.Green;
+                //double greyValProportion = this.Intensity / expectedColor.Intensity;
+
+                //implement proportion comparison
+
                 bool colourMatch = expectedColor.RGBColor.Red - (Constants.COLOUR_TOLERANCE / 2) < this.RGBColor.Red
                     && this.RGBColor.Red < expectedColor.RGBColor.Red + (Constants.COLOUR_TOLERANCE / 2)
                     && expectedColor.RGBColor.Green - (Constants.COLOUR_TOLERANCE / 2) < this.RGBColor.Green

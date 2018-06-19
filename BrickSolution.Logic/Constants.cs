@@ -48,16 +48,16 @@ namespace BrickSolution.Logic
         public static readonly int ULTRA_SONIC_TABLE_END_VALUE = 820;
         public static readonly int ULTRA_SONIC_REFLECTION_TOLL = 900;
         public static readonly int IR_TABLE_END_VALUE = 45;
-        public static readonly int COLOUR_TOLERANCE = 30;
+        public static readonly int COLOUR_TOLERANCE = 15;
         public static readonly int INTENSITY_TOLERANCE = 10;
         public static readonly int US_MEADOW_DISTANCE_TOLL_DOWN = 90;
         public static readonly int US_MEADOW_DISTANCE_TOLL_UP = 101;
         public static readonly int IR_MEADOW_DISTANCE_TOLL_DOWN = 4;
-        public static readonly int IR_MEADOW_DISTANCE_TOLL_UP = 9;
+        public static readonly int IR_MEADOW_DISTANCE_TOLL_UP = 8;
         public static readonly int US_FENCE_DISTANCE_TOLL_DOWN = 102;
         public static readonly int US_FENCE_DISTANCE_TOLL_UP = 110;
-        public static readonly int IR_FENCE_DISTANCE_TOLL_DOWN = 10;
-        public static readonly int IR_FENCE_DISTANCE_TOLL_UP = 13;
+        public static readonly int IR_FENCE_DISTANCE_TOLL_DOWN = 9;
+        public static readonly int IR_FENCE_DISTANCE_TOLL_UP = 11;
         #endregion
 
         #region TeamValues
@@ -65,31 +65,31 @@ namespace BrickSolution.Logic
         //gelb
         {
             Intensity = 16,
-            RGBColor = new RGBColor(150, 18, 103)
+            RGBColor = new RGBColor(150, 103, 18)
         };
         public static readonly FullColor WINNIE_TEAM_MEADOW_COLOR = new FullColor()
         //blau
         {
-            Intensity = -1,
-            RGBColor = new RGBColor(17, 43, 52)
+            Intensity = 7,
+            RGBColor = new RGBColor(23, 63, 54)
         };
         public static readonly FullColor IAH_TEAM_FOODSTONE_COLOR = new FullColor()
         //grün
         {
             Intensity = 11,
-            RGBColor = new RGBColor(8, 9, 41)
+            RGBColor = new RGBColor(8, 41, 9)
         };
         public static readonly FullColor IAH_TEAM_MEADOW_COLOR = new FullColor()
         //weiß
         {
             Intensity = 16,
-            RGBColor = new RGBColor(90, 73, 100)
+            RGBColor = new RGBColor(90, 100, 73)
         };
         public static readonly FullColor TREE_COLOR = new FullColor()
         //braun
         {
-            Intensity = -1,
-            RGBColor = new RGBColor(0, 0, 0)
+            Intensity = 10,
+            RGBColor = new RGBColor(10, 10, 10)
         };
         #endregion
     }

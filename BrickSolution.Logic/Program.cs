@@ -14,13 +14,15 @@ namespace BrickSolution.Logic
                 Robot.InitRobot();
 
                 Thread.Sleep(1000);
+
+                Robot.Print("initialization succeeded");
                 
                 while (true)
                 {
                     Robot.Drive();
 
                     Robot.Print($"last-stop-reason: {Robot.LastStopReason}");
-                    Thread.Sleep(3000);
+                    Thread.Sleep(7000);
 
                     switch (Robot.LastStopReason)
                     {
@@ -100,6 +102,7 @@ namespace BrickSolution.Logic
                 }
 
                 Robot.Print(e.Message);
+                Robot.Print(e.TargetSite.ToString());
             }
             finally
             {

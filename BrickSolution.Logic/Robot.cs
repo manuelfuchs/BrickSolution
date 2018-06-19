@@ -603,17 +603,18 @@ namespace BrickSolution.Logic
             int usDist = GetUltraSonicDistance();
             int irDist = GetIRDistance();
 
-            bool result = 
-                (usDist > Constants.ULTRA_SONIC_TABLE_END_VALUE
-                    && usDist < Constants.ULTRA_SONIC_REFLECTION_TOLL)
-                || irDist > Constants.IR_TABLE_END_VALUE;
+            bool usCond = (usDist > Constants.ULTRA_SONIC_TABLE_END_VALUE
+                    && usDist < Constants.ULTRA_SONIC_REFLECTION_TOLL);
+            bool irCond = irDist > Constants.IR_TABLE_END_VALUE;
+
+            bool result = usCond || irCond;
 
             if (result)
             {
                 Print($"us-dist: {usDist}");
                 Print($"ir-dist: {irDist}");
-                Print($"cond1: {usDist > Constants.ULTRA_SONIC_TABLE_END_VALUE && usDist < Constants.ULTRA_SONIC_REFLECTION_TOLL}");
-                Print($"cond2: {irDist > Constants.IR_TABLE_END_VALUE}");
+                Print($"cond1: {usCond}");
+                Print($"cond2: {irCond}");
 
                 LastStopReason = StopReason.AbyssDetected;
             }
@@ -671,19 +672,23 @@ namespace BrickSolution.Logic
         /// </returns>
         public static bool FenceDetected()
         {
-            bool result =
-                (GetUltraSonicDistance() < Constants.US_FENCE_DISTANCE_TOLL_UP
-                    && GetUltraSonicDistance() > Constants.US_FENCE_DISTANCE_TOLL_DOWN)
-                || (GetIRDistance() < Constants.IR_FENCE_DISTANCE_TOLL_UP
-                    && GetIRDistance() > Constants.IR_FENCE_DISTANCE_TOLL_DOWN);
+            int usDist = GetUltraSonicDistance();
+            int irDist = GetIRDistance();
+
+            bool cond1 = (usDist < Constants.US_FENCE_DISTANCE_TOLL_UP
+                    && usDist > Constants.US_FENCE_DISTANCE_TOLL_DOWN);
+            bool cond2 = (irDist < Constants.IR_FENCE_DISTANCE_TOLL_UP
+                    && irDist > Constants.IR_FENCE_DISTANCE_TOLL_DOWN);
+
+            bool result = cond1 || cond2;
             
             if (result)
             {
-                Print($"ir-dist: {GetIRDistance()}");
-                Print($"us-dist: {GetUltraSonicDistance()}");
-                Print($"cond1: {GetUltraSonicDistance() < Constants.US_FENCE_DISTANCE_TOLL_UP && GetUltraSonicDistance() > Constants.US_FENCE_DISTANCE_TOLL_DOWN}");
-                Print($"cond2: {GetIRDistance() < Constants.IR_FENCE_DISTANCE_TOLL_UP && GetIRDistance() > Constants.IR_FENCE_DISTANCE_TOLL_DOWN}");
-
+                Print($"us-dist: {usDist}");
+                Print($"ir-dist: {irDist}");
+                Print($"us-cond: {cond1}");
+                Print($"ir-cond: {cond2}");
+                
                 LastStopReason = StopReason.FenceDetected;
             }
 
@@ -763,7 +768,8 @@ namespace BrickSolution.Logic
             return result;
         }
 
-        /// <summary>
+        
+        // <summary>
         /// this method returns an boolean indicating if a certain action
         /// should be stopped
         /// </summary>
