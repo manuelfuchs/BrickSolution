@@ -27,35 +27,6 @@ namespace BrickSolution.Logic
         #endregion
 
         #region Values
-<<<<<<< Updated upstream
-        public const sbyte DRIVE_FORWARD_SPEED = -30;
-        public const sbyte DRIVE_BACKWARD_SPEED = 30;
-        public const sbyte DRIVE_FORWARD_AFT_BACKWARD_SPEED = -30;
-        public const sbyte GRAPPLER_RISER_SPEED = -40;
-        public const sbyte GRAPPLER_WHEEL_SPEED = 25;
-        public const int GRAPPLER_WHEEL_BOUNDARY = 210;
-        public const sbyte ROTATION_SPEED_FORWARD = -40;
-        public const sbyte ROTATION_SPEED_BACKWARD = 40;
-        public const int GRAPPLER_RISER_TACHO_BOUNDARY = 100;
-        public const int PROGRAM_ABORTION_DELAY = 15000;
-        public const int PROGRAM_BOOT_DELAY = 10000;
-        public const int SAMPLING_RATE = 250;
-        public const int ROTATION_DURATION = 1000;
-        public const int IR_VALUES_NOT_INTERPRETABLE_VALUE = -1;
-        public const int ULTRA_SONIC_TABLE_END_VALUE = 820;
-        public const int ULTRA_SONIC_REFLECTION_TOLL = 900;
-        public const int IR_TABLE_END_VALUE = 45;
-        public const int COLOUR_TOLERANCE = 15;
-        public const int INTENSITY_TOLERANCE = 10;
-        public const int US_MEADOW_DISTANCE_TOLL_DOWN = 90;
-        public const int US_MEADOW_DISTANCE_TOLL_UP = 101;
-        public const int IR_MEADOW_DISTANCE_TOLL_DOWN = 4;
-        public const int IR_MEADOW_DISTANCE_TOLL_UP = 8;
-        public const int US_FENCE_DISTANCE_TOLL_DOWN = 102;
-        public const int US_FENCE_DISTANCE_TOLL_UP = 110;
-        public const int IR_FENCE_DISTANCE_TOLL_DOWN = 9;
-        public const int IR_FENCE_DISTANCE_TOLL_UP = 11;
-=======
         public static readonly sbyte DRIVE_FORWARD_SPEED = -30;
         public static readonly sbyte DRIVE_BACKWARD_SPEED = 30;
         public static readonly sbyte DRIVE_FORWARD_AFT_BACKWARD_SPEED = -30;
@@ -83,7 +54,6 @@ namespace BrickSolution.Logic
         public static readonly int US_FENCE_DISTANCE_TOLL_UP = 95/*110*/;
         public static readonly int IR_FENCE_DISTANCE_TOLL_DOWN = 7;
         public static readonly int IR_FENCE_DISTANCE_TOLL_UP = 9;
->>>>>>> Stashed changes
         #endregion
 
         #region TeamValues
