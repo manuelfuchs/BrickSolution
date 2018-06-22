@@ -136,16 +136,18 @@ namespace BrickSolution.Logic
 
         public static void DetectTeamColor()
         {
-            FullColor currentColor = GetFullColor();
+            SetTrackSpeed(Constants.DRIVE_FORWARD_SPEED, Constants.DRIVE_FORWARD_SPEED);
 
-            if (currentColor.Equals(Constants.WINNIE_TEAM_FOODSTONE_COLOR))
+            FullColor currentColor;
+            do
             {
-                TeamMode = TeamMode.WinnieTeam;
-            }
-            else if (currentColor.Equals(Constants.IAH_TEAM_FOODSTONE_COLOR))
-            {
-                TeamMode = TeamMode.IAhTeam;
-            }
+                currentColor = GetFullColor();
+            } while (!currentColor.IsSignificant());
+
+            HaltTracks();
+            
+            // Use the color that fits bets
+            // to implement
         }
 
         /// <summary>
@@ -628,7 +630,7 @@ namespace BrickSolution.Logic
         {
             bool result = false;
 
-            //TODO
+            //to implement
 
             if (result)
             {

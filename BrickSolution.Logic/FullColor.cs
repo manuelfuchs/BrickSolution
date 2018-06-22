@@ -32,12 +32,12 @@ namespace BrickSolution.Logic
             {
                 FullColor expectedColor = other as FullColor;
 
-                double actualRg = this.RGBColor.Red / this.RGBColor.Green;
-                double expectedRg = expectedColor.RGBColor.Red / expectedColor.RGBColor.Green;
-                double actualGb = this.RGBColor.Green / this.RGBColor.Blue;
-                double expectedGb = expectedColor.RGBColor.Green / expectedColor.RGBColor.Blue;
-                double actualBr = this.RGBColor.Blue / this.RGBColor.Red;
-                double expectedBr = expectedColor.RGBColor.Blue / expectedColor.RGBColor.Red;
+                double actualRg = this.RGBColor.Red / (double)this.RGBColor.Green;
+                double expectedRg = expectedColor.RGBColor.Red / (double)expectedColor.RGBColor.Green;
+                double actualGb = this.RGBColor.Green / (double)this.RGBColor.Blue;
+                double expectedGb = expectedColor.RGBColor.Green / (double)expectedColor.RGBColor.Blue;
+                double actualBr = this.RGBColor.Blue / (double)this.RGBColor.Red;
+                double expectedBr = expectedColor.RGBColor.Blue / (double)expectedColor.RGBColor.Red;
 
                 double downFact = 1 - Constants.COLOUR_TOLERANCE;
                 double upFact = 1 + Constants.COLOUR_TOLERANCE;
@@ -47,7 +47,7 @@ namespace BrickSolution.Logic
                     && expectedGb * downFact < actualGb
                     && actualGb < expectedGb * upFact
                     && expectedBr * downFact < actualBr
-                    && actualBr < expectedBr;
+                    && actualBr < expectedBr * upFact;
 
                 return colorMatch
                     //&& intensityMatch
@@ -79,6 +79,20 @@ namespace BrickSolution.Logic
             hashCode = hashCode * -1521134295 + Intensity.GetHashCode();
             hashCode = hashCode * -1521134295 + EqualityComparer<RGBColor>.Default.GetHashCode(RGBColor);
             return hashCode;
+        }
+
+        /// <summary>
+        /// returns a boolean indicating if the measured values are
+        /// significant or not
+        /// </summary>
+        /// <returns>
+        /// true:  the fullColor is significant
+        /// false: the fullcolor is not significant</returns>
+        public bool IsSignificant()
+        {
+            // all over 10 or 1 over 25
+            //to implement
+            throw new NotImplementedException();
         }
     }
 }
