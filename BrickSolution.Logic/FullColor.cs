@@ -1,4 +1,5 @@
 ﻿using MonoBrickFirmware.Sensors;
+using System;
 using System.Collections.Generic;
 
 namespace BrickSolution.Logic
@@ -31,24 +32,26 @@ namespace BrickSolution.Logic
             {
                 FullColor expectedColor = other as FullColor;
 
-                //double redProportion = this.RGBColor.Red / expectedColor.RGBColor.Red;
-                //double blueProportion = this.RGBColor.Blue / expectedColor.RGBColor.Blue;
-                //double greenProportion = this.RGBColor.Green / expectedColor.RGBColor.Green;
-                //double greyValProportion = this.Intensity / expectedColor.Intensity;
+                double actualRg = this.RGBColor.Red / this.RGBColor.Green;
+                double expectedRg = expectedColor.RGBColor.Red / expectedColor.RGBColor.Green;
+                double actualGb = this.RGBColor.Green / this.RGBColor.Blue;
+                double expectedGb = expectedColor.RGBColor.Green / expectedColor.RGBColor.Blue;
+                double actualBr = this.RGBColor.Blue / this.RGBColor.Red;
+                double expectedBr = expectedColor.RGBColor.Blue / expectedColor.RGBColor.Red;
 
-                //implement proportion comparison
+                double downFact = 1 - Constants.COLOUR_TOLERANCE;
+                double upFact = 1 + Constants.COLOUR_TOLERANCE;
 
-                bool colourMatch = expectedColor.RGBColor.Red - (Constants.COLOUR_TOLERANCE / 2) < this.RGBColor.Red
-                    && this.RGBColor.Red < expectedColor.RGBColor.Red + (Constants.COLOUR_TOLERANCE / 2)
-                    && expectedColor.RGBColor.Green - (Constants.COLOUR_TOLERANCE / 2) < this.RGBColor.Green
-                    && this.RGBColor.Green < expectedColor.RGBColor.Green + (Constants.COLOUR_TOLERANCE / 2)
-                    && expectedColor.RGBColor.Blue - (Constants.COLOUR_TOLERANCE / 2) < this.RGBColor.Blue
-                    && this.RGBColor.Blue < expectedColor.RGBColor.Blue + (Constants.COLOUR_TOLERANCE / 2);
-                
-                bool intensityMatch = expectedColor.Intensity - (Constants.INTENSITY_TOLERANCE / 2) < this.Intensity
-                    && this.Intensity < expectedColor.Intensity + (Constants.INTENSITY_TOLERANCE / 2);
+                bool colorMatch = expectedRg * downFact < actualRg
+                    && actualRg < expectedRg * upFact
+                    && expectedGb * downFact < actualGb
+                    && actualGb < expectedGb * upFact
+                    && expectedBr * downFact < actualBr
+                    && actualBr < expectedBr;
 
-                return colourMatch && intensityMatch;
+                return colorMatch
+                    //&& intensityMatch
+                    ;
             }
             else
             {

@@ -44,7 +44,7 @@ namespace BrickSolution.Logic
         public const int ULTRA_SONIC_TABLE_END_VALUE = 820;
         public const int ULTRA_SONIC_REFLECTION_TOLL = 900;
         public const int IR_TABLE_END_VALUE = 20;
-        public const int COLOUR_TOLERANCE = 15;
+        public const double COLOUR_TOLERANCE = 0.2;
         public const int INTENSITY_TOLERANCE = 10;
         public const int US_MEADOW_DISTANCE_TOLL_DOWN = 55/*90*/;
         public const int US_MEADOW_DISTANCE_TOLL_UP = 74/*101*/;
