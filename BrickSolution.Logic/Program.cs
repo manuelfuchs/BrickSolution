@@ -14,17 +14,20 @@ namespace BrickSolution.Logic
                 Robot.InitRobot();
 
                 Thread.Sleep(1000);
+                
+                Wait("Press button to calibrize:");
+                FullColor calibColor = Robot.GetFullColor();
 
                 for (int i = 0; i < 10; i++)
                 {
-                    Robot.Print("press button:");
-
-                    Wait();
+                    Wait("press middle button to read");
                     FullColor color = Robot.GetFullColor();
 
                     if (color != null)
                     {
-                        Robot.Print("  " + color.ToString());
+                        Robot.Print($"  calibCo = {calibColor.ToString()}");
+                        Robot.Print($"  current = {color.ToString()}");
+                        Robot.Print($"  equals = {color.Equals(calibColor)}");
                     }
                     else
                     {
@@ -58,7 +61,7 @@ namespace BrickSolution.Logic
             }
         }
 
-        private static void Wait()
+        private static void Wait(string outputText)
         {
             bool continueWithCompetition = false;
 
@@ -71,8 +74,7 @@ namespace BrickSolution.Logic
             btnEvents.EnterPressed += btnAction;
 
             Robot.PrintEmptyLine();
-            Robot.Print("press middle button to read");
-            Robot.Print("a colour");
+            Robot.Print(outputText);
 
             while (!continueWithCompetition)
             {

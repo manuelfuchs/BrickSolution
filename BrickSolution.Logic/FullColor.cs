@@ -30,14 +30,17 @@ namespace BrickSolution.Logic
         {
             if (other is FullColor)
             {
+                // e: 8, 34, 9, 37
+                // a: 8, 35, 9, 37
+
                 FullColor expectedColor = other as FullColor;
 
-                double actualRg = this.RGBColor.Red / this.RGBColor.Green;
-                double expectedRg = expectedColor.RGBColor.Red / expectedColor.RGBColor.Green;
-                double actualGb = this.RGBColor.Green / this.RGBColor.Blue;
-                double expectedGb = expectedColor.RGBColor.Green / expectedColor.RGBColor.Blue;
-                double actualBr = this.RGBColor.Blue / this.RGBColor.Red;
-                double expectedBr = expectedColor.RGBColor.Blue / expectedColor.RGBColor.Red;
+                double actualRg = this.RGBColor.Red / (double)this.RGBColor.Green;
+                double expectedRg = expectedColor.RGBColor.Red / (double)expectedColor.RGBColor.Green;
+                double actualGb = this.RGBColor.Green / (double)this.RGBColor.Blue;
+                double expectedGb = expectedColor.RGBColor.Green / (double)expectedColor.RGBColor.Blue;
+                double actualBr = this.RGBColor.Blue / (double)this.RGBColor.Red;
+                double expectedBr = expectedColor.RGBColor.Blue / (double)expectedColor.RGBColor.Red;
 
                 double downFact = 1 - Constants.COLOUR_TOLERANCE;
                 double upFact = 1 + Constants.COLOUR_TOLERANCE;
@@ -47,7 +50,7 @@ namespace BrickSolution.Logic
                     && expectedGb * downFact < actualGb
                     && actualGb < expectedGb * upFact
                     && expectedBr * downFact < actualBr
-                    && actualBr < expectedBr;
+                    && actualBr < expectedBr * upFact;
 
                 return colorMatch
                     //&& intensityMatch
@@ -65,12 +68,7 @@ namespace BrickSolution.Logic
         /// <returns>the string representation of this object</returns>
         public override string ToString()
         {
-            return $"RGB:{System.Environment.NewLine}"
-                 + $"  red:   {this.RGBColor.Red}{System.Environment.NewLine}"
-                 + $"  blue:  {this.RGBColor.Blue}{System.Environment.NewLine}"
-                 + $"  green: {this.RGBColor.Green}{System.Environment.NewLine}"
-                 + $"{System.Environment.NewLine}"
-                 + $"color-intensity: {this.Intensity}";
+            return $"{this.RGBColor.Red}, {this.RGBColor.Green}, {this.RGBColor.Blue}, {this.Intensity}";
         }
 
         public override int GetHashCode()
