@@ -1,4 +1,5 @@
 ﻿using MonoBrickFirmware.Sensors;
+using System;
 using System.Collections.Generic;
 
 namespace BrickSolution.Logic
@@ -31,17 +32,26 @@ namespace BrickSolution.Logic
             {
                 FullColor expectedColor = other as FullColor;
 
-                bool colourMatch = expectedColor.RGBColor.Red - (Constants.COLOUR_TOLERANCE / 2) < this.RGBColor.Red
-                    && this.RGBColor.Red < expectedColor.RGBColor.Red + (Constants.COLOUR_TOLERANCE / 2)
-                    && expectedColor.RGBColor.Green - (Constants.COLOUR_TOLERANCE / 2) < this.RGBColor.Green
-                    && this.RGBColor.Green < expectedColor.RGBColor.Green + (Constants.COLOUR_TOLERANCE / 2)
-                    && expectedColor.RGBColor.Blue - (Constants.COLOUR_TOLERANCE / 2) < this.RGBColor.Blue
-                    && this.RGBColor.Blue < expectedColor.RGBColor.Blue + (Constants.COLOUR_TOLERANCE / 2);
-                
-                bool intensityMatch = expectedColor.Intensity - (Constants.INTENSITY_TOLERANCE / 2) < this.Intensity
-                    && this.Intensity < expectedColor.Intensity + (Constants.INTENSITY_TOLERANCE / 2);
+                double actualRg = this.RGBColor.Red / this.RGBColor.Green;
+                double expectedRg = expectedColor.RGBColor.Red / expectedColor.RGBColor.Green;
+                double actualGb = this.RGBColor.Green / this.RGBColor.Blue;
+                double expectedGb = expectedColor.RGBColor.Green / expectedColor.RGBColor.Blue;
+                double actualBr = this.RGBColor.Blue / this.RGBColor.Red;
+                double expectedBr = expectedColor.RGBColor.Blue / expectedColor.RGBColor.Red;
 
-                return colourMatch && intensityMatch;
+                double downFact = 1 - Constants.COLOUR_TOLERANCE;
+                double upFact = 1 + Constants.COLOUR_TOLERANCE;
+
+                bool colorMatch = expectedRg * downFact < actualRg
+                    && actualRg < expectedRg * upFact
+                    && expectedGb * downFact < actualGb
+                    && actualGb < expectedGb * upFact
+                    && expectedBr * downFact < actualBr
+                    && actualBr < expectedBr;
+
+                return colorMatch
+                    //&& intensityMatch
+                    ;
             }
             else
             {
@@ -55,7 +65,12 @@ namespace BrickSolution.Logic
         /// <returns>the string representation of this object</returns>
         public override string ToString()
         {
-            return $"({this.RGBColor.Red}, {this.RGBColor.Blue}, {this.RGBColor.Green}) / {this.Intensity}";
+            return $"RGB:{System.Environment.NewLine}"
+                 + $"  red:   {this.RGBColor.Red}{System.Environment.NewLine}"
+                 + $"  blue:  {this.RGBColor.Blue}{System.Environment.NewLine}"
+                 + $"  green: {this.RGBColor.Green}{System.Environment.NewLine}"
+                 + $"{System.Environment.NewLine}"
+                 + $"color-intensity: {this.Intensity}";
         }
 
         public override int GetHashCode()
@@ -64,6 +79,20 @@ namespace BrickSolution.Logic
             hashCode = hashCode * -1521134295 + Intensity.GetHashCode();
             hashCode = hashCode * -1521134295 + EqualityComparer<RGBColor>.Default.GetHashCode(RGBColor);
             return hashCode;
+        }
+
+        /// <summary>
+        /// returns a boolean indicating if the measured values are
+        /// significant or not
+        /// </summary>
+        /// <returns>
+        /// true:  the fullColor is significant
+        /// false: the fullcolor is not significant</returns>
+        public bool IsSignificant()
+        {
+            // all over 10 or 1 over 25
+            //to implement
+            throw new NotImplementedException();
         }
     }
 }
