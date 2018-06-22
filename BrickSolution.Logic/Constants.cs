@@ -27,33 +27,33 @@ namespace BrickSolution.Logic
         #endregion
 
         #region Values
-        public static readonly sbyte DRIVE_FORWARD_SPEED = -30;
-        public static readonly sbyte DRIVE_BACKWARD_SPEED = 30;
-        public static readonly sbyte DRIVE_FORWARD_AFT_BACKWARD_SPEED = -30;
-        public static readonly sbyte GRAPPLER_RISER_SPEED = -40;
-        public static readonly sbyte GRAPPLER_WHEEL_SPEED = 25;
-        public static readonly int GRAPPLER_WHEEL_BOUNDARY = 210;
-        public static readonly sbyte ROTATION_SPEED_FORWARD = -40;
-        public static readonly sbyte ROTATION_SPEED_BACKWARD = 40;
-        public static readonly int GRAPPLER_RISER_TACHO_BOUNDARY = 100;
-        public static readonly int PROGRAM_ABORTION_DELAY = 15000;
-        public static readonly int PROGRAM_BOOT_DELAY = 10000;
-        public static readonly int SAMPLING_RATE = 250;
-        public static readonly int ROTATION_DURATION = 1000;
-        public static readonly int IR_VALUES_NOT_INTERPRETABLE_VALUE = -1;
-        public static readonly int ULTRA_SONIC_TABLE_END_VALUE = 820;
-        public static readonly int ULTRA_SONIC_REFLECTION_TOLL = 900;
-        public static readonly int IR_TABLE_END_VALUE = 20;
-        public static readonly int COLOUR_TOLERANCE = 15;
-        public static readonly int INTENSITY_TOLERANCE = 10;
-        public static readonly int US_MEADOW_DISTANCE_TOLL_DOWN = 55/*90*/;
-        public static readonly int US_MEADOW_DISTANCE_TOLL_UP = 74/*101*/;
-        public static readonly int IR_MEADOW_DISTANCE_TOLL_DOWN = 2;
-        public static readonly int IR_MEADOW_DISTANCE_TOLL_UP = 6;
-        public static readonly int US_FENCE_DISTANCE_TOLL_DOWN = 75/*102*/;
-        public static readonly int US_FENCE_DISTANCE_TOLL_UP = 95/*110*/;
-        public static readonly int IR_FENCE_DISTANCE_TOLL_DOWN = 7;
-        public static readonly int IR_FENCE_DISTANCE_TOLL_UP = 9;
+        public const sbyte DRIVE_FORWARD_SPEED = -30;
+        public const sbyte DRIVE_BACKWARD_SPEED = 30;
+        public const sbyte DRIVE_FORWARD_AFT_BACKWARD_SPEED = -30;
+        public const sbyte GRAPPLER_RISER_SPEED = -40;
+        public const sbyte GRAPPLER_WHEEL_SPEED = 25;
+        public const int GRAPPLER_WHEEL_BOUNDARY = 210;
+        public const sbyte ROTATION_SPEED_FORWARD = -40;
+        public const sbyte ROTATION_SPEED_BACKWARD = 40;
+        public const int GRAPPLER_RISER_TACHO_BOUNDARY = 100;
+        public const int PROGRAM_ABORTION_DELAY = 15000;
+        public const int PROGRAM_BOOT_DELAY = 10000;
+        public const int SAMPLING_RATE = 250;
+        public const int ROTATION_DURATION = 1000;
+        public const int IR_VALUES_NOT_INTERPRETABLE_VALUE = -1;
+        public const int ULTRA_SONIC_TABLE_END_VALUE = 820;
+        public const int ULTRA_SONIC_REFLECTION_TOLL = 900;
+        public const int IR_TABLE_END_VALUE = 20;
+        public const int COLOUR_TOLERANCE = 15;
+        public const int INTENSITY_TOLERANCE = 10;
+        public const int US_MEADOW_DISTANCE_TOLL_DOWN = 55/*90*/;
+        public const int US_MEADOW_DISTANCE_TOLL_UP = 74/*101*/;
+        public const int IR_MEADOW_DISTANCE_TOLL_DOWN = 2;
+        public const int IR_MEADOW_DISTANCE_TOLL_UP = 6;
+        public const int US_FENCE_DISTANCE_TOLL_DOWN = 75/*102*/;
+        public const int US_FENCE_DISTANCE_TOLL_UP = 95/*110*/;
+        public const int IR_FENCE_DISTANCE_TOLL_DOWN = 7;
+        public const int IR_FENCE_DISTANCE_TOLL_UP = 9;
         #endregion
 
         #region TeamValues
