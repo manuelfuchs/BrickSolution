@@ -16,17 +16,15 @@ namespace BrickSolution.Logic
                 Robot.WaitForStartButtonPress();
 
                 Robot.DetectTeamColor();
-
-                Thread.Sleep(1000);
-
-                Robot.Print("initialization succeeded");
+                
+                Thread.Sleep(Constants.STEP_DELAY);
                 
                 while (true)
                 {
                     Robot.Drive();
-
                     Robot.Print($"last-stop-reason: {Robot.LastStopReason}");
-                    Thread.Sleep(7000);
+
+                    Thread.Sleep(Constants.STEP_DELAY);
 
                     switch (Robot.LastStopReason)
                     {
@@ -92,6 +90,8 @@ namespace BrickSolution.Logic
                         default:
                             break;
                     }
+
+                    Thread.Sleep(Constants.STEP_DELAY);
                 }
             }
             catch (Exception e)
