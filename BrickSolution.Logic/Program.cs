@@ -13,6 +13,10 @@ namespace BrickSolution.Logic
             {
                 Robot.InitRobot();
 
+                Robot.WaitForStartButtonPress();
+
+                Robot.DetectTeamColor();
+
                 Thread.Sleep(1000);
 
                 Robot.Print("initialization succeeded");

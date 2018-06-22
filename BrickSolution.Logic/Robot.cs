@@ -132,16 +132,9 @@ namespace BrickSolution.Logic
             CalibrizeGrappler();
 
             PrintEmptyLine();
-
-            WaitForStartButtonPress();
-
-#if DEBUG
-            TeamMode = TeamMode.WinnieTeam;
-#endif
-            //InitColour();
         }
 
-        public static void InitColour()
+        public static void DetectTeamColor()
         {
             FullColor currentColor = GetFullColor();
 
@@ -153,6 +146,33 @@ namespace BrickSolution.Logic
             {
                 TeamMode = TeamMode.IAhTeam;
             }
+        }
+
+        /// <summary>
+        /// waits until the operator presses the middle-button to
+        /// start the competition mode
+        /// </summary>
+        public static void WaitForStartButtonPress()
+        {
+            bool continueWithCompetition = false;
+
+            ButtonEvents btnEvents = new ButtonEvents();
+
+            Action btnAction = () => {
+                continueWithCompetition = true;
+            };
+
+            btnEvents.EnterPressed += btnAction;
+
+            Robot.Print(Constants.COMPETITION_START_USER_MSG_PART1);
+            Robot.Print(Constants.COMPETITION_START_USER_MSG_PART2);
+
+            while (!continueWithCompetition)
+            {
+                Thread.Sleep(Constants.SAMPLING_RATE);
+            }
+
+            btnEvents.EnterPressed -= btnAction;
         }
 
         public static void PushObjectInFrontToLeft()
@@ -558,33 +578,6 @@ namespace BrickSolution.Logic
             while (!TimerBreakCondition(loadStart, Constants.PROGRAM_BOOT_DELAY))
             {
             }
-        }
-        
-        /// <summary>
-        /// waits until the operator presses the middle-button to
-        /// start the competition mode
-        /// </summary>
-        private static void WaitForStartButtonPress()
-        {
-            bool continueWithCompetition = false;
-
-            ButtonEvents btnEvents = new ButtonEvents();
-
-            Action btnAction = () => {
-                continueWithCompetition = true;
-            };
-
-            btnEvents.EnterPressed += btnAction;
-
-            Robot.Print(Constants.COMPETITION_START_USER_MSG_PART1);
-            Robot.Print(Constants.COMPETITION_START_USER_MSG_PART2);
-
-            while (!continueWithCompetition)
-            {
-                Thread.Sleep(Constants.SAMPLING_RATE);
-            }
-
-            btnEvents.EnterPressed -= btnAction;
         }
 
         #endregion
