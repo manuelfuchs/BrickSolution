@@ -84,8 +84,8 @@ namespace BrickSolution.Logic
         public static readonly FullColor TREE_COLOR = new FullColor()
         //braun
         {
-            Intensity = 10,
-            RGBColor = new RGBColor(10, 10, 10)
+            Intensity = 6,
+            RGBColor = new RGBColor(25, 6, 10)
         };
         #endregion
     }
