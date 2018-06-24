@@ -357,7 +357,7 @@ namespace BrickSolution.Logic
             GrapplerWheelMotor.SetSpeed(Constants.GRAPPLER_WHEEL_SPEED);
             SetTrackSpeed(Constants.DRIVE_FORWARD_AFT_BACKWARD_SPEED,
                           Constants.DRIVE_FORWARD_AFT_BACKWARD_SPEED);
-            Thread.Sleep(1500);
+            Thread.Sleep(2100);
             HaltMotors();
             RiseGrappler();
 
@@ -661,9 +661,13 @@ namespace BrickSolution.Logic
         /// </returns>
         public static bool ObstacleDetected()
         {
-            bool result = false;
+            FullColor currColor = GetFullColor();
 
-            //to implement
+            bool result = !currColor.Equals(Constants.WINNIE_TEAM_FOODSTONE_COLOR)
+                && !currColor.Equals(Constants.WINNIE_TEAM_MEADOW_COLOR)
+                && !currColor.Equals(Constants.IAH_TEAM_FOODSTONE_COLOR)
+                && !currColor.Equals(Constants.IAH_TEAM_MEADOW_COLOR)
+                && !currColor.Equals(Constants.TREE_COLOR);
 
             if (result)
             {
