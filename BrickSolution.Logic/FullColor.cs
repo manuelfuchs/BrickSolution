@@ -30,14 +30,13 @@ namespace BrickSolution.Logic
         {
             if (other is FullColor)
             {
+                double actualRg, actualGb, actualBr,
+                    expectedRg, expectedGb, expectedBr;
+
                 FullColor expectedColor = other as FullColor;
 
-                double actualRg = this.RGBColor.Red / (double)this.RGBColor.Green;
-                double expectedRg = expectedColor.RGBColor.Red / (double)expectedColor.RGBColor.Green;
-                double actualGb = this.RGBColor.Green / (double)this.RGBColor.Blue;
-                double expectedGb = expectedColor.RGBColor.Green / (double)expectedColor.RGBColor.Blue;
-                double actualBr = this.RGBColor.Blue / (double)this.RGBColor.Red;
-                double expectedBr = expectedColor.RGBColor.Blue / (double)expectedColor.RGBColor.Red;
+                this.GetRatios(out actualRg, out actualGb, out actualBr);
+                expectedColor.GetRatios(out expectedRg, out expectedGb, out expectedBr);
 
                 double downFact = 1 - Constants.COLOUR_TOLERANCE;
                 double upFact = 1 + Constants.COLOUR_TOLERANCE;
@@ -60,24 +59,37 @@ namespace BrickSolution.Logic
         }
 
         /// <summary>
+        /// returns all relevant ratios
+        /// </summary>
+        /// <param name="rg">ratio between red and green</param>
+        /// <param name="gb">ratio between green and blue</param>
+        /// <param name="br">ratio blue and red</param>
+        public void GetRatios(out double rg, out double gb, out double br)
+        {
+            rg = this.RGBColor.Red / (double)this.RGBColor.Green;
+            gb = this.RGBColor.Green / (double)this.RGBColor.Blue;
+            br = this.RGBColor.Blue / (double)this.RGBColor.Red;
+        }
+
+        /// <summary>
         /// returns a string representation of the object
         /// </summary>
         /// <returns>the string representation of this object</returns>
         public override string ToString()
         {
-            return $"RGB:{System.Environment.NewLine}"
-                 + $"  red:   {this.RGBColor.Red}{System.Environment.NewLine}"
-                 + $"  blue:  {this.RGBColor.Blue}{System.Environment.NewLine}"
-                 + $"  green: {this.RGBColor.Green}{System.Environment.NewLine}"
-                 + $"{System.Environment.NewLine}"
-                 + $"color-intensity: {this.Intensity}";
+            return $"{this.RGBColor.Red}, "
+                 + $"{this.RGBColor.Green}, "
+                 + $"{this.RGBColor.Blue}, "
+                 + $"{this.Intensity}";
         }
 
         public override int GetHashCode()
         {
             var hashCode = -112779971;
             hashCode = hashCode * -1521134295 + Intensity.GetHashCode();
-            hashCode = hashCode * -1521134295 + EqualityComparer<RGBColor>.Default.GetHashCode(RGBColor);
+            hashCode =
+                hashCode * -1521134295
+                + EqualityComparer<RGBColor>.Default.GetHashCode(RGBColor);
             return hashCode;
         }
 
