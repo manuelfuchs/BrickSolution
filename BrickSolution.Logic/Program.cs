@@ -108,6 +108,8 @@ namespace BrickSolution.Logic
             }
             finally
             {
+                Thread.Sleep(Constants.STEP_DELAY);
+
                 Robot.HaltMotors();
                 Robot.DisposeComponents();
                 Robot.PrintEmptyLine();
