@@ -144,10 +144,43 @@ namespace BrickSolution.Logic
                 currentColor = GetFullColor();
             } while (!currentColor.IsSignificant());
 
+            Thread.Sleep(500);
             HaltTracks();
             
-            // Use the color that fits bets
-            // to implement
+            if (currentColor.Equals(Constants.WINNIE_TEAM_FOODSTONE_COLOR))
+            {
+                TeamMode = TeamMode.WinnieTeam;
+            }
+            else if (currentColor.Equals(Constants.IAH_TEAM_FOODSTONE_COLOR))
+            {
+                TeamMode = TeamMode.IAhTeam;
+            }
+            else
+            {
+                currentColor
+                    .GetRatios(out double currRg, out double currGb, out double currBr);
+
+                Constants.WINNIE_TEAM_FOODSTONE_COLOR
+                    .GetRatios(out double winnieRg, out double winnieGb, out double winnieBr);
+
+                Constants.IAH_TEAM_FOODSTONE_COLOR
+                    .GetRatios(out double iahRg, out double iahGb, out double iahBr);
+
+                double winnieDiff =
+                    currRg - winnieRg + currGb - winnieGb + currBr - winnieBr;
+                
+                double iahDiff =
+                    currRg - iahRg + currGb - iahGb + currBr - iahBr;
+
+                if (winnieDiff <= iahDiff)
+                {
+                    TeamMode = TeamMode.WinnieTeam;
+                }
+                else
+                {
+                    TeamMode = TeamMode.IAhTeam;
+                }
+            }
         }
 
         /// <summary>
