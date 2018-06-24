@@ -319,7 +319,9 @@ namespace BrickSolution.Logic
         public static void HaltTracks()
         {
             LeftTrack.Brake();
+            LeftTrack.Off();
             RightTrack.Brake();
+            RightTrack.Off();
         }
 
         /// <summary>
@@ -328,7 +330,9 @@ namespace BrickSolution.Logic
         /// </summary>
         public static void TurnOffGrappler()
         {
+            GrapplerRiserMotor.Brake();
             GrapplerRiserMotor.Off();
+            GrapplerWheelMotor.Brake();
             GrapplerWheelMotor.Off();
             GrapplerPosition = GrapplerPosition.Down;
         }
