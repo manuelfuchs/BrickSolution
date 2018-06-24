@@ -54,7 +54,7 @@ namespace BrickSolution.Logic
         public const int US_FENCE_DISTANCE_TOLL_UP = 95/*110*/;
         public const int IR_FENCE_DISTANCE_TOLL_DOWN = 7;
         public const int IR_FENCE_DISTANCE_TOLL_UP = 9;
-        public const int STEP_DELAY = 100;
+        public const int STEP_DELAY = 200;
         #endregion
 
         #region TeamValues
