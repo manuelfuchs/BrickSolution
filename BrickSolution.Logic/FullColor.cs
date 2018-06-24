@@ -90,9 +90,12 @@ namespace BrickSolution.Logic
         /// false: the fullcolor is not significant</returns>
         public bool IsSignificant()
         {
-            // all over 10 or 1 over 25
-            //to implement
-            throw new NotImplementedException();
+            return this.RGBColor.Red > 25
+                || this.RGBColor.Green > 25
+                || this.RGBColor.Blue > 25
+                ||    (this.RGBColor.Red > 10
+                    && this.RGBColor.Green > 10
+                    && this.RGBColor.Blue > 10);
         }
     }
 }
