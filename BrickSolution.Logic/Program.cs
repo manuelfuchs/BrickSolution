@@ -16,7 +16,14 @@ namespace BrickSolution.Logic
                 Robot.WaitForStartButtonPress();
 
                 Robot.DetectTeamColor();
+
+                Robot.PrintEmptyLine();
+                Robot.Print($"detected-team: {Robot.TeamMode}");
                 
+                Thread.Sleep(Constants.STEP_DELAY);
+
+                Robot.CollectFood();
+
                 Thread.Sleep(Constants.STEP_DELAY);
                 
                 while (true)
