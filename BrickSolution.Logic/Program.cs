@@ -103,20 +103,12 @@ namespace BrickSolution.Logic
             }
             catch (Exception e)
             {
-                if (Robot.IsInitialized)
-                {
-                    Robot.HaltMotors();
-                }
-                else
-                {
-                    Robot.Print(Constants.INIT_ERROR_MSG);
-                }
-
                 Robot.Print(e.Message);
                 Robot.Print(e.TargetSite.ToString());
             }
             finally
             {
+                Robot.HaltMotors();
                 Robot.DisposeComponents();
                 Robot.PrintEmptyLine();
                 Robot.Print(Constants.PROGRAM_FINISHED_MSG);
