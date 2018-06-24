@@ -32,6 +32,7 @@ namespace BrickSolution.Logic
         public const sbyte DRIVE_FORWARD_AFT_BACKWARD_SPEED = -30;
         public const sbyte GRAPPLER_RISER_SPEED = -40;
         public const sbyte GRAPPLER_WHEEL_SPEED = 25;
+        public const sbyte GRAPPLER_WHEEL_RELEASE_SPEED = -25;
         public const int GRAPPLER_WHEEL_BOUNDARY = 210;
         public const sbyte ROTATION_SPEED_FORWARD = -40;
         public const sbyte ROTATION_SPEED_BACKWARD = 40;

@@ -408,7 +408,7 @@ namespace BrickSolution.Logic
                 HaltTracks();
 
                 GrapplerWheelMotor.ResetTacho();
-                GrapplerWheelMotor.SetSpeed(Constants.GRAPPLER_WHEEL_SPEED);
+                GrapplerWheelMotor.SetSpeed(Constants.GRAPPLER_WHEEL_RELEASE_SPEED);
 
                 while (Math.Abs(GrapplerWheelMotor.GetTachoCount())
                     < Constants.GRAPPLER_WHEEL_BOUNDARY)
