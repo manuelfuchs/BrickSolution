@@ -44,17 +44,17 @@ namespace BrickSolution.Logic
         public const int IR_VALUES_NOT_INTERPRETABLE_VALUE = -1;
         public const int ULTRA_SONIC_TABLE_END_VALUE = 820;
         public const int ULTRA_SONIC_REFLECTION_TOLL = 900;
-        public const int IR_TABLE_END_VALUE = 20;
+        public const int IR_TABLE_END_VALUE = 30;
         public const double COLOUR_TOLERANCE = 0.4;
         public const int INTENSITY_TOLERANCE = 10;
-        public const int US_MEADOW_DISTANCE_TOLL_DOWN = 55/*90*/;
-        public const int US_MEADOW_DISTANCE_TOLL_UP = 74/*101*/;
-        public const int IR_MEADOW_DISTANCE_TOLL_DOWN = 2;
-        public const int IR_MEADOW_DISTANCE_TOLL_UP = 6;
-        public const int US_FENCE_DISTANCE_TOLL_DOWN = 75/*102*/;
-        public const int US_FENCE_DISTANCE_TOLL_UP = 95/*110*/;
-        public const int IR_FENCE_DISTANCE_TOLL_DOWN = 7;
-        public const int IR_FENCE_DISTANCE_TOLL_UP = 9;
+        public const int US_MEADOW_DISTANCE_TOLL_DOWN = 60/*90*/;
+        public const int US_MEADOW_DISTANCE_TOLL_UP = 94/*101*/;
+        public const int IR_MEADOW_DISTANCE_TOLL_DOWN = 3;
+        public const int IR_MEADOW_DISTANCE_TOLL_UP = 7;
+        public const int US_FENCE_DISTANCE_TOLL_DOWN = 95/*102*/;
+        public const int US_FENCE_DISTANCE_TOLL_UP = 110/*110*/;
+        public const int IR_FENCE_DISTANCE_TOLL_DOWN = 1;
+        public const int IR_FENCE_DISTANCE_TOLL_UP = 2;
         public const int STEP_DELAY = 200;
         #endregion
 
