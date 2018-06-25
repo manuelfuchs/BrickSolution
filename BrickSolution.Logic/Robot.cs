@@ -120,6 +120,7 @@ namespace BrickSolution.Logic
 
             ColorSensor.Mode = ColorMode.RGB;
             UltraSonicSensor.Mode = UltraSonicMode.Centimeter;
+            IRSensor.Mode = IRMode.Seek;
             
             GrapplerPosition = GrapplerPosition.Down;
             FoodState = FoodState.Searching;
