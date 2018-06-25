@@ -673,8 +673,11 @@ namespace BrickSolution.Logic
                 && !currColor.Equals(Constants.IAH_TEAM_MEADOW_COLOR)
                 && !currColor.Equals(Constants.TREE_COLOR);
 
+            result = false;
+
             if (result)
             {
+                Robot.Print("obstacle detected!");
                 LastStopReason = StopReason.ObstacleDetected;
             }
 
@@ -693,6 +696,7 @@ namespace BrickSolution.Logic
 
             if (result)
             {
+                Print("Tree detected");
                 LastStopReason = StopReason.TreeDetected;
             }
 
@@ -752,6 +756,8 @@ namespace BrickSolution.Logic
 
             if (result)
             {
+                Print("our food detected");
+
                 LastStopReason = StopReason.OurFoodDetected;
             }
 
@@ -770,6 +776,8 @@ namespace BrickSolution.Logic
 
             if (result)
             {
+                Print("enemy food detected");
+
                 LastStopReason = StopReason.EnemyFoodDetected;
             }
 
